@@ -24,7 +24,6 @@ public class DTOMapperTest {
         User user = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
 
         // check content
-        assertEquals(userPostDTO.getPassword(), user.getPassword());
         assertEquals(userPostDTO.getUsername(), user.getUsername());
     }
 

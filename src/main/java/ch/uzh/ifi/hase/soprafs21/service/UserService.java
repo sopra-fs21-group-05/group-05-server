@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.service;
 import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserAuthDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -39,7 +41,7 @@ public class UserService {
     }
 
     public User createUser(User newUser) {
-        newUser.setToken(UUID.randomUUID().toString());
+        newUser.setToken("1L");
         newUser.setStatus(UserStatus.ONLINE);
 
 
@@ -74,7 +76,7 @@ public class UserService {
         //checks if the provided username is in the userRepository
         User userByUsername = userRepository.findByUsername(username);
 
-        String baseErrorMessage = "Invalid %s,, make sure that username and password are correct.";
+        String baseErrorMessage = "Invalid %s, make sure that username and password are correct.";
         String loggedInErrorMessage = "The user %s is already logged in.";
 
         if(userByUsername==null){
@@ -91,8 +93,27 @@ public class UserService {
 
         //Setting the user ONLINE & saving the information in the userRepository
         userByUsername.setStatus(UserStatus.ONLINE);
+        userByUsername.setToken("1L");
         userRepository.save(userByUsername);
         userRepository.flush();
         return userByUsername;
+    }
+
+    public void logoutUser(Long userId) {
+        User user = getExistingUser(userId);
+        user.setStatus(UserStatus.OFFLINE);
+        userRepository.save(user);
+        userRepository.flush();
+    }
+
+
+    //checks if user is saved in the userRepository
+    private User getExistingUser(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        String baseErrorMessage = "The %s provided %s not found.";
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "userId", "was"));
+        }
+        return optionalUser.get();
     }
 }

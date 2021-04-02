@@ -9,6 +9,7 @@ public class UserGetDTO {
     private String username;
     private UserStatus status;
 
+
     public Long getId() {
         return id;
     }

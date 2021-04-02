@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserAuthDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.DTOMapper;
@@ -72,5 +73,17 @@ public class UserController {
         return ResponseEntity.created(locationAsUrl).body(locationAsString);
     }
 
+    //login endpoint
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserAuthDTO login(@RequestBody UserPostDTO userPostDTO) {
+        User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+        User user = userService.loginUser(userInput.getUsername(),userInput.getPassword());
+        //returns token and id in JSON file
+        return DTOMapper.INSTANCE.convertEntityToUserAuthDTO(user);
+    }
+
+    
 
 }

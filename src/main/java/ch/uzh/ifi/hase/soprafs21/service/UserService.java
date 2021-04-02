@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -68,5 +68,31 @@ public class UserService {
         if (userByUsername != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "username", "is"));
         }
+    }
+
+    public User loginUser(String username, String password){
+        //checks if the provided username is in the userRepository
+        User userByUsername = userRepository.findByUsername(username);
+
+        String baseErrorMessage = "Invalid %s,, make sure that username and password are correct.";
+        String loggedInErrorMessage = "The user %s is already logged in.";
+
+        if(userByUsername==null){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format(baseErrorMessage, "username"));
+        }
+
+        if (!userByUsername.getPassword().equals(password)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format(baseErrorMessage, "password"));
+        }
+        //If user is already logged in, it is not possible to login again
+        if (userByUsername.getStatus() == UserStatus.ONLINE) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format(loggedInErrorMessage, userByUsername.getUsername()));
+        }
+
+        //Setting the user ONLINE & saving the information in the userRepository
+        userByUsername.setStatus(UserStatus.ONLINE);
+        userRepository.save(userByUsername);
+        userRepository.flush();
+        return userByUsername;
     }
 }

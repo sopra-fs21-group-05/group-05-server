@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -115,5 +116,26 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "userId", "was"));
         }
         return optionalUser.get();
+    }
+
+    public void restrictPlayer(User user){
+        user.setRestrictedMode(true);
+    }
+
+    public List<User> getWinner(){
+        List<User> winners = new ArrayList<>();
+        int max = 0;
+        for(User user: getUsers()){
+            if(user.getPoints() >= max){
+                max = user.getPoints();
+            }
+        }
+        for (User user: getUsers()){
+            if(user.getPoints() == max){
+                winners.add(user);
+                restrictPlayer(user);
+            }
+        }
+        return winners;
     }
 }

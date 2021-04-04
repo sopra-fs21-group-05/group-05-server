@@ -8,7 +8,36 @@ public class UserGetDTO {
     private String password;
     private String username;
     private UserStatus status;
+    private int points;
+    private boolean restrictedMode;
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    private String token;
+
+
+    public boolean getRestrictedMode() {
+        return restrictedMode;
+    }
+
+    public void setRestrictedMode(boolean restrictedMode) {
+        this.restrictedMode = restrictedMode;
+    }
+
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
 
     public Long getId() {
         return id;

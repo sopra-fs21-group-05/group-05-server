@@ -93,5 +93,17 @@ public class UserController {
         userService.logoutUser(userInput.getId());
     }
 
+    @GetMapping("/winner")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<UserGetDTO> getWinner(){
+        List<User> winnerList = userService.getWinner();
+        List<UserGetDTO> winners = new ArrayList<>();
+
+        for(User user: winnerList){
+            winners.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
+        }
+        return winners;
+    }
 
 }

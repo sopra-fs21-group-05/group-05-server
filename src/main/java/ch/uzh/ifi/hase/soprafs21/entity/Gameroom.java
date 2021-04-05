@@ -34,4 +34,17 @@ public class Gameroom implements Serializable{
     private List<User> users = new ArrayList<User>();
 
     //TODO: game column foreign key @OnetoOne
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    public String getRoomname() { return roomname; }
+    public void setRoomname(String roomname) { this.roomname = roomname; }
+
+    public List<User> getUsers() { return users; }
+    public void setUsers(List<User> users) { this.users = users; }
+
 }

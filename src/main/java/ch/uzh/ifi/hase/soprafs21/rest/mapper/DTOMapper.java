@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs21.rest.mapper;
 
+import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomPostDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserAuthDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserPostDTO;
@@ -40,5 +42,9 @@ public interface DTOMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "token", target = "token")
     User convertUserAuthDTOToEntity(UserAuthDTO userAuthDTO);
+
+    @Mapping(source = "password", target = "password")
+    @Mapping(source = "roomname", target = "roomname")
+    Gameroom convertGameroomPostDTOtoEntity(GameroomPostDTO gameroomPostDTO);
 
 }

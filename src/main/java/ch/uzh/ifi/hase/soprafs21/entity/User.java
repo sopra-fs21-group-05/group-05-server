@@ -34,6 +34,12 @@ public class User implements Serializable {
     @Column(nullable = false)
     private UserStatus status;
 
+    @Column(columnDefinition = "int default 0")
+    private int points;
+    
+    @Column(columnDefinition = "boolean default false")
+    private boolean restrictedMode;
+
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -60,5 +66,20 @@ public class User implements Serializable {
     }
     public void setStatus(UserStatus status) {
         this.status = status;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+    public boolean getRestrictedMode() {
+        return restrictedMode;
+    }
+
+    public void setRestrictedMode(boolean restrictedMode) {
+        this.restrictedMode = restrictedMode;
     }
 }

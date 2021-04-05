@@ -16,6 +16,7 @@ public class UserRepositoryIntegrationTest {
     @Autowired
     private TestEntityManager entityManager;
 
+    /*
     @Autowired
     private UserRepository userRepository;
 
@@ -41,4 +42,6 @@ public class UserRepositoryIntegrationTest {
         assertEquals(found.getToken(), user.getToken());
         assertEquals(found.getStatus(), user.getStatus());
     }
+    */
+
 }

@@ -106,15 +106,5 @@ public class UserController {
         return winners;
     }
 
-    @PostMapping("/winner")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    @ResponseBody
-    public UserGetDTO updateUser(@RequestBody UserAuthDTO userAuthDTO){
-        User user = DTOMapper.INSTANCE.convertUserAuthDTOToEntity(userAuthDTO);
-
-
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.updateUser(user));
-    }
-
 
 }

@@ -36,7 +36,7 @@ public class User implements Serializable {
 
     @Column(columnDefinition = "int default 0")
     private int points;
-    
+
     @Column(columnDefinition = "boolean default false")
     private boolean restrictedMode;
 

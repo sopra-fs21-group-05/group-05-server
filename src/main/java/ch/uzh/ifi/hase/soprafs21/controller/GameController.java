@@ -25,6 +25,8 @@ public class GameController {
 
 
 
+    //TODO: fix DTOMapper
+    /*
     @GetMapping("/game/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -39,6 +41,8 @@ public class GameController {
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(setNr, coordinatesAssignedPicture);
     }
 
+
+     */
 
     //TODO: submit all recreated pictures or one by one?
     /*

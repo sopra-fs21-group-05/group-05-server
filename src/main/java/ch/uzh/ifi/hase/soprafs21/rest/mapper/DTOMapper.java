@@ -46,18 +46,18 @@ public interface DTOMapper {
     Gameroom convertGameroomPostDTOtoEntity(GameroomPostDTO gameroomPostDTO);
 
 
-    @Mapping(source = "setNr", target = "setNr")
-    @Mapping(source = "coordinatesAssignedPicture", target = "coordinatesAssignedPicture")
-    GameGetDTO convertEntityToGameGetDTO(int setNr, String coordinatesToAssignedPicture);
+    //@Mapping(source = "setNr", target = "setNr")
+    //@Mapping(source = "coordinatesAssignedPicture", target = "coordinatesAssignedPicture")
+    GameGetDTO convertEntityToGameGetDTO(Game game);
 
 
     @Mapping(source = "gameId", target = "gameId")
-    @Mapping(source = "setNr", target = "setNr")
-    @Mapping(source = "coordinatesAssignedPicture", target = "coordinatesAssignedPicture")
+    //@Mapping(source = "setNr", target = "setNr")
+    //@Mapping(source = "coordinatesAssignedPicture", target = "coordinatesAssignedPicture")
     Game convertGameGetDTOToEntity(GameGetDTO gameGetDTO);
 
     @Mapping(source = "roundNr", target = "roundNr")
-    @Mapping(source = "PictureBase64", target = "PictureBase64")
+    //@Mapping(source = "PictureBase64", target = "PictureBase64")
     Game convertGamePostDTOtoEntity(GamePostDTO gamePostDTO);
 
 

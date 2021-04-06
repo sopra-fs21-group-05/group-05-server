@@ -1,11 +1,9 @@
 package ch.uzh.ifi.hase.soprafs21.rest.mapper;
 
+import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomPostDTO;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserAuthDTO;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -46,5 +44,22 @@ public interface DTOMapper {
     @Mapping(source = "password", target = "password")
     @Mapping(source = "roomname", target = "roomname")
     Gameroom convertGameroomPostDTOtoEntity(GameroomPostDTO gameroomPostDTO);
+
+
+    @Mapping(source = "setNr", target = "setNr")
+    @Mapping(source = "coordinatesAssignedPicture", target = "coordinatesAssignedPicture")
+    GameGetDTO convertEntityToGameGetDTO(int setNr, String coordinatesToAssignedPicture);
+
+
+    @Mapping(source = "gameId", target = "gameId")
+    @Mapping(source = "setNr", target = "setNr")
+    @Mapping(source = "coordinatesAssignedPicture", target = "coordinatesAssignedPicture")
+    Game convertGameGetDTOToEntity(GameGetDTO gameGetDTO);
+
+    @Mapping(source = "roundNr", target = "roundNr")
+    @Mapping(source = "PictureBase64", target = "PictureBase64")
+    Game convertGamePostDTOtoEntity(GamePostDTO gamePostDTO);
+
+
 
 }

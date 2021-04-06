@@ -109,7 +109,7 @@ public class UserService {
 
 
     //checks if user is saved in the userRepository
-    private User getExistingUser(Long id) {
+    public User getExistingUser(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         String baseErrorMessage = "The %s provided %s not found.";
         if(optionalUser.isEmpty()){
@@ -138,4 +138,5 @@ public class UserService {
         }
         return winners;
     }
+
 }

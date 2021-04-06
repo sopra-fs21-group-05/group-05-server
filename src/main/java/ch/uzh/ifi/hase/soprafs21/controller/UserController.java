@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserAuthDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -93,18 +94,19 @@ public class UserController {
         userService.logoutUser(userInput.getId());
     }
 
+
     @GetMapping("/winner")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<UserGetDTO> getWinner(){
+    public List<UserGetDTO> getWinner() {
         List<User> winnerList = userService.getWinner();
         List<UserGetDTO> winners = new ArrayList<>();
 
-        for(User user: winnerList){
+        for (User user : winnerList) {
             winners.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
         }
         return winners;
-    }
 
+    }
 
 }

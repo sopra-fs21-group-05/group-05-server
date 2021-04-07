@@ -29,11 +29,13 @@ public class Gameroom implements Serializable{
     @Column(nullable = false, unique = true)
     private String roomname;
 
-    //TODO: user list uni or bidirectional?
+    @Column
     @OneToMany
-    private List<User> users = new ArrayList<User>();
+    private List<User> users;
 
-    //TODO: game column foreign key @OnetoOne
+    @Column
+    @OneToOne
+    private Game game;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -46,5 +48,8 @@ public class Gameroom implements Serializable{
 
     public List<User> getUsers() { return users; }
     public void setUsers(List<User> users) { this.users = users; }
+
+    public Game getGame() { return game; }
+    public void setGame(Game game) { this.game = game; }
 
 }

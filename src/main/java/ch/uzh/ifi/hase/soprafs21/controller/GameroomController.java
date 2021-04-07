@@ -7,10 +7,7 @@ import ch.uzh.ifi.hase.soprafs21.service.GameroomService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -20,7 +17,7 @@ import java.net.URI;
  * This class is responsible for handling all REST request that are related to the gameroom.
  * The controller will receive the request and delegate the execution to the GameroomService and finally return the result.
  */
-
+@RestController
 public class GameroomController {
 
     private final GameroomService gameroomService;

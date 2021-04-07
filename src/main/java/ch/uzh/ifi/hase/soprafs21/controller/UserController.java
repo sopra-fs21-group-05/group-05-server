@@ -89,9 +89,10 @@ public class UserController {
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void logout(@RequestBody UserAuthDTO userAuthDTO){
+    public UserAuthDTO logout(@RequestBody UserAuthDTO userAuthDTO){
         User userInput = DTOMapper.INSTANCE.convertUserAuthDTOToEntity(userAuthDTO);
-        userService.logoutUser(userInput.getId());
+        User newUser = userService.logoutUser(userInput.getId());
+        return DTOMapper.INSTANCE.convertEntityToUserAuthDTO(newUser);
     }
 
 

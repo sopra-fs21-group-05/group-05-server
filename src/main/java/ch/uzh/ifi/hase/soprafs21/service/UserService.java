@@ -100,11 +100,13 @@ public class UserService {
         return userByUsername;
     }
 
-    public void logoutUser(Long userId) {
+    public User logoutUser(Long userId) {
         User user = getExistingUser(userId);
         user.setStatus(UserStatus.OFFLINE);
+        user.setToken(null);
         userRepository.save(user);
         userRepository.flush();
+        return user;
     }
 
 

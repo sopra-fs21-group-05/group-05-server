@@ -39,8 +39,9 @@ public class GameroomService {
     }
 
     public Gameroom createGameroom(Gameroom newGameroom) {
-
-        // TODO: checkIfGameroomExists(newGameroom);
+        
+        //check if gameroom already exists
+        checkIfGameroomExists(newGameroom);
 
         // saves the given entity but data is only persisted in the database once flush() is called
         newGameroom = gameroomRespository.save(newGameroom);
@@ -48,5 +49,15 @@ public class GameroomService {
 
         log.debug("Created Information for Gameroom: {}", newGameroom);
         return newGameroom;
+    }
+
+    private void checkIfGameroomExists(Gameroom gameroom) {
+        Gameroom gameroomByName = gameroomRespository.findByRoomname(gameroom.getRoomname());
+
+        String baseErrorMessage = "The roomname provided already exists. Therefore, the gameroom could not be created!";
+
+        if (gameroomByName != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, baseErrorMessage);
+        }
     }
 }

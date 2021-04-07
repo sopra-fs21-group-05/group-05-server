@@ -29,11 +29,9 @@ public class Gameroom implements Serializable{
     @Column(nullable = false, unique = true)
     private String roomname;
 
-    @Column
     @OneToMany
     private List<User> users;
 
-    @Column
     @OneToOne
     private Game game;
 

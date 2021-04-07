@@ -39,7 +39,7 @@ public class GameroomService {
     }
 
     public Gameroom createGameroom(Gameroom newGameroom) {
-        
+
         //check if gameroom already exists
         checkIfGameroomExists(newGameroom);
 
@@ -49,6 +49,15 @@ public class GameroomService {
 
         log.debug("Created Information for Gameroom: {}", newGameroom);
         return newGameroom;
+    }
+
+    public Gameroom joinGameroom(Gameroom gameroom){
+
+        //TODO: check gameroom credentials
+
+        //TODO: add user to list un gameroom and return it
+
+        return gameroom;
     }
 
     private void checkIfGameroomExists(Gameroom gameroom) {

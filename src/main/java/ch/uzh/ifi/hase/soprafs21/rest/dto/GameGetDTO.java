@@ -1,13 +1,11 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
+import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
+
 public class GameGetDTO {
     private int gameId;
-    private int setNr;
+    private MaterialSet materialSet;
     private String coordinatesAssignedPicture;
-
-
-    public int getSetNr() { return setNr; }
-    public void setSetNr(int setNr) { this.setNr = setNr; }
 
 
     public String getCoordinatesAssignedPicture() { return coordinatesAssignedPicture; }
@@ -15,4 +13,7 @@ public class GameGetDTO {
 
     public int getGameId() { return gameId; }
     public void setGameId(int gameId) { this.gameId = gameId; }
+
+    public MaterialSet getMaterialSet() { return materialSet; }
+    public void setMaterialSet(MaterialSet materialSet) { this.materialSet = materialSet; }
 }

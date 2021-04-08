@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
+import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
@@ -33,21 +34,24 @@ public class GameService {
 
     //assigns the "next" materialset to specific player
     //TODO: modify once MaterialSet (entity or enum) is created
-    public int assignMaterialset(Game game, Long userId) {
+    public User assignMaterialset(Game game, Long userId) {
         Long gameId = game.getGameId();
         User user = getPlayerInGame(userId, gameId);
 
-        int prevSetId = 0;
-        int currentSetId;
-        /*
-        int prevSetId = user.getMaterialset().setId;
-         */
+        MaterialSet newSet;
+        int currentSet;
+        int prevSetId = user.getMaterialSet().getSetNr();
+
         if(prevSetId != 4){
-            currentSetId = prevSetId+1;
+            currentSet = prevSetId+1;
         }else{
-            currentSetId = 0;
+            currentSet = 0;
         }
-        return currentSetId;
+
+        newSet = MaterialSet.nameOfSetNr(currentSet);
+        user.setMaterialSet(newSet);
+
+        return user;
     }
 
     //assigns picture to recreate to specific player
@@ -86,4 +90,12 @@ public class GameService {
         return targetUser;
     }
 
+
+    //submits the recreated picture of one user --> adds to game.userRecreations
+    /*public String submitPicture(Game gameInput, Long userId) {
+        Game currentGame = getExistingGame(gameInput.getGameId());
+
+    }
+
+     */
 }

@@ -41,16 +41,11 @@ public class User implements Serializable {
     @Column(columnDefinition = "boolean default false")
     private boolean restrictedMode;
 
-    public MaterialSet getMaterialSet() {
-        return materialSet;
-    }
-
-    public void setMaterialSet(MaterialSet materialSet) {
-        this.materialSet = materialSet;
-    }
-
     @Column
     private MaterialSet materialSet;
+
+    @Column
+    private String coordinatesAssignedPicture;
 
 
     public Long getId() { return id; }
@@ -83,15 +78,25 @@ public class User implements Serializable {
     public int getPoints() {
         return points;
     }
-
     public void setPoints(int points) {
         this.points = points;
     }
+
     public boolean getRestrictedMode() {
         return restrictedMode;
     }
-
     public void setRestrictedMode(boolean restrictedMode) {
         this.restrictedMode = restrictedMode;
     }
+
+    public MaterialSet getMaterialSet() {
+        return materialSet;
+    }
+    public void setMaterialSet(MaterialSet materialSet) {
+        this.materialSet = materialSet;
+    }
+
+    public String getCoordinatesAssignedPicture() { return coordinatesAssignedPicture; }
+
+    public void setCoordinatesAssignedPicture(String coordinatesAssignedPicture) { this.coordinatesAssignedPicture = coordinatesAssignedPicture; }
 }

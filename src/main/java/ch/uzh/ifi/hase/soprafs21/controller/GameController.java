@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
+import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameGetDTO;
@@ -25,37 +26,35 @@ public class GameController {
 
 
 
-    //TODO: fix DTOMapper
-    /*
+    //TODO: fix once assignPicture() is implemented & initial game setup is done
     @GetMapping("/game/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO getPictureAndMaterialset(@RequestBody GameGetDTO gameGetDTO, @PathVariable Long userId){
+    public GameGetDTO getPictureAndMaterialset(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
         // convert API game to internal representation
-        Game game = DTOMapper.INSTANCE.convertGameGetDTOToEntity(gameGetDTO);
+        Game game = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
 
         //call game service methods
-        int setNr = gameService.assignMaterialset(game,userId);
-        String coordinatesAssignedPicture = gameService.assignPicture(game, userId);
+        User user = gameService.assignMaterialset(game,userId);
+        //User user = gameService.assignPicture(game, userId);
 
-        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(setNr, coordinatesAssignedPicture);
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(user);
     }
 
 
-     */
-
-    //TODO: submit all recreated pictures or one by one?
-    /*
-    //save recreated pictures
+    //TODO: submit recreated picture for each player and extend the userRecreations in Game
+    /*//save recreated pictures
     @PostMapping("/game/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<String> submitRecreatedPictures(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
+    public ResponseEntity<String> submitRecreatedPicture(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
         // convert API game to internal representation
-        Game gameInput = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
+        Game gameInput = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
+
+        //call gameservice method
         String submittedPicture = gameService.submitPicture(gameInput,userId);
-    }
-     */
+    }*/
+
 
 
 }

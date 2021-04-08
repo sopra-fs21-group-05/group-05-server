@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
+import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 
 import javax.persistence.*;
@@ -39,6 +40,17 @@ public class User implements Serializable {
 
     @Column(columnDefinition = "boolean default false")
     private boolean restrictedMode;
+
+    public MaterialSet getMaterialSet() {
+        return materialSet;
+    }
+
+    public void setMaterialSet(MaterialSet materialSet) {
+        this.materialSet = materialSet;
+    }
+
+    @Column
+    private MaterialSet materialSet;
 
 
     public Long getId() { return id; }

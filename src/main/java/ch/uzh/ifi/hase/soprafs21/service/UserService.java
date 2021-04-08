@@ -42,10 +42,8 @@ public class UserService {
     }
 
     public User createUser(User newUser) {
-        newUser.setToken(UUID.randomUUID().toString());
-        newUser.setStatus(UserStatus.ONLINE);
-
-
+        newUser.setStatus(UserStatus.OFFLINE);
+        
         checkIfUserExists(newUser);
 
         // saves the given entity but data is only persisted in the database once flush() is called
@@ -110,7 +108,7 @@ public class UserService {
     }
 
 
-    //checks if user is saved in the userRepository
+    //returns user that is saved in the userRepository
     public User getExistingUser(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         String baseErrorMessage = "The %s provided %s not found.";

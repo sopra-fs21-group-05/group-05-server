@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
+import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 
 public class UserGetDTO {
@@ -10,6 +11,16 @@ public class UserGetDTO {
     private UserStatus status;
     private int points;
     private boolean restrictedMode;
+
+    public MaterialSet getMaterialSet() {
+        return materialSet;
+    }
+
+    public void setMaterialSet(MaterialSet materialSet) {
+        this.materialSet = materialSet;
+    }
+
+    private MaterialSet materialSet;
 
     public String getToken() {
         return token;

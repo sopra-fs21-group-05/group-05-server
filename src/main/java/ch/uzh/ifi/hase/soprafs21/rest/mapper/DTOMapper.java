@@ -31,6 +31,7 @@ public interface DTOMapper {
     @Mapping(source = "points", target = "points")
     @Mapping(source = "restrictedMode", target = "restrictedMode")
     @Mapping(source = "token", target = "token")
+    @Mapping(source = "materialSet", target = "materialSet")
     UserGetDTO convertEntityToUserGetDTO(User user);
 
     @Mapping(source = "id", target = "id")

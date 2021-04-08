@@ -122,6 +122,10 @@ public class UserService {
         user.setRestrictedMode(true);
     }
 
+    public boolean isRestricted(User user){
+        return user.getRestrictedMode();
+    }
+
     public List<User> getWinner(){
         List<User> winners = new ArrayList<>();
         int max = 0;

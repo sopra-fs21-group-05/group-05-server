@@ -110,4 +110,13 @@ public class UserController {
 
     }
 
+    @GetMapping("/restricted")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public boolean isRestricted(@RequestBody UserAuthDTO userAuthDTO){
+        User user = DTOMapper.INSTANCE.convertUserAuthDTOToEntity(userAuthDTO);
+
+        return userService.isRestricted(user);
+    }
+
 }

@@ -39,6 +39,10 @@ public class GameroomService {
         this.gameroomRespository = gameroomRespository;
     }
 
+    public List<Gameroom> getGamerooms() {
+        return this.gameroomRespository.findAll();
+    }
+
     public Gameroom getGameroomByName(String roomname){
         Gameroom gameroomByName = gameroomRespository.findByRoomname(roomname);
         if(gameroomByName == null){

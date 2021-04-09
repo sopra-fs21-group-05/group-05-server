@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomPostDTO;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.GameroomService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Gameroom Controller
@@ -79,5 +82,20 @@ public class GameroomController {
     public void putGameroom(@PathVariable("roomId") Long roomId) {
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
         //TODO: start the game
+    }
+
+    @GetMapping("/gamerooms/list")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<GameroomGetDTO> getGameroomList() {
+        // fetch all gamerooms in the internal representation
+        List<Gameroom> gamerooms = gameroomService.getGamerooms();
+        List<GameroomGetDTO> gameroomGetDTOs = new ArrayList<>();
+
+        // convert each user to the API representation
+        for (Gameroom gameroom : gamerooms) {
+            gameroomGetDTOs.add(DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(gameroom));
+        }
+        return gameroomGetDTOs;
     }
 }

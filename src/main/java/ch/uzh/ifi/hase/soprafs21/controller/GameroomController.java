@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomGetDTO;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomIdGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomPostDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.DTOMapper;
@@ -67,23 +68,21 @@ public class GameroomController {
         return ResponseEntity.created(locationAsUrl).body(locationAsString);
     }
 
-    @GetMapping("/gamerooms")
+    @GetMapping("/gamerooms/{roomname}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameroomGetDTO joinGameroom(@RequestBody GameroomPostDTO gameroomPostDTO) {
-        // get user that created the gameroom
-        Long userId = gameroomPostDTO.getUserId();
-        User user = userService.getExistingUser(userId);
-
-        // convert API gameroom to internal representation
-        Gameroom gameroomInput = DTOMapper.INSTANCE.convertGameroomPostDTOtoEntity(gameroomPostDTO);
-
-        // add user to gameroom and return it
-        Gameroom createdGameroom = gameroomService.joinGameroom(gameroomInput, user);
-
-        //convert internal representation to API gameroom
-        GameroomGetDTO returnedGameroom = DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(createdGameroom);
-
-        return returnedGameroom;
+    public GameroomIdGetDTO getGameroomId(@PathVariable("roomname") String roomname) {
+        Gameroom gameroom = gameroomService.getGameroomByName(roomname);
+        GameroomIdGetDTO foundGameroom = DTOMapper.INSTANCE.convertEntityToGameroomIdGetDTO(gameroom);
+        return foundGameroom;
     }
+
+    /*@GetMapping("/gamerooms/{roomId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameroomGetDTO getGameroom(@PathVariable("roomId") Long roomId) {
+        Gameroom gameroom = gameroomService.getGameroomById(roomId);
+        GameroomGetDTO foundGameroom = DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(gameroom);
+        return foundGameroom;
+    }*/
 }

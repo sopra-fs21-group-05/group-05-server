@@ -26,32 +26,41 @@ import java.util.List;
 public class GameroomController {
 
     private final GameroomService gameroomService;
+    private final UserService userService;
 
-    GameroomController(GameroomService gameroomService) {
+    GameroomController(GameroomService gameroomService, UserService userService) {
         this.gameroomService = gameroomService;
+        this.userService = userService;
     }
 
     @PostMapping("/gamerooms")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<String> createGameroom(@RequestBody GameroomPostDTO gameroomPostDTO) {
+        // get user that created the gameroom
+        Long userId = gameroomPostDTO.getUserId();
+        User user = userService.getExistingUser(userId);
+
         // convert API gameroom to internal representation
         Gameroom gameroomInput = DTOMapper.INSTANCE.convertGameroomPostDTOtoEntity(gameroomPostDTO);
 
         //create gameroom
         Gameroom createdGameroom = gameroomService.createGameroom(gameroomInput);
 
+        //add user that created the gameroom to that room
+        Gameroom joinedGameroom = gameroomService.joinGameroom(createdGameroom, user);
+
         //create String of ResponseEntity in order to return it
         String locationAsString = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(String.format("%d", createdGameroom.getId()))
+                .buildAndExpand(String.format("%d", joinedGameroom.getId()))
                 .toString();
 
         URI locationAsUrl = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(String.format("%d", createdGameroom.getId()))
+                .buildAndExpand(String.format("%d", joinedGameroom.getId()))
                 .toUri();
 
         //returns url as a string
@@ -62,11 +71,15 @@ public class GameroomController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameroomGetDTO joinGameroom(@RequestBody GameroomPostDTO gameroomPostDTO) {
+        // get user that created the gameroom
+        Long userId = gameroomPostDTO.getUserId();
+        User user = userService.getExistingUser(userId);
+
         // convert API gameroom to internal representation
         Gameroom gameroomInput = DTOMapper.INSTANCE.convertGameroomPostDTOtoEntity(gameroomPostDTO);
 
         // add user to gameroom and return it
-        Gameroom createdGameroom = gameroomService.joinGameroom(gameroomInput);
+        Gameroom createdGameroom = gameroomService.joinGameroom(gameroomInput, user);
 
         //convert internal representation to API gameroom
         GameroomGetDTO returnedGameroom = DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(createdGameroom);

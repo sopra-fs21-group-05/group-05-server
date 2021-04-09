@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.GameroomRespository;
@@ -51,13 +52,20 @@ public class GameroomService {
         return newGameroom;
     }
 
-    public Gameroom joinGameroom(Gameroom gameroom){
+    public Gameroom joinGameroom(Gameroom gameroom, User user){
 
-        //TODO: check gameroom credentials
+        Gameroom gameroomByName = checkGameroomCredentials(gameroom);
 
-        //TODO: add user to list un gameroom and return it
+        List<User> currentUsers = gameroomByName.getUsers();
+        currentUsers.add(user);
+        gameroomByName.setUsers(currentUsers);
 
-        return gameroom;
+        gameroomByName = gameroomRespository.save(gameroomByName);
+        gameroomRespository.flush();
+
+        log.debug("{} added to gameroom: {}", user.getUsername(), gameroomByName.getRoomname());
+
+        return gameroomByName;
     }
 
     private void checkIfGameroomExists(Gameroom gameroom) {
@@ -68,5 +76,22 @@ public class GameroomService {
         if (gameroomByName != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, baseErrorMessage);
         }
+    }
+
+    private Gameroom checkGameroomCredentials(Gameroom gameroom){
+        Gameroom gameroomByName = gameroomRespository.findByRoomname(gameroom.getRoomname());
+
+        //throw exception if no user with this username is found
+        String baseErrorMessage = "Credentials are invalid.";
+        if (gameroomByName == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, baseErrorMessage);
+        }
+
+        //throw exception if the password doesn't match for the username
+        if(!gameroomByName.getPassword().equals(gameroom.getPassword())){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, baseErrorMessage);
+        }
+
+        return gameroomByName;
     }
 }

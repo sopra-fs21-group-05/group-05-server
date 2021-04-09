@@ -98,4 +98,18 @@ public class GameroomController {
         }
         return gameroomGetDTOs;
     }
+
+    @PutMapping("/gamerooms/list/{roomId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void joinGameroom(@PathVariable("roomId") Long roomId, @RequestBody GameroomPostDTO gameroomPostDTO) {
+        // get user that created the gameroom
+        Long userId = gameroomPostDTO.getUserId();
+        User user = userService.getExistingUser(userId);
+
+        // convert API gameroom to internal representation
+        Gameroom gameroomInput = DTOMapper.INSTANCE.convertGameroomPostDTOtoEntity(gameroomPostDTO);
+        gameroomService.joinGameroom(gameroomInput, user);
+
+    }
 }

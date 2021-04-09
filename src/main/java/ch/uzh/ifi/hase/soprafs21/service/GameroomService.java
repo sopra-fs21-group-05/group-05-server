@@ -43,14 +43,6 @@ public class GameroomService {
         return this.gameroomRespository.findAll();
     }
 
-    public Gameroom getGameroomByName(String roomname){
-        Gameroom gameroomByName = gameroomRespository.findByRoomname(roomname);
-        if(gameroomByName == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Gameroom was not found.");
-        }
-        return gameroomByName;
-    }
-
     public Gameroom getGameroomById(Long id){
         Gameroom gameroomById = gameroomRespository.getOne(id);
         if(gameroomById == null){

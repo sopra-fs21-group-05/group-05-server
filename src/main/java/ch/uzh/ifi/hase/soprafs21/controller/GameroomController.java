@@ -85,4 +85,12 @@ public class GameroomController {
         GameroomGetDTO foundGameroom = DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(gameroom);
         return foundGameroom;
     }*/
+
+    @PutMapping("/gamerooms/{roomId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void getGameroom(@PathVariable("roomId") Long roomId) {
+        Gameroom gameroom = gameroomService.getGameroomById(roomId);
+        //TODO: start the game
+    }
 }

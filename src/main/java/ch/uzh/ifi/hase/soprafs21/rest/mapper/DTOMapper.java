@@ -51,9 +51,6 @@ public interface DTOMapper {
     @Mapping(source = "users", target = "users")
     GameroomGetDTO convertEntityToGameroomGetDTO(Gameroom gameroom);
 
-    @Mapping(source = "id", target = "id")
-    GameroomIdGetDTO convertEntityToGameroomIdGetDTO(Gameroom gameroom);
-
     @Mapping(source = "materialSet", target = "materialSet")
     @Mapping(source = "coordinatesAssignedPicture", target = "coordinatesAssignedPicture")
     GameGetDTO convertEntityToGameGetDTO(User user);

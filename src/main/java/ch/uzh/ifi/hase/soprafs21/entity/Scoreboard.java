@@ -15,11 +15,18 @@ public class Scoreboard implements Serializable {
     @GeneratedValue
     private Long scoreboardId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private Game game;
 
     @OneToMany
-    private final List<User> userList = game.getUserList();
+    private List<User> userList= new ArrayList<>();
+
+    @PostLoad
+    public void postLoad() {
+        if(game != null) {
+            this.userList = game.getUserList();
+        }
+    }
 
     //TODO: needed? else remove
     @ElementCollection

@@ -39,10 +39,9 @@ public class Game implements Serializable {
     @ElementCollection
     private final List<MaterialSet> setList = new ArrayList<>();
 
-/*
+
     @OneToOne
     private Scoreboard scoreboard;
-*/
 
 
     //TODO: uncomment if needed, else delete
@@ -61,8 +60,8 @@ public class Game implements Serializable {
     public List<User> getUserList() { return userList; }
     public void setUserList(List<User> userList) { this.userList = userList; }
 
-   /* public Scoreboard getScoreboard() { return scoreboard; }
+    public Scoreboard getScoreboard() { return scoreboard; }
     public void setScoreboard(Scoreboard scoreboard) { this.scoreboard = scoreboard; }
-*/
+
     public List<MaterialSet> getSetList() { return setList; }
 }

@@ -75,7 +75,7 @@ public class UserController {
     }
 
     //login endpoint
-    @PostMapping("/login")
+    @PutMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserAuthDTO login(@RequestBody UserPostDTO userPostDTO) {
@@ -86,7 +86,7 @@ public class UserController {
     }
 
     //logout endpoint
-    @PostMapping("/logout")
+    @PutMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserAuthDTO logout(@RequestBody UserAuthDTO userAuthDTO){

@@ -33,12 +33,9 @@ public class Game implements Serializable {
 
     //TODO: grid pictures column with input from Pixabay API
 
-    //TODO: uncomment & create getters/setters when the respective
-    // entities (MaterialSet, Scoreboard etc.) have been created
 
     @ElementCollection
     private final List<MaterialSet> setList = new ArrayList<>();
-
 
     @OneToOne
     private Scoreboard scoreboard;

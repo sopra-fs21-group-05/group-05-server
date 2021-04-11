@@ -25,20 +25,32 @@ public class GameController {
     }
 
 
-
-    //TODO: fix once assignPicture() is implemented & initial game setup is done
-    @GetMapping("/game/{userId}")
+    //returns setNr (int)
+    //TODO: test once initial game setup is done
+    @GetMapping("/game/set/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO getPictureAndMaterialset(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
+    public Integer getAssignedMaterialset(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
         // convert API game to internal representation
         Game game = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
 
         //call game service methods
         User user = gameService.assignMaterialset(game,userId);
-        //User user = gameService.assignPicture(game, userId);
 
-        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(user);
+        return user.getMaterialSet().getSetNr();
+    }
+
+    //returns coordinatesAssignedPicture (String)
+    //TODO: fix & test once initial game setup is done
+    @GetMapping("/game/set/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String getAssignedPicture(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
+        // convert API game to internal representation
+        Game game = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
+        //call game service methods
+        String coordinatesAssignedPicture = gameService.assignPicture(game, userId);
+        return coordinatesAssignedPicture;
     }
 
 

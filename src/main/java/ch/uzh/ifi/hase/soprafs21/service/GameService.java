@@ -39,16 +39,16 @@ public class GameService {
         User user = getPlayerInGame(userId, gameId);
 
         MaterialSet newSet;
-        int currentSet;
+        int newSetNr;
         int prevSetId = user.getMaterialSet().getSetNr();
 
         if(prevSetId != 4){
-            currentSet = prevSetId+1;
+            newSetNr = prevSetId+1;
         }else{
-            currentSet = 0;
+            newSetNr = 0;
         }
 
-        newSet = MaterialSet.nameOfSetNr(currentSet);
+        newSet = MaterialSet.nameOfSetNr(newSetNr);
         user.setMaterialSet(newSet);
 
         return user;
@@ -56,7 +56,13 @@ public class GameService {
 
     //assigns picture to recreate to specific player
     public String assignPicture(Game game, Long userId) {
-        String coordinatesAssignedPicture = "";
+        Long gameId = game.getGameId();
+        User user = getPlayerInGame(userId, gameId);
+
+
+
+        String coordinatesAssignedPicture = null;
+
         //TODO: implementation once game initial setup is done
         return coordinatesAssignedPicture;
     }

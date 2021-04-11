@@ -78,18 +78,20 @@ public class UserController {
     @PutMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void login(@RequestBody UserPostDTO userPostDTO) {
+    public UserAuthDTO login(@RequestBody UserPostDTO userPostDTO) {
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-        userService.loginUser(userInput.getUsername(),userInput.getPassword());
+        User user = userService.loginUser(userInput.getUsername(),userInput.getPassword());
+        return DTOMapper.INSTANCE.convertEntityToUserAuthDTO(user);
     }
 
     //logout endpoint
     @PutMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void logout(@RequestBody UserAuthDTO userAuthDTO){
+    public UserAuthDTO logout(@RequestBody UserAuthDTO userAuthDTO){
         User userInput = DTOMapper.INSTANCE.convertUserAuthDTOToEntity(userAuthDTO);
-        userService.logoutUser(userInput.getId());
+        User user= userService.logoutUser(userInput.getId());
+        return DTOMapper.INSTANCE.convertEntityToUserAuthDTO(user);
     }
 
 

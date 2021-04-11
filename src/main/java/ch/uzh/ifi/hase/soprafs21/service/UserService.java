@@ -71,7 +71,7 @@ public class UserService {
         }
     }
 
-    public void loginUser(String username, String password){
+    public User loginUser(String username, String password){
         //checks if the provided username is in the userRepository
         User userByUsername = userRepository.findByUsername(username);
 
@@ -95,14 +95,16 @@ public class UserService {
         userByUsername.setToken("1L");
         userRepository.save(userByUsername);
         userRepository.flush();
+        return userByUsername;
     }
 
-    public void logoutUser(Long userId) {
+    public User logoutUser(Long userId) {
         User user = getExistingUser(userId);
         user.setStatus(UserStatus.OFFLINE);
         user.setToken(null);
         userRepository.save(user);
         userRepository.flush();
+        return user;
     }
 
 

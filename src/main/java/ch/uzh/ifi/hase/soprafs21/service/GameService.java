@@ -15,9 +15,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.*;
+
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 @Service
 @Transactional
@@ -25,6 +34,10 @@ public class GameService {
     private final Logger log = LoggerFactory.getLogger(GameService.class);
 
     private final GameRepository gameRepository;
+
+    private final HttpClient httpClient = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .build();
 
 
     @Autowired
@@ -135,6 +148,88 @@ public class GameService {
             }
         }
         return winners;
+    }
+
+    public List<String> getPicturesFromPixabay(){
+        List<String> pictures = new ArrayList<>();
+        List<String> keywords = new ArrayList<String>();
+        Collections.addAll(keywords, "yellow+flower", "red+car", "tree", "fruits", "butterfly", "mushroom",
+                "school", "beach", "bike", "farm", "safari", "balloon", "rainbow", "books", "street", "sunrise");
+
+        //get one base64 encoded picture for each keyword
+        for (String k:keywords) {
+            String responseBody = sendGetRequest(k);
+            String url = parseJson(responseBody);
+            byte[] byteArray = getPictureFromUrl(url);
+            String encodedPicture = encodePicture(byteArray);
+            pictures.add(encodedPicture);
+        }
+        return pictures;
+    }
+
+    private String sendGetRequest(String keyword) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(URI.create("https://pixabay.com/api/?key=20947416-386f2cea1a25d1b2b70bdcc1f&q="+ keyword +"&image_type=photo&per_page=5"))
+                    .setHeader("User-Agent", "Java 11 HttpClient Bot")
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // print status code
+            System.out.println(response.statusCode());
+
+            // print response body
+            System.out.println(response.body());
+            return response.body();
+
+        } catch (Exception e){
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    private String encodePicture(byte[] pictureBytes){
+        String encoded = Base64.getEncoder().encodeToString(pictureBytes);
+
+        System.out.println(encoded);
+        return encoded;
+    }
+
+
+    private byte[] getPictureFromUrl(String urlString){
+        try {
+            URL url = new URL(urlString);
+            InputStream in = new BufferedInputStream(url.openStream());
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int n = 0;
+            while (-1!=(n=in.read(buf)))
+            {
+                out.write(buf, 0, n);
+            }
+            out.close();
+            in.close();
+            byte[] response = out.toByteArray();
+            return response;
+        } catch (Exception e){
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    private String parseJson(String jsonString){
+        JSONObject json = new JSONObject(jsonString);
+
+        JSONArray hitsJSONArray = json.getJSONArray("hits");
+        //get webformaturl of  one of the 5 results, as we only need 1 picture of each categroy
+        Random random = new Random();
+        int i = random.nextInt(5); //random int from 0 to 4
+        JSONObject hitJSONObject = hitsJSONArray.getJSONObject(i);
+        String url = hitJSONObject.getString("webformatURL");
+        System.out.println(url);
+        return url;
     }
 
     private void checkIfGameExists(Gameroom gameroom) {

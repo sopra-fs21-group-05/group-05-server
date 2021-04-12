@@ -55,6 +55,20 @@ public class GameController {
         return coordinatesAssignedPicture;
     }*/
 
+    @GetMapping("/winner")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<UserGetDTO> getWinner(@RequestBody GameGetDTO gameGetDTO) {
+        List<User> winnerList = gameService.getWinner(gameGetDTO.getGameId());
+        List<UserGetDTO> winners = new ArrayList<>();
+
+        for (User user : winnerList) {
+            winners.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
+        }
+        return winners;
+
+    }
+
 
     //TODO: submit recreated picture for each player and extend the userRecreations in Game
     /*//save recreated pictures

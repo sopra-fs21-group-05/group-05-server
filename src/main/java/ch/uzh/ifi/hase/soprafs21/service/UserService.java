@@ -118,7 +118,7 @@ public class UserService {
         return optionalUser.get();
     }
 
-    public void restrictPlayer(User user){
+    public static void restrictPlayer(User user){
         user.setRestrictedMode(true);
     }
 
@@ -126,6 +126,7 @@ public class UserService {
         return user.getRestrictedMode();
     }
 
+    /*
     public List<User> getWinner(){
         List<User> winners = new ArrayList<>();
         int max = 0;
@@ -142,5 +143,6 @@ public class UserService {
         }
         return winners;
     }
+     */
 
 }

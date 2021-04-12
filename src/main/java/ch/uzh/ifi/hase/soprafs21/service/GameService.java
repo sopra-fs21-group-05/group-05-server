@@ -94,6 +94,29 @@ public class GameService {
         return targetUser;
     }
 
+    //Get a list of all players in the game
+    public List<User> getPlayers(Long gameId){
+        Game game = getExistingGame(gameId);
+        return game.getUserList();
+    }
+
+    public List<User> getWinner(Long gameId){
+        List<User> winners = new ArrayList<>();
+        int max = 0;
+        for(User user: getPlayers(gameId)){
+            if(user.getPoints() >= max){
+                max = user.getPoints();
+            }
+        }
+        for (User user: getPlayers(gameId)){
+            if(user.getPoints() == max){
+                winners.add(user);
+                UserService.restrictPlayer(user);
+            }
+        }
+        return winners;
+    }
+
 
     /*//submits the recreated picture of one user --> adds to game.userRecreations
     public User submitPicture(Game gameInput, Long userId) {

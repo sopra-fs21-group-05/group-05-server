@@ -27,7 +27,7 @@ public class GameController {
     }
 
 
- /*   //returns setNr (int)
+    //returns setNr (int)
     //TODO: test once initial game setup is done
     @GetMapping("/game/set/{userId}")
     @ResponseStatus(HttpStatus.OK)
@@ -44,16 +44,16 @@ public class GameController {
 
     //returns coordinatesAssignedPicture (String)
     //TODO: fix & test once initial game setup is done
-    @GetMapping("/game/set/{userId}")
+    @GetMapping("/game/picture/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public String getAssignedPicture(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
         // convert API game to internal representation
         Game game = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
         //call game service methods
-        String coordinatesAssignedPicture = gameService.assignPicture(game, userId);
-        return coordinatesAssignedPicture;
-    }*/
+        User user = gameService.assignPicture(game, userId);
+        return user.getCoordinatesAssignedPicture();
+    }
 
     @GetMapping("/winner")
     @ResponseStatus(HttpStatus.OK)

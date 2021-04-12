@@ -23,9 +23,8 @@ public class Game implements Serializable {
     @Column(nullable = false)
     private int roundNr;
 
-    @Column(nullable = false)
     @OneToMany
-    private List<User> userList;
+    private List<User> userList = new ArrayList<User>();
 
     //TODO: create Map with key=userId and value=Base64 encoded recreated picture
     /*@OneToMany
@@ -39,6 +38,9 @@ public class Game implements Serializable {
 
     @OneToOne
     private Scoreboard scoreboard;
+
+    @OneToOne(mappedBy = "game")
+    private Gameroom gameroom;
 
 
     //TODO: uncomment if needed, else delete
@@ -61,4 +63,15 @@ public class Game implements Serializable {
     public void setScoreboard(Scoreboard scoreboard) { this.scoreboard = scoreboard; }
 
     public List<MaterialSet> getSetList() { return setList; }
+
+    public Gameroom getGameroom() { return gameroom; }
+    public void setGameroom(Gameroom gameroom) {
+        if (gameroom == null) {
+            if (this.gameroom != null) {
+                this.gameroom.setGame(null);
+            }
+        }
+        else {
+            gameroom.setGame(this);}
+        this.gameroom = gameroom; }
 }

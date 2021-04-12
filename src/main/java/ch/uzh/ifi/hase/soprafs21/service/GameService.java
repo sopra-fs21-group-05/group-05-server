@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
+import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
@@ -29,6 +30,24 @@ public class GameService {
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository) {
         this.gameRepository = gameRepository;
+    }
+
+    public Game createGame(Gameroom gameroom) {
+
+        checkIfGameExists(gameroom);
+
+        Game newGame = new Game();
+        newGame.setUserList(new ArrayList<>(gameroom.getUsers()));
+        newGame.setRoundNr(0);
+        newGame.setGameroom(gameroom);
+        //TODO: set material sets and scoreboard
+
+        // saves the given entity but data is only persisted in the database once flush() is called
+        newGame = gameRepository.save(newGame);
+        gameRepository.flush();
+
+        log.debug("Created Information for Game: {}", newGame);
+        return newGame;
     }
 
 
@@ -115,6 +134,16 @@ public class GameService {
             }
         }
         return winners;
+    }
+
+    private void checkIfGameExists(Gameroom gameroom) {
+        Game game = gameRepository.findByGameroom(gameroom);
+
+        String baseErrorMessage = "The game already exist. Therefore, the gamecould not be created!";
+
+        if (game != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, baseErrorMessage);
+        }
     }
 
 

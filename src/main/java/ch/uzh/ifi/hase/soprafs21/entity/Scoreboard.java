@@ -24,7 +24,7 @@ public class Scoreboard implements Serializable {
     @PostLoad
     public void postLoad() {
         if(game != null) {
-            this.userList = game.getUserList();
+            this.userList = new ArrayList<>(game.getUserList());
         }
     }
 

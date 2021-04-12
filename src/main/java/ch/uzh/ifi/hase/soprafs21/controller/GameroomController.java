@@ -77,6 +77,7 @@ public class GameroomController {
     public GameroomGetDTO getGameroom(@PathVariable("roomId") Long roomId) {
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
         GameroomGetDTO foundGameroom = DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(gameroom);
+        System.out.println(gameroom.getGame().getScoreboard());
         return foundGameroom;
     }
 
@@ -118,5 +119,13 @@ public class GameroomController {
         Gameroom gameroomInput = DTOMapper.INSTANCE.convertGameroomPostDTOtoEntity(gameroomPostDTO);
         gameroomService.joinGameroom(gameroomInput, user);
 
+    }
+
+    @PostMapping("/gamerooms/{roomId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void getWinner(@PathVariable("roomId") Long roomId) {
+        Gameroom gameroom = gameroomService.getGameroomById(roomId);
+        //TODO: get winner
     }
 }

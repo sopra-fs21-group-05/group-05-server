@@ -94,7 +94,7 @@ public class UserController {
         return DTOMapper.INSTANCE.convertEntityToUserAuthDTO(user);
     }
 
-
+    /*
     @GetMapping("/winner")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -108,6 +108,7 @@ public class UserController {
         return winners;
 
     }
+    */
 
     @GetMapping("/restricted")
     @ResponseStatus(HttpStatus.OK)

@@ -69,6 +69,16 @@ public class GameController {
 
     }
 
+    @GetMapping("/game/setup/{roomId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<String> gameSetup(@PathVariable Long roomId){
+        //get 16 pictures via api call to pixabay
+        List<String> pictures = gameService.getPicturesFromPixabay();
+
+        return pictures;
+    }
+
 
     //TODO: submit recreated picture for each player and extend the userRecreations in Game
     /*//save recreated pictures

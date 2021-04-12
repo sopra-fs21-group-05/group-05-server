@@ -54,18 +54,16 @@ public class GameService {
         return user;
     }
 
-    //assigns picture to recreate to specific player
+   /* //assigns picture to recreate to specific player
     public String assignPicture(Game game, Long userId) {
         Long gameId = game.getGameId();
         User user = getPlayerInGame(userId, gameId);
-
-
 
         String coordinatesAssignedPicture = null;
 
         //TODO: implementation once game initial setup is done
         return coordinatesAssignedPicture;
-    }
+    }*/
 
 
     //returns an existing game
@@ -97,11 +95,15 @@ public class GameService {
     }
 
 
-    //submits the recreated picture of one user --> adds to game.userRecreations
-    /*public String submitPicture(Game gameInput, Long userId) {
+    /*//submits the recreated picture of one user --> adds to game.userRecreations
+    public User submitPicture(Game gameInput, Long userId) {
         Game currentGame = getExistingGame(gameInput.getGameId());
+        User user = getPlayerInGame(userId, currentGame.getGameId());
 
-    }
+        //submit the picture
 
-     */
+        return user;
+    }*/
+
+
 }

@@ -12,7 +12,9 @@ import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class GameController {
     }
 
 
-    //returns setNr (int)
+ /*   //returns setNr (int)
     //TODO: test once initial game setup is done
     @GetMapping("/game/set/{userId}")
     @ResponseStatus(HttpStatus.OK)
@@ -51,7 +53,7 @@ public class GameController {
         //call game service methods
         String coordinatesAssignedPicture = gameService.assignPicture(game, userId);
         return coordinatesAssignedPicture;
-    }
+    }*/
 
 
     //TODO: submit recreated picture for each player and extend the userRecreations in Game
@@ -64,7 +66,21 @@ public class GameController {
         Game gameInput = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
 
         //call gameservice method
-        String submittedPicture = gameService.submitPicture(gameInput,userId);
+        User user = gameService.submitPicture(gameInput,userId);
+
+        //create String of ResponseEntity in order to return it
+        String locationAsString = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .build()
+                .toString();
+
+        URI locationAsUrl = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .build()
+                .toUri();
+
+        //returns url as a string
+        return ResponseEntity.created(locationAsUrl).body(locationAsString);
     }*/
 
 

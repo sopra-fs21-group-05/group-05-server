@@ -1,11 +1,11 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
+import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
-import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,17 +65,17 @@ public class GameService {
 
 
     //assigns the "next" materialset to specific player
-    //TODO: modify once MaterialSet (entity or enum) is created
+    //TODO: modify once createGame() is done
     public User assignMaterialset(Game game, Long userId) {
         Long gameId = game.getGameId();
         User user = getPlayerInGame(userId, gameId);
 
         MaterialSet newSet;
         int newSetNr;
-        int prevSetId = user.getMaterialSet().getSetNr();
+        int prevSetNr = user.getMaterialSet().getSetNr();
 
-        if(prevSetId != 4){
-            newSetNr = prevSetId+1;
+        if(prevSetNr != 4){
+            newSetNr = prevSetNr+1;
         }else{
             newSetNr = 0;
         }
@@ -86,16 +86,41 @@ public class GameService {
         return user;
     }
 
-    //assigns picture to recreate to specific player
-    public User assignPicture(Game game, Long userId) {
+    //assigns pictures to recreate to all players
+    //TODO: test once createGame endpoint is added
+    public Map<Long,String> assignPictures(Game game) {
         Long gameId = game.getGameId();
-        User user = getPlayerInGame(userId, gameId);
 
-        String coordinatesAssignedPicture = null;
-        user.setCoordinatesAssignedPicture(coordinatesAssignedPicture);
+        List<User> userList = game.getUserList();
 
-        //TODO: implementation once game initial setup is done
-        return user;
+        int i;
+
+        //create new list which contains all coordinates twice
+        List<GridCoordinates> gridCoordinates1 = game.getGridCoordinates();
+        List<GridCoordinates> gridCoordinates2 = game.getGridCoordinates();
+        List<GridCoordinates> newList = new ArrayList<>();
+        newList.addAll(gridCoordinates1);
+        newList.addAll(gridCoordinates2);
+
+
+        Random rand = new Random();
+        int numberOfElements = 2;
+
+        Map<Long,String> assignedCoordinates = new HashMap<>();
+
+        //assign each user random coordinates (each coordinate removed once assigned)
+        for(User u: userList){
+            for (i = 0; i<numberOfElements; i++){
+                int randomIndex = rand.nextInt(newList.size());
+                String randomElement = newList.get(randomIndex).toString();
+                newList.remove(randomIndex);
+                u.setCoordinatesAssignedPicture(randomElement);
+                //append map with userId as key and coordinatesAssignedPicture as value
+                assignedCoordinates.put(u.getId(),u.getCoordinatesAssignedPicture());
+            }
+        }
+
+        return assignedCoordinates;
     }
 
 

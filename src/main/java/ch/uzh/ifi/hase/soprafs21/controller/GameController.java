@@ -17,6 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class GameController {
@@ -42,17 +43,17 @@ public class GameController {
         return user.getMaterialSet().getSetNr();
     }
 
-    //returns coordinatesAssignedPicture (String)
+    //returns coordinatesAssignedPicture for all players
     //TODO: fix & test once initial game setup is done
-    @GetMapping("/game/picture/{userId}")
+    @GetMapping("/game/pictures")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String getAssignedPicture(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
+    public Map<Long,String> getAssignedPictures(@RequestBody GamePostDTO gamePostDTO){
         // convert API game to internal representation
         Game game = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
         //call game service methods
-        User user = gameService.assignPicture(game, userId);
-        return user.getCoordinatesAssignedPicture();
+        Map<Long,String> assignedCoordinates = gameService.assignPictures(game);
+        return assignedCoordinates;
     }
 
     @GetMapping("/winner")

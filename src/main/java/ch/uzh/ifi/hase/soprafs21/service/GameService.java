@@ -171,7 +171,8 @@ public class GameService {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .GET()
-                    .uri(URI.create("https://pixabay.com/api/?key=20947416-386f2cea1a25d1b2b70bdcc1f&q="+ keyword +"&image_type=photo&per_page=5"))
+                    .uri(URI.create("https://pixabay.com/api/?key=20947416-386f2cea1a25d1b2b70bdcc1f&q="+ keyword
+                            +"&image_type=photo&per_page=5&orientation=horizontal"))
                     .setHeader("User-Agent", "Java 11 HttpClient Bot")
                     .build();
 

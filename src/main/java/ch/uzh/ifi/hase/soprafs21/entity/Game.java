@@ -2,11 +2,9 @@ package ch.uzh.ifi.hase.soprafs21.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 
@@ -26,15 +24,16 @@ public class Game implements Serializable {
     @OneToMany
     private List<User> userList = new ArrayList<User>();
 
-    //TODO: create Map with key=userId and value=Base64 encoded recreated picture
-    /*@OneToMany
-    private Map<Long,Base64> userRecreations;*/
-
-    //TODO: grid pictures column with input from Pixabay API
+    //Map with key=userId and value=(Base64 encoded) string recreated picture
+    @ElementCollection
+    private Map<Long,String> userRecreations;
 
 
     @ElementCollection
-    private final List<MaterialSet> setList = new ArrayList<>();
+    private final List<GridCoordinates> gridCoordinates = Arrays.asList(GridCoordinates.values());
+
+    @ElementCollection
+    private final List<MaterialSet> setList = Arrays.asList(MaterialSet.values());
 
     @OneToOne(mappedBy = "game")
     private Scoreboard scoreboard;
@@ -59,6 +58,8 @@ public class Game implements Serializable {
     public List<User> getUserList() { return userList; }
     public void setUserList(List<User> userList) { this.userList = userList; }
 
+    public List<GridCoordinates> getGridCoordinates() { return gridCoordinates; }
+
     public Scoreboard getScoreboard() { return scoreboard; }
     public void setScoreboard(Scoreboard scoreboard) {
         if (scoreboard == null) {
@@ -72,6 +73,7 @@ public class Game implements Serializable {
 
     public List<MaterialSet> getSetList() { return setList; }
 
+
     public Gameroom getGameroom() { return gameroom; }
     public void setGameroom(Gameroom gameroom) {
         if (gameroom == null) {
@@ -82,4 +84,5 @@ public class Game implements Serializable {
         else {
             gameroom.setGame(this);}
         this.gameroom = gameroom; }
+
 }

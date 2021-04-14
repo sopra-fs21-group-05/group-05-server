@@ -77,7 +77,7 @@ public class GameroomController {
     public GameroomGetDTO getGameroom(@PathVariable("roomId") Long roomId) {
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
         GameroomGetDTO foundGameroom = DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(gameroom);
-        System.out.println(gameroom.getGame().getScoreboard());
+        //System.out.println(gameroom.getGame().getScoreboard());
         return foundGameroom;
     }
 

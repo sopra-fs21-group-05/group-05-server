@@ -30,7 +30,6 @@ public class GameController {
 
     //returns setNr (int) for assigned Materialset (per player)
     //TODO: test once initial game setup is done
-    //TODO: maybe assign Materialsets for all players in one request?
     @GetMapping("/game/set/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -46,14 +45,14 @@ public class GameController {
 
     //returns coordinatesAssignedPicture for all players
     //TODO: fix & test once initial game setup is done
-    @GetMapping("/game/pictures")
+    @GetMapping("/game/picture/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Map<Long,String> getAssignedPictures(@RequestBody GamePostDTO gamePostDTO){
+    public String getAssignedPicture(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
         // convert API game to internal representation
         Game game = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
         //call game service methods
-        Map<Long,String> assignedCoordinates = gameService.assignPictures(game);
+        String assignedCoordinates = gameService.assignPictures(game,userId);
         return assignedCoordinates;
     }
 

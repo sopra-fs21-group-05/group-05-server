@@ -28,8 +28,15 @@ public class Game implements Serializable {
     @ElementCollection
     private Map<Long,String> userRecreations = new HashMap<>();
 
+    //gridCoordinates1 and gridCoordinates2 are joined in gridCoordinates
     @ElementCollection
-    private final List<GridCoordinates> gridCoordinates = Arrays.asList(GridCoordinates.values());
+    private final List<GridCoordinates> gridCoordinates1 = Arrays.asList(GridCoordinates.values());
+
+    @ElementCollection
+    private final List<GridCoordinates> gridCoordinates2 = Arrays.asList(GridCoordinates.values());
+
+    @ElementCollection
+    private final List<GridCoordinates> gridCoordinates = new ArrayList<>();
 
     @ElementCollection
     private final List<MaterialSet> setList = Arrays.asList(MaterialSet.values());
@@ -62,7 +69,11 @@ public class Game implements Serializable {
     public List<User> getUserList() { return userList; }
     public void setUserList(List<User> userList) { this.userList = userList; }
 
-    public List<GridCoordinates> getGridCoordinates() { return gridCoordinates; }
+    public List<GridCoordinates> getGridCoordinates() {
+        gridCoordinates.addAll(gridCoordinates1);
+        gridCoordinates.addAll(gridCoordinates2);
+        return gridCoordinates;
+    }
 
     public Scoreboard getScoreboard() { return scoreboard; }
     public void setScoreboard(Scoreboard scoreboard) {

@@ -88,35 +88,23 @@ public class GameService {
 
     //assigns pictures to recreate to all players
     //TODO: test once createGame endpoint is added
-    public Map<Long,String> assignPictures(Game game) {
-        List<User> userList = getPlayers(game.getGameId());
+    public String assignPictures(Game game, Long userId) {
+        User user = getPlayerInGame(userId,game.getGameId());
+        List<GridCoordinates> coordinatesList = game.getGridCoordinates();
 
-        //create new list which contains all coordinates twice
-        List<GridCoordinates> gridCoordinates1 = game.getGridCoordinates();
-        List<GridCoordinates> gridCoordinates2 = game.getGridCoordinates();
-        List<GridCoordinates> newList = new ArrayList<>();
-        newList.addAll(gridCoordinates1);
-        newList.addAll(gridCoordinates2);
-
-        System.out.println(newList);
-
-        Map<Long,String> assignedCoordinates = new HashMap<>();
         Random rand = new Random();
         //assign each user random coordinates (each coordinate removed once assigned)
-        for(User u: userList){
-            //picks random index from list
-            int randomIndex = rand.nextInt(newList.size());
-            //gets the coordinates at the randomIndex
-            String randomElement = newList.get(randomIndex).toString();
-            //remove the index to prevent it to be picked again
-            newList.remove(randomIndex);
-            //assign the coordinates to player
-            u.setCoordinatesAssignedPicture(randomElement);
-            //append map with userId as key and coordinatesAssignedPicture as value
-            assignedCoordinates.put(u.getId(),u.getCoordinatesAssignedPicture());
-        }
 
-        return assignedCoordinates;
+        //picks random index from list
+        int randomIndex = rand.nextInt(coordinatesList.size());
+        //gets the coordinates at the randomIndex
+        String randomElement = coordinatesList.get(randomIndex).toString();
+        //remove the index to prevent it to be picked again
+        coordinatesList.remove(randomIndex);
+        //assign the coordinates to player
+        user.setCoordinatesAssignedPicture(randomElement);
+
+        return user.getCoordinatesAssignedPicture();
     }
 
 

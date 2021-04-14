@@ -89,12 +89,11 @@ public class GameService {
     //assigns pictures to recreate to all players
     //TODO: test once createGame endpoint is added
     public Map<Long,String> assignPictures(Game game) {
-        Game existingGame = getExistingGame(game.getGameId());
-        List<User> userList = game.getUserList();
+        List<User> userList = getPlayers(game.getGameId());
 
         //create new list which contains all coordinates twice
-        List<GridCoordinates> gridCoordinates1 = existingGame.getGridCoordinates();
-        List<GridCoordinates> gridCoordinates2 = existingGame.getGridCoordinates();
+        List<GridCoordinates> gridCoordinates1 = game.getGridCoordinates();
+        List<GridCoordinates> gridCoordinates2 = game.getGridCoordinates();
         List<GridCoordinates> newList = new ArrayList<>();
         newList.addAll(gridCoordinates1);
         newList.addAll(gridCoordinates2);
@@ -266,15 +265,17 @@ public class GameService {
     }
 
 
-    /*//submits the recreated picture of one user --> adds to game.userRecreations
-    public User submitPicture(Game gameInput, Long userId) {
+    //TODO: if picture is submitted per User, the game.userRecreations needs to be "cleared" after every round
+    //submits the recreated picture of one user --> adds to game.userRecreations
+    public Map<Long,String> submitPicture(Game gameInput,String submittedPicture, Long userId) {
         Game currentGame = getExistingGame(gameInput.getGameId());
-        User user = getPlayerInGame(userId, currentGame.getGameId());
 
-        //submit the picture
+        //append userRecreations Map in currentGame
+        currentGame.setUserRecreations(userId,submittedPicture);
 
-        return user;
-    }*/
+        //return Map
+        return currentGame.getUserRecreations();
+    }
 
 
 }

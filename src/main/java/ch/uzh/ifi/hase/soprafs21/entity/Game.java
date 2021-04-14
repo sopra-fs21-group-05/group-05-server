@@ -24,10 +24,9 @@ public class Game implements Serializable {
     @OneToMany
     private List<User> userList = new ArrayList<User>();
 
-    //Map with key=userId and value=(Base64 encoded) string recreated picture
+    //Map with key=userId and value=string(Base64 encoded) recreated picture
     @ElementCollection
-    private Map<Long,String> userRecreations;
-
+    private Map<Long,String> userRecreations = new HashMap<>();
 
     @ElementCollection
     private final List<GridCoordinates> gridCoordinates = Arrays.asList(GridCoordinates.values());
@@ -54,6 +53,11 @@ public class Game implements Serializable {
 
     public int getRoundNr() { return roundNr; }
     public void setRoundNr(int roundNr) { this.roundNr = roundNr; }
+
+    public Map<Long,String> getUserRecreations() { return userRecreations; }
+    public void setUserRecreations(Long userId, String submittedPicture) {
+        userRecreations.put(userId,submittedPicture);
+    }
 
     public List<User> getUserList() { return userList; }
     public void setUserList(List<User> userList) { this.userList = userList; }

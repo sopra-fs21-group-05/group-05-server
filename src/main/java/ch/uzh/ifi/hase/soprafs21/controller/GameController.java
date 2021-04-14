@@ -28,8 +28,9 @@ public class GameController {
     }
 
 
-    //returns setNr (int)
+    //returns setNr (int) for assigned Materialset (per player)
     //TODO: test once initial game setup is done
+    //TODO: maybe assign Materialsets for all players in one request?
     @GetMapping("/game/set/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -81,33 +82,34 @@ public class GameController {
     }
 
 
-    //TODO: submit recreated picture for each player and extend the userRecreations in Game
-    /*//save recreated pictures
+    //submit recreated picture for each player and extend the userRecreations in Game
     @PostMapping("/game/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<String> submitRecreatedPicture(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
+    public ResponseEntity<String> submitRecreatedPicture(@RequestBody GamePostDTO gamePostDTO, String submittedPicture, @PathVariable Long userId){
         // convert API game to internal representation
         Game gameInput = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
 
         //call gameservice method
-        User user = gameService.submitPicture(gameInput,userId);
+        Map<Long,String> userRecreations = gameService.submitPicture(gameInput,submittedPicture,userId);
 
-        //create String of ResponseEntity in order to return it
+
         String locationAsString = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .build()
+                .path("/{userId}")
+                .buildAndExpand(String.format("%d", userId))
                 .toString();
+
 
         URI locationAsUrl = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .build()
+                .path("/{userId}")
+                .buildAndExpand(String.format("%d", userId))
                 .toUri();
 
         //returns url as a string
         return ResponseEntity.created(locationAsUrl).body(locationAsString);
-    }*/
-
+    }
 
 
 }

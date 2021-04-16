@@ -53,7 +53,7 @@ public class GameService {
         newGame.setUserList(new ArrayList<>(gameroom.getUsers()));
         newGame.setRoundNr(0);
         newGame.setGameroom(gameroom);
-        //TODO: set material sets and scoreboard
+        //TODO: set material sets already here? and scoreboard
 
         // saves the given entity but data is only persisted in the database once flush() is called
         newGame = gameRepository.save(newGame);

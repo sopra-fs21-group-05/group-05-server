@@ -84,12 +84,13 @@ public class GameroomController {
     @PutMapping("/gamerooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void putGameroom(@PathVariable("roomId") Long roomId) {
+    public Long putGameroom(@PathVariable("roomId") Long roomId) {
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
         // create new game
         Game newGame = gameService.createGame(gameroom);
         //initialize game
         //TODO: start the game
+        return newGame.getGameId();
     }
 
     @GetMapping("/gamerooms/list")

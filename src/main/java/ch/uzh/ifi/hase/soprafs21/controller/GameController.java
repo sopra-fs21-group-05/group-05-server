@@ -52,7 +52,7 @@ public class GameController {
         // convert API game to internal representation
         Game game = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
         //call game service methods
-        String assignedCoordinates = gameService.assignPictures(game,userId);
+        String assignedCoordinates = gameService.assignPicture(game,userId);
         return assignedCoordinates;
     }
 
@@ -85,7 +85,8 @@ public class GameController {
     @PostMapping("/game/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<String> submitRecreatedPicture(@RequestBody GamePostDTO gamePostDTO, String submittedPicture, @PathVariable Long userId){
+    public ResponseEntity<String> submitRecreatedPicture(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
+        String submittedPicture = gamePostDTO.getSubmittedPicture();
         // convert API game to internal representation
         Game gameInput = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
 
@@ -95,19 +96,18 @@ public class GameController {
 
         String locationAsString = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{userId}")
-                .buildAndExpand(String.format("%d", userId))
+                .build()
                 .toString();
 
 
         URI locationAsUrl = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{userId}")
-                .buildAndExpand(String.format("%d", userId))
+                .build()
                 .toUri();
 
         //returns url as a string
         return ResponseEntity.created(locationAsUrl).body(locationAsString);
+        //return userRecreations;
     }
 
 

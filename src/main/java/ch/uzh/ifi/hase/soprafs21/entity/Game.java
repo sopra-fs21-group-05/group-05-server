@@ -25,6 +25,8 @@ public class Game implements Serializable {
     private List<User> userList = new ArrayList<User>();
 
     //Map with key=userId and value=string(Base64 encoded) recreated picture
+    @MapKeyColumn(name="userId")
+    @Column(name="submittedPicture")
     @ElementCollection
     private Map<Long,String> userRecreations = new HashMap<>();
 
@@ -40,6 +42,7 @@ public class Game implements Serializable {
 
     @ElementCollection
     private final List<MaterialSet> setList = Arrays.asList(MaterialSet.values());
+
 
     @OneToOne(mappedBy = "game")
     private Scoreboard scoreboard;
@@ -62,9 +65,10 @@ public class Game implements Serializable {
     public void setRoundNr(int roundNr) { this.roundNr = roundNr; }
 
     public Map<Long,String> getUserRecreations() { return userRecreations; }
-    public void setUserRecreations(Long userId, String submittedPicture) {
-        userRecreations.put(userId,submittedPicture);
+    public void setUserRecreations(Map<Long,String> userRecreations){
+        this.userRecreations = userRecreations;
     }
+
 
     public List<User> getUserList() { return userList; }
     public void setUserList(List<User> userList) { this.userList = userList; }

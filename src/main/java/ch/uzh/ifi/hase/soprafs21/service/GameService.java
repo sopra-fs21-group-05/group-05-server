@@ -70,6 +70,11 @@ public class GameService {
         Long gameId = game.getGameId();
         User user = getPlayerInGame(userId, gameId);
 
+        String baseErrorMessage = "The provided %s is not the current %s. ";
+        if(game.getRoundNr() != gameRepository.getOne(game.getGameId()).getRoundNr()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "roundNr", "roundNr"));
+        }
+
         MaterialSet newSet;
         int newSetNr;
         int prevSetNr = user.getMaterialSet().getSetNr();
@@ -88,9 +93,14 @@ public class GameService {
 
     //assigns pictures to recreate to all players
     //TODO: test once createGame endpoint is added
-    public String assignPictures(Game game, Long userId) {
+    public String assignPicture(Game game, Long userId) {
         User user = getPlayerInGame(userId,game.getGameId());
         List<GridCoordinates> coordinatesList = game.getGridCoordinates();
+
+        String baseErrorMessage = "The provided %s is not the current %s. ";
+        if(game.getRoundNr() != gameRepository.getOne(game.getGameId()).getRoundNr()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "roundNr", "roundNr"));
+        }
 
         Random rand = new Random();
         //assign each user random coordinates (each coordinate removed once assigned)
@@ -245,7 +255,7 @@ public class GameService {
     private void checkIfGameExists(Gameroom gameroom) {
         Game game = gameRepository.findByGameroom(gameroom);
 
-        String baseErrorMessage = "The game already exist. Therefore, the gamecould not be created!";
+        String baseErrorMessage = "The game already exist. Therefore, the game could not be created!";
 
         if (game != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, baseErrorMessage);
@@ -255,11 +265,22 @@ public class GameService {
 
     //TODO: if picture is submitted per User, the game.userRecreations needs to be "cleared" after every round
     //submits the recreated picture of one user --> adds to game.userRecreations
-    public Map<Long,String> submitPicture(Game gameInput,String submittedPicture, Long userId) {
+    public Map<Long,String> submitPicture(Game gameInput,String submittedPicture,Long userId) {
         Game currentGame = getExistingGame(gameInput.getGameId());
+        User user = getPlayerInGame(userId,currentGame.getGameId());
+        Map<Long,String> submissions = new HashMap<>();
+        submissions.putAll(currentGame.getUserRecreations());
+
+        String baseErrorMessage = "The provided %s was not found. ";
+
+        if(submittedPicture==null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "picture"));
+        }
 
         //append userRecreations Map in currentGame
-        currentGame.setUserRecreations(userId,submittedPicture);
+        submissions.put(user.getId(),submittedPicture);
+        System.out.println(submissions);
+        currentGame.setUserRecreations(submissions);
 
         //return Map
         return currentGame.getUserRecreations();

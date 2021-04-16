@@ -44,6 +44,7 @@ public interface DTOMapper {
 
     @Mapping(source = "password", target = "password")
     @Mapping(source = "roomname", target = "roomname")
+    @Mapping(source = "roomId", target = "id")
     Gameroom convertGameroomPostDTOtoEntity(GameroomPostDTO gameroomPostDTO);
 
     @Mapping(source = "id", target = "id")

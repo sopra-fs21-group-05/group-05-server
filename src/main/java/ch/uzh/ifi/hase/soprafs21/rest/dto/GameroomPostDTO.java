@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.rest.dto;
 public class GameroomPostDTO {
 
     private String roomname;
+    private Long roomId;
     private String password;
     private Long userId;
 
@@ -16,4 +17,7 @@ public class GameroomPostDTO {
 
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
+
+    public Long getRoomId() { return roomId; }
+    public void setRoomId(Long roomId) { this.roomId = roomId; }
 }

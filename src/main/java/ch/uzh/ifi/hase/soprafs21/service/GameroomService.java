@@ -66,18 +66,21 @@ public class GameroomService {
 
     public Gameroom joinGameroom(Gameroom gameroom, User user){
 
-        Gameroom gameroomByName = checkGameroomCredentials(gameroom);
+        Gameroom gameroomById = checkGameroomCredentials(gameroom);
 
-        List<User> currentUsers = gameroomByName.getUsers();
+        List<User> currentUsers = gameroomById.getUsers();
+        if (currentUsers.contains(user)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already joined this gameroom!");
+        }
         currentUsers.add(user);
-        gameroomByName.setUsers(currentUsers);
+        gameroomById.setUsers(currentUsers);
 
-        gameroomByName = gameroomRespository.save(gameroomByName);
+        gameroomById = gameroomRespository.save(gameroomById);
         gameroomRespository.flush();
 
-        log.debug("{} added to gameroom: {}", user.getUsername(), gameroomByName.getRoomname());
+        log.debug("{} added to gameroom: {}", user.getUsername(), gameroomById.getRoomname());
 
-        return gameroomByName;
+        return gameroomById;
     }
 
     private void checkIfGameroomExists(Gameroom gameroom) {
@@ -91,19 +94,19 @@ public class GameroomService {
     }
 
     private Gameroom checkGameroomCredentials(Gameroom gameroom){
-        Gameroom gameroomByName = gameroomRespository.findByRoomname(gameroom.getRoomname());
+        Gameroom gameroomById = gameroomRespository.getOne(gameroom.getId());
 
         //throw exception if no user with this username is found
         String baseErrorMessage = "Credentials are invalid.";
-        if (gameroomByName == null) {
+        if (gameroomById == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, baseErrorMessage);
         }
 
         //throw exception if the password doesn't match for the username
-        if(!gameroomByName.getPassword().equals(gameroom.getPassword())){
+        if(!gameroomById.getPassword().equals(gameroom.getPassword())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, baseErrorMessage);
         }
 
-        return gameroomByName;
+        return gameroomById;
     }
 }

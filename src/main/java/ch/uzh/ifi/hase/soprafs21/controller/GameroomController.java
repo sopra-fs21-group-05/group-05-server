@@ -71,7 +71,7 @@ public class GameroomController {
         return ResponseEntity.created(locationAsUrl).body(locationAsString);
     }
 
-    @GetMapping("/gamerooms/{roomId}")
+    @GetMapping("/gamerooms/overview/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameroomGetDTO getGameroom(@PathVariable("roomId") Long roomId) {

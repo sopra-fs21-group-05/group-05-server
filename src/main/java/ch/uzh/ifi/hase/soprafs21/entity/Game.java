@@ -8,6 +8,8 @@ import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 
+import static java.util.Collections.emptyList;
+
 @Entity
 @Table(name = "GAME")
 public class Game implements Serializable {
@@ -23,6 +25,11 @@ public class Game implements Serializable {
 
     @OneToMany
     private List<User> userList = new ArrayList<User>();
+
+
+    @OneToMany
+    private List<Picture> gridPictures;
+
 
     //Map with key=userId and value=string(Base64 encoded) recreated picture
     @MapKeyColumn(name="userId")
@@ -104,4 +111,30 @@ public class Game implements Serializable {
             gameroom.setGame(this);}
         this.gameroom = gameroom; }
 
+    public List<String> getGridPictures() {
+        List<String> picturesAsStrings= new ArrayList<>();
+        for(Picture picture: gridPictures){
+            picturesAsStrings.add(picture.getEncodedPicture());
+        }
+        return picturesAsStrings;
+    }
+
+    public void setGridPictures(List<Picture> gridPictures) {
+        this.gridPictures = gridPictures;
+    }
+
+    @Converter
+    public class StringListConverter implements AttributeConverter<List<String>, String> {
+        private static final String SPLIT_CHAR = ";";
+
+        @Override
+        public String convertToDatabaseColumn(List<String> stringList) {
+            return stringList != null ? String.join(SPLIT_CHAR, stringList) : "";
+        }
+
+        @Override
+        public List<String> convertToEntityAttribute(String string) {
+            return string != null ? Arrays.asList(string.split(SPLIT_CHAR)) : emptyList();
+        }
+    }
 }

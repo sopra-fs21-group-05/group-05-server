@@ -2,13 +2,17 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
+import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
+import ch.uzh.ifi.hase.soprafs21.entity.Picture;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GamePostDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.GameService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -75,7 +79,12 @@ public class GameController {
     @ResponseBody
     public List<String> gameSetup(@PathVariable Long roomId){
         //get 16 pictures via api call to pixabay
-        List<String> pictures = gameService.getPicturesFromPixabay();
+        Gameroom gameroom = gameService.getGameroomById(roomId);
+        List<Picture> pictureList = gameService.makePictureList();
+
+        Game game = gameService.createGame(gameroom);
+        gameService.assignGridPictures(game,pictureList);
+        List<String> pictures = game.getGridPictures();
 
         return pictures;
     }

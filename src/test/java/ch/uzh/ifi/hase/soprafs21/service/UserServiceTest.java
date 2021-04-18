@@ -130,7 +130,7 @@ public class UserServiceTest {
         assertThrows(ResponseStatusException.class, () -> userService.logoutUser(2L));
 
     }
-
+    /*
     @Test
     void getWinner_success(){
         //creating 2 new users (can't use create user function as it always returns testUser as specified in the setup)
@@ -158,6 +158,7 @@ public class UserServiceTest {
         assertFalse(user1.getRestrictedMode());
         assertTrue(user2.getRestrictedMode());
     }
+
 
     @Test
     void getWinner_two_winners(){
@@ -193,6 +194,6 @@ public class UserServiceTest {
 
 
     }
-
+ */
 
 }

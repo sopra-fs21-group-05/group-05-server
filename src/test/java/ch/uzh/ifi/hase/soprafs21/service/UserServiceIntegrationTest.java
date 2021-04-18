@@ -3,13 +3,17 @@ package ch.uzh.ifi.hase.soprafs21.service;
 import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,16 +33,17 @@ public class UserServiceIntegrationTest {
     @Autowired
     private UserService userService;
 
+
     @BeforeEach
     public void setup() {
         userRepository.deleteAll();
+
     }
 
     @Test
     public void createUser_validInputs_success() {
-        // given
         assertNull(userRepository.findByUsername("testUsername"));
-
+        // Create a user
         User testUser = new User();
         testUser.setPassword("testName");
         testUser.setUsername("testUsername");
@@ -51,7 +56,7 @@ public class UserServiceIntegrationTest {
         assertEquals(testUser.getPassword(), createdUser.getPassword());
         assertEquals(testUser.getUsername(), createdUser.getUsername());
         assertNull(createdUser.getToken());
-        //assertEquals(UserStatus.OFFLINE, createdUser.getStatus());
+        assertEquals(UserStatus.OFFLINE, createdUser.getStatus());
     }
 
     @Test
@@ -59,18 +64,90 @@ public class UserServiceIntegrationTest {
         assertNull(userRepository.findByUsername("testUsername"));
 
         User testUser = new User();
-        testUser.setPassword("testName");
+        testUser.setPassword("password");
         testUser.setUsername("testUsername");
-        User createdUser = userService.createUser(testUser);
+        userService.createUser(testUser);
 
         // attempt to create second user with same username
         User testUser2 = new User();
-
-        // change the name but forget about the username
-        testUser2.setPassword("testName2");
+        testUser2.setPassword("password");
         testUser2.setUsername("testUsername");
 
         // check that an error is thrown
         assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser2));
+    }
+
+    @Test
+    public void loginUser_success() {
+        //create user
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("testUsername");
+        userService.createUser(testUser);
+
+        //login user
+        User loggedInUser = userService.loginUser(testUser.getUsername(),testUser.getPassword());
+
+        assertEquals(testUser.getId(), loggedInUser.getId());
+        assertEquals("1L", loggedInUser.getToken());
+        assertEquals(UserStatus.ONLINE, loggedInUser.getStatus());
+
+
+    }
+
+    @Test
+    public void loginUser_nonExistingUser_fail(){
+        //make a user, but don't save it to the repository
+        User notExisting = new User();
+        notExisting.setUsername("noUsername");
+        notExisting.setPassword("noPassword");
+
+        assertThrows(ResponseStatusException.class, () -> userService.loginUser(notExisting.getUsername(),notExisting.getPassword()));
+    }
+
+    @Test
+    void loginUser_falsePassword_fail(){
+        //create user
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("testUsername");
+        userService.createUser(testUser);
+
+        //try to login with wrong password
+        assertThrows(ResponseStatusException.class, () -> userService.loginUser(testUser.getUsername(), "notPassword"));
+    }
+
+    @Test
+    void logoutUser_success(){
+        //create user
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("testUsername");
+        userService.createUser(testUser);
+
+        //login user
+        userService.loginUser(testUser.getUsername(),testUser.getPassword());
+
+        //logout user
+        User loggedOut = userService.logoutUser(testUser.getId());
+
+        assertEquals(UserStatus.OFFLINE, loggedOut.getStatus());
+        assertNull(loggedOut.getToken());
+    }
+
+    @Test
+    public void getExistingUser_success() {
+        //create user
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("testUsername");
+        userService.createUser(testUser);
+
+        User existingUser = userService.getExistingUser(testUser.getId());
+
+        //test if all fields that were set are equal
+        assertEquals(testUser.getId(), existingUser.getId());
+        assertEquals(testUser.getToken(), existingUser.getToken());
+
     }
 }

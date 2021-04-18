@@ -51,6 +51,13 @@ public class GameroomService {
         return gameroomById;
     }
 
+    public Gameroom addGame(Gameroom gameroom, Game game){
+        gameroom.setGame(game);
+        gameroom = gameroomRespository.save(gameroom);
+        gameroomRespository.flush();
+        return gameroom;
+    }
+
     public Gameroom createGameroom(Gameroom newGameroom) {
 
         //check if gameroom already exists

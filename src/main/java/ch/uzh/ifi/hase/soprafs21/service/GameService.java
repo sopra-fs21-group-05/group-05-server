@@ -8,6 +8,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.Picture;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
+import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class GameService {
     private final GameRepository gameRepository;
     private final GameroomService gameroomService;
     private final PictureRepository pictureRepository;
+    private final UserRepository userRepository;
 
     private final HttpClient httpClient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2)
@@ -47,10 +49,12 @@ public class GameService {
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
                        @Qualifier("gameroomService") GameroomService gameroomService,
-                       @Qualifier("pictureRepository") PictureRepository pictureRepository) {
+                       @Qualifier("pictureRepository") PictureRepository pictureRepository,
+                       @Qualifier("userRepository") UserRepository userRepository) {
         this.gameRepository = gameRepository;
         this.gameroomService = gameroomService;
         this.pictureRepository = pictureRepository;
+        this.userRepository = userRepository;
     }
 
     public Game createGame(Gameroom gameroom) {
@@ -58,15 +62,29 @@ public class GameService {
         checkIfGameExists(gameroom);
 
         Game newGame = new Game();
-        newGame.setUserList(new ArrayList<>(gameroom.getUsers()));
+        List<User> users = new ArrayList<>(gameroom.getUsers());
+        List<User> players = new ArrayList<>();
+
+        //assign each user a material set
+        MaterialSet[] sets = MaterialSet.values();
+        int SetNr = 0;
+        for (User user : users) {
+            //User userById = userRepository.getOne(user.getId());
+            user.setMaterialSet(sets[SetNr]);
+            SetNr++;
+
+            user = userRepository.save(user);
+            userRepository.flush();
+
+            players.add(user);
+        }
+
+        newGame.setUserList(players);
         newGame.setRoundNr(0);
         newGame.setGameroom(gameroom);
 
 
-
         //TODO: set material sets and scoreboard
-
-        //TODO: set material sets already here? and scoreboard
 
 
         // saves the given entity but data is only persisted in the database once flush() is called

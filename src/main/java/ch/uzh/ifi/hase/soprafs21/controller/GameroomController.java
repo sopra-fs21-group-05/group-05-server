@@ -77,19 +77,20 @@ public class GameroomController {
     public GameroomGetDTO getGameroom(@PathVariable("roomId") Long roomId) {
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
         GameroomGetDTO foundGameroom = DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(gameroom);
-        //System.out.println(gameroom.getGame().getScoreboard());
+
         return foundGameroom;
     }
 
-    @PutMapping("/gamerooms/{roomId}")
+    @PutMapping("/gamerooms/overview/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Long putGameroom(@PathVariable("roomId") Long roomId) {
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
-        // create new game
+        // create and initialize new game
         Game newGame = gameService.createGame(gameroom);
-        //initialize game
-        //TODO: start the game
+        //add game to gameroom
+        gameroom = gameroomService.addGame(gameroom, newGame);
+
         return newGame.getGameId();
     }
 

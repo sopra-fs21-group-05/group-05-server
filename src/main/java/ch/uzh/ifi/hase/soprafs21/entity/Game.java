@@ -47,9 +47,6 @@ public class Game implements Serializable {
     @ElementCollection
     private final List<GridCoordinates> gridCoordinates = new ArrayList<>();
 
-    @ElementCollection
-    private final List<MaterialSet> setList = Arrays.asList(MaterialSet.values());
-
 
     @OneToOne(mappedBy = "game")
     private Scoreboard scoreboard;
@@ -96,8 +93,6 @@ public class Game implements Serializable {
         else {
             scoreboard.setGame(this);}
         this.scoreboard = scoreboard; }
-
-    public List<MaterialSet> getSetList() { return setList; }
 
 
     public Gameroom getGameroom() { return gameroom; }

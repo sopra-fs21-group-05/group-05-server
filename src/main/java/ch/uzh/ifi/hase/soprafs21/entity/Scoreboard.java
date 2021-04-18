@@ -3,7 +3,9 @@ package ch.uzh.ifi.hase.soprafs21.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "SCOREBOARD")
@@ -28,10 +30,19 @@ public class Scoreboard implements Serializable {
         }
     }
 
-    //TODO: needed? else remove
     @ElementCollection
-    private List<Integer> previousRounds= new ArrayList<>();
+    private List<Integer> rounds= new ArrayList<>();
 
+    //Map with key=userId and points (int)
+    @MapKeyColumn(name="userId")
+    @Column(name="pointsOfUsers")
+    @ElementCollection
+    private Map<Long,Integer> userPoints = new HashMap<>();
+
+    public Map<Long,Integer> getUserPoints() { return userPoints; }
+    public void setUserPoints(Map<Long,Integer> userPoints){
+        this.userPoints = userPoints;
+    }
 
     public Long getScoreboardId() { return scoreboardId; }
     public void setScoreboardId(Long scoreboardId) { this.scoreboardId = scoreboardId; }
@@ -41,6 +52,6 @@ public class Scoreboard implements Serializable {
 
     public List<User> getUserList() { return userList; }
 
-    public List<Integer> getPreviousRounds() { return previousRounds; }
-    public void setPreviousRounds(List<Integer> previousRounds) { this.previousRounds = previousRounds; }
+    public List<Integer> getrounds() { return rounds; }
+    public void setrounds(List<Integer> rounds) { this.rounds = rounds; }
 }

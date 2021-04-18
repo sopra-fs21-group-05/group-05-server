@@ -2,10 +2,7 @@ package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
-import ch.uzh.ifi.hase.soprafs21.entity.Game;
-import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
-import ch.uzh.ifi.hase.soprafs21.entity.Picture;
-import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.entity.*;
 import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
@@ -40,6 +37,7 @@ public class GameService {
     private final GameroomService gameroomService;
     private final PictureRepository pictureRepository;
     private final UserRepository userRepository;
+    private final ScoreboardService scoreboardService;
 
     private final HttpClient httpClient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2)
@@ -50,11 +48,13 @@ public class GameService {
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
                        @Qualifier("gameroomService") GameroomService gameroomService,
                        @Qualifier("pictureRepository") PictureRepository pictureRepository,
-                       @Qualifier("userRepository") UserRepository userRepository) {
+                       @Qualifier("userRepository") UserRepository userRepository,
+                       @Qualifier("scoreboardService") ScoreboardService scoreboardService) {
         this.gameRepository = gameRepository;
         this.gameroomService = gameroomService;
         this.pictureRepository = pictureRepository;
         this.userRepository = userRepository;
+        this.scoreboardService = scoreboardService;
     }
 
     public Game createGame(Gameroom gameroom) {
@@ -83,11 +83,14 @@ public class GameService {
         newGame.setRoundNr(0);
         newGame.setGameroom(gameroom);
 
-
-        //TODO: set material sets and scoreboard
-
-
         // saves the given entity but data is only persisted in the database once flush() is called
+        newGame = gameRepository.save(newGame);
+        gameRepository.flush();
+
+        //create scoreboard and assign it
+        Scoreboard scoreboard = scoreboardService.createScoreboard(newGame);
+        newGame.setScoreboard(scoreboard);
+
         newGame = gameRepository.save(newGame);
         gameRepository.flush();
 

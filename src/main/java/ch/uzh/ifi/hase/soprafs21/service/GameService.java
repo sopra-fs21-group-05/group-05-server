@@ -2,10 +2,10 @@ package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
-import ch.uzh.ifi.hase.soprafs21.entity.*;
+import ch.uzh.ifi.hase.soprafs21.entity.Game;
+import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
+import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
-import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
-import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +34,6 @@ public class GameService {
     private final Logger log = LoggerFactory.getLogger(GameService.class);
 
     private final GameRepository gameRepository;
-    private final GameroomService gameroomService;
-    private final PictureRepository pictureRepository;
-    private final UserRepository userRepository;
-    private final ScoreboardService scoreboardService;
 
     private final HttpClient httpClient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2)
@@ -45,16 +41,8 @@ public class GameService {
 
 
     @Autowired
-    public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
-                       @Qualifier("gameroomService") GameroomService gameroomService,
-                       @Qualifier("pictureRepository") PictureRepository pictureRepository,
-                       @Qualifier("userRepository") UserRepository userRepository,
-                       @Qualifier("scoreboardService") ScoreboardService scoreboardService) {
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository) {
         this.gameRepository = gameRepository;
-        this.gameroomService = gameroomService;
-        this.pictureRepository = pictureRepository;
-        this.userRepository = userRepository;
-        this.scoreboardService = scoreboardService;
     }
 
     public Game createGame(Gameroom gameroom) {
@@ -62,45 +50,17 @@ public class GameService {
         checkIfGameExists(gameroom);
 
         Game newGame = new Game();
-        List<User> users = new ArrayList<>(gameroom.getUsers());
-        List<User> players = new ArrayList<>();
-
-        //assign each user a material set
-        MaterialSet[] sets = MaterialSet.values();
-        int SetNr = 0;
-        for (User user : users) {
-            //User userById = userRepository.getOne(user.getId());
-            user.setMaterialSet(sets[SetNr]);
-            SetNr++;
-
-            user = userRepository.save(user);
-            userRepository.flush();
-
-            players.add(user);
-        }
-
-        newGame.setUserList(players);
+        newGame.setUserList(new ArrayList<>(gameroom.getUsers()));
         newGame.setRoundNr(0);
         newGame.setGameroom(gameroom);
+        //TODO: set material sets and scoreboard
 
         // saves the given entity but data is only persisted in the database once flush() is called
         newGame = gameRepository.save(newGame);
         gameRepository.flush();
 
-        //create scoreboard and assign it
-        Scoreboard scoreboard = scoreboardService.createScoreboard(newGame);
-        newGame.setScoreboard(scoreboard);
-
-        newGame = gameRepository.save(newGame);
-        gameRepository.flush();
-
         log.debug("Created Information for Game: {}", newGame);
         return newGame;
-    }
-
-    public Game assignGridPictures(Game game, List<Picture> pictureList){
-        game.setGridPictures(pictureList);
-        return game;
     }
 
 
@@ -222,11 +182,9 @@ public class GameService {
             byte[] byteArray = getPictureFromUrl(url);
             String encodedPicture = encodePicture(byteArray);
             pictures.add(encodedPicture);
-
         }
         return pictures;
     }
-
 
     private String sendGetRequest(String keyword) {
         try {
@@ -304,10 +262,6 @@ public class GameService {
         }
     }
 
-    public Gameroom getGameroomById(Long roomId){
-        return gameroomService.getGameroomById(roomId);
-    }
-
 
     //TODO: if picture is submitted per User, the game.userRecreations needs to be "cleared" after every round
     //submits the recreated picture of one user --> adds to game.userRecreations
@@ -332,28 +286,9 @@ public class GameService {
         return currentGame.getUserRecreations();
     }
 
-    public List<Picture> makePictureList(){
-        List<String> pictureStringList = getPicturesFromPixabay();
-        List<Picture> pictureList = new ArrayList<>();
 
-        for (String string: pictureStringList){
-            Picture picture= createPicture(string);
-            pictureList.add(picture);
-        }
+    //returns all submitted pictures of all players in that round
+   /* public Map<Long, String> getSubmittedPictures() {
 
-        return pictureList;
-    }
-
-    public Picture createPicture(String picture){
-            Picture newPicture = new Picture();
-            newPicture.setEncodedPicture(picture);
-            pictureRepository.save(newPicture);
-            pictureRepository.flush();
-            return newPicture;
-        }
-
-    }
-
-
-
-
+    }*/
+}

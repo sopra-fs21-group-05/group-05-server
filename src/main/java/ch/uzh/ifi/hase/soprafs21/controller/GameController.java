@@ -120,4 +120,15 @@ public class GameController {
     }
 
 
+   /* @GetMapping("/game/round/{roundNr}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Map<Long,String> getSubmittedPictures(@PathVariable Long roomId){
+        //get 16 pictures via api call to pixabay
+        Map<Long,String> submittedPictures = gameService.getSubmittedPictures();
+
+        return submittedPictures;
+    }*/
+
+
 }

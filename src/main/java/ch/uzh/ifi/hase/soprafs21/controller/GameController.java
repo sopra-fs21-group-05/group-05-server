@@ -82,7 +82,7 @@ public class GameController {
         Gameroom gameroom = gameService.getGameroomById(roomId);
         List<Picture> pictureList = gameService.makePictureList();
 
-        Game game = gameService.createGame(gameroom);
+        Game game = gameroom.getGame();
         gameService.assignGridPictures(game,pictureList);
         List<String> pictures = game.getGridPictures();
 

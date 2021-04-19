@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
+import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 
@@ -45,7 +46,7 @@ public class User implements Serializable {
     private MaterialSet materialSet;
 
     @Column
-    private String coordinatesAssignedPicture;
+    private GridCoordinates coordinatesAssignedPicture;
 
 
     public Long getId() { return id; }
@@ -96,7 +97,7 @@ public class User implements Serializable {
         this.materialSet = materialSet;
     }
 
-    public String getCoordinatesAssignedPicture() { return coordinatesAssignedPicture; }
+    public GridCoordinates getCoordinatesAssignedPicture() { return coordinatesAssignedPicture; }
 
-    public void setCoordinatesAssignedPicture(String coordinatesAssignedPicture) { this.coordinatesAssignedPicture = coordinatesAssignedPicture; }
+    public void setCoordinatesAssignedPicture(GridCoordinates coordinatesAssignedPicture) { this.coordinatesAssignedPicture = coordinatesAssignedPicture; }
 }

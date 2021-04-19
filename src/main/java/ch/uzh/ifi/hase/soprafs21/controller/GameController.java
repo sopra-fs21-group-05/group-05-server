@@ -52,11 +52,11 @@ public class GameController {
     @GetMapping("/game/picture/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String getAssignedPicture(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
+    public Map<String, String> getAssignedPicture(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
         // convert API game to internal representation
         Game game = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
         //call game service methods
-        String assignedCoordinates = gameService.assignPicture(game,userId);
+        Map<String,String> assignedCoordinates = gameService.assignPicture(game,userId);
         return assignedCoordinates;
     }
 

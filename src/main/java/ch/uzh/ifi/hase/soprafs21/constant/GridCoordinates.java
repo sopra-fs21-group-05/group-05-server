@@ -2,6 +2,14 @@ package ch.uzh.ifi.hase.soprafs21.constant;
 
 
 public enum GridCoordinates {
-    A1,A2,A3,A4,B1,B2,B3,B4,C1,C2,C3,C4,D1,D2,D3,D4;
+    A1(0),A2(1),A3(2),A4(3),B1(4),B2(5),B3(6),B4(7),C1(8),C2(9),C3(10),C4(11),D1(12),D2(13),D3(14),D4(15);
+
+    private final Integer pictureNr;
+
+    private GridCoordinates(final Integer pictureNr){this.pictureNr=pictureNr;}
+
+    public Integer getPictureNr(){
+        return pictureNr;
+    }
 
 }

@@ -133,7 +133,7 @@ public class GameService {
 
     //assigns pictures to recreate to all players
     //TODO: test once createGame endpoint is added
-    public String assignPicture(Game game, Long userId) {
+    public Map<String, String> assignPicture(Game game, Long userId) {
         User user = getPlayerInGame(userId,game.getGameId());
         List<GridCoordinates> coordinatesList = game.getGridCoordinates();
 
@@ -148,13 +148,20 @@ public class GameService {
         //picks random index from list
         int randomIndex = rand.nextInt(coordinatesList.size());
         //gets the coordinates at the randomIndex
-        String randomElement = coordinatesList.get(randomIndex).toString();
+        GridCoordinates randomElement = coordinatesList.get(randomIndex);
         //remove the index to prevent it to be picked again
         coordinatesList.remove(randomIndex);
         //assign the coordinates to player
         user.setCoordinatesAssignedPicture(randomElement);
 
-        return user.getCoordinatesAssignedPicture();
+        GridCoordinates coordinates = user.getCoordinatesAssignedPicture();
+
+        int pictureIndex = coordinates.getPictureNr();
+
+        Map<String, String> assignedPicture = new HashMap<>();
+        assignedPicture.put(coordinates.toString(),game.getGridPictures().get(pictureIndex));
+
+        return assignedPicture;
     }
 
 

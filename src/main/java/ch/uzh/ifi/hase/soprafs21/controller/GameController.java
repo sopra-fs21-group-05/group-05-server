@@ -119,16 +119,16 @@ public class GameController {
         //return userRecreations;
     }
 
-
-   /* @GetMapping("/game/round/{roundNr}")
+    //get a list of all submitted pictures in the current round
+   @GetMapping("/game/recreations/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Map<Long,String> getSubmittedPictures(@PathVariable Long roomId){
-        //get 16 pictures via api call to pixabay
-        Map<Long,String> submittedPictures = gameService.getSubmittedPictures();
+    public List<String> getSubmittedPictures(@PathVariable Long gameId){
+        //get list of all submitted pictures
+        List<String> submittedPictures = gameService.getSubmittedPictures(gameId);
 
         return submittedPictures;
-    }*/
+    }
 
 
 }

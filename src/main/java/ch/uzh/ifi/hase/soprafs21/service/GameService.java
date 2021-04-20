@@ -119,10 +119,10 @@ public class GameService {
         int newSetNr;
         int prevSetNr = user.getMaterialSet().getSetNr();
 
-        if(prevSetNr != 4){
+        if(prevSetNr != 5){
             newSetNr = prevSetNr+1;
         }else{
-            newSetNr = 0;
+            newSetNr = 1;
         }
 
         newSet = MaterialSet.nameOfSetNr(newSetNr);
@@ -154,12 +154,13 @@ public class GameService {
         //assign the coordinates to player
         user.setCoordinatesAssignedPicture(randomElement);
 
-        GridCoordinates coordinates = user.getCoordinatesAssignedPicture();
+        System.out.println(randomElement);
 
-        int pictureIndex = coordinates.getPictureNr();
+        int pictureIndex = randomElement.getPictureNr();
+        System.out.println(pictureIndex);
 
         Map<String, String> assignedPicture = new HashMap<>();
-        assignedPicture.put(coordinates.toString(),game.getGridPictures().get(pictureIndex));
+        assignedPicture.put(randomElement.toString(),game.getGridPictures().get(pictureIndex));
 
         return assignedPicture;
     }

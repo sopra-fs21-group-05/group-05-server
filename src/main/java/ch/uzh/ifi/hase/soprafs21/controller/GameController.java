@@ -33,32 +33,28 @@ public class GameController {
 
 
     //returns setNr (int) for assigned Materialset (per player)
-    //TODO: test once initial game setup is done
-    @GetMapping("/game/set/{userId}")
+    @GetMapping("/game/{gameId}/{userId}/set")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Integer getAssignedMaterialset(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
-        // convert API game to internal representation
-        Game game = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
+    public Integer getAssignedMaterialset(@PathVariable ("userId")Long userId, @PathVariable ("gameId") Long gameId){
 
         //call game service methods
-        User user = gameService.assignMaterialset(game,userId);
+        User user = gameService.assignMaterialset(gameId,userId);
 
         return user.getMaterialSet().getSetNr();
     }
 
     //returns coordinatesAssignedPicture for all players
     //TODO: fix & test once initial game setup is done
-    @GetMapping("/game/picture/{userId}")
+    @GetMapping("/game/{gameId}/{userId}/picture")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Map<String, String> getAssignedPicture(@RequestBody GamePostDTO gamePostDTO, @PathVariable Long userId){
-        // convert API game to internal representation
-        Game game = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
+    public Map<String, String> getAssignedPicture(@PathVariable ("userId")Long userId, @PathVariable ("gameId") Long gameId){
         //call game service methods
-        Map<String,String> assignedCoordinates = gameService.assignPicture(game,userId);
+        Map<String,String> assignedCoordinates = gameService.assignPicture(gameId,userId);
         return assignedCoordinates;
     }
+
 
     @GetMapping("/winner")
     @ResponseStatus(HttpStatus.OK)
@@ -120,7 +116,7 @@ public class GameController {
     }
 
     //get a list of all submitted pictures in the current round
-   @GetMapping("/game/recreations/{gameId}")
+    @GetMapping("/game/recreations/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<String> getSubmittedPictures(@PathVariable Long gameId){
@@ -129,6 +125,18 @@ public class GameController {
 
         return submittedPictures;
     }
+
+    //submit guesses endpoint
+   /* @PostMapping("/game/round/{roundNr}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public ResponseEntity<String> submitGuesses(@PathVariable Long gameId){
+        //get list of all submitted pictures
+        List<String> submittedPictures = gameService.getSubmittedPictures(gameId);
+
+        return submittedPictures;
+    }*/
+
 
 
 }

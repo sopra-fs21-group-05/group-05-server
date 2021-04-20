@@ -105,9 +105,8 @@ public class GameService {
 
 
     //assigns the "next" materialset to specific player
-    //TODO: modify once createGame() is done
-    public User assignMaterialset(Game game, Long userId) {
-        Long gameId = game.getGameId();
+    public User assignMaterialset(Long gameId, Long userId) {
+        Game game = getExistingGame(gameId);
         User user = getPlayerInGame(userId, gameId);
 
         String baseErrorMessage = "The provided %s is not the current %s. ";
@@ -133,8 +132,9 @@ public class GameService {
 
     //assigns pictures to recreate to all players
     //TODO: test once createGame endpoint is added
-    public Map<String, String> assignPicture(Game game, Long userId) {
-        User user = getPlayerInGame(userId,game.getGameId());
+    public Map<String, String> assignPicture(Long gameId, Long userId) {
+        Game game = getExistingGame(gameId);
+        User user = getPlayerInGame(userId,gameId);
         List<GridCoordinates> coordinatesList = game.getGridCoordinates();
 
         String baseErrorMessage = "The provided %s is not the current %s. ";

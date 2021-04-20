@@ -35,6 +35,16 @@ public class Gameroom implements Serializable{
     @OneToOne
     private Game game;
 
+    @Column
+    private Long startedGame;
+
+    @PostLoad
+    public void postLoad() {
+        if(game != null) {
+            this.startedGame = game.getGameId();
+        }
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -49,5 +59,8 @@ public class Gameroom implements Serializable{
 
     public Game getGame() { return game; }
     public void setGame(Game game) { this.game = game; }
+
+    public Long getStartedGame() { return startedGame; }
+    public void setStartedGame(Long startedGame) { this.startedGame = startedGame; }
 
 }

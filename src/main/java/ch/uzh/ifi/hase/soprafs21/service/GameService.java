@@ -100,6 +100,8 @@ public class GameService {
 
     public Game assignGridPictures(Game game, List<Picture> pictureList){
         game.setGridPictures(pictureList);
+        game = gameRepository.save(game);
+        gameRepository.flush();
         return game;
     }
 

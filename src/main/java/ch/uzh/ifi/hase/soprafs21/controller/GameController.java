@@ -32,7 +32,7 @@ public class GameController {
     }
 
 
-    //returns setNr (int) for assigned Materialset (per player)
+    //returns setNr (int) for assigned Materialset per player
     @GetMapping("/game/{gameId}/{userId}/set")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -44,7 +44,7 @@ public class GameController {
         return user.getMaterialSet().getSetNr();
     }
 
-    //returns coordinatesAssignedPicture for all players
+    //returns gridCoordinates and assigned picture as Base 64 encoded string per player
     //TODO: fix & test once initial game setup is done
     @GetMapping("/game/{gameId}/{userId}/picture")
     @ResponseStatus(HttpStatus.OK)

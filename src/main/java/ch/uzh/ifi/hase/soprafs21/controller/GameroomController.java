@@ -114,6 +114,7 @@ public class GameroomController {
     @ResponseBody
     public void joinGameroom(@PathVariable("roomId") Long roomId, @RequestBody GameroomPostDTO gameroomPostDTO) {
         // get user that created the gameroom
+        gameroomPostDTO.setRoomId(roomId);
         Long userId = gameroomPostDTO.getUserId();
         User user = userService.getExistingUser(userId);
 

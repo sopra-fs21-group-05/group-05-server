@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Scoreboard;
+import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.ScoreboardRepository;
 import org.slf4j.Logger;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -29,11 +32,16 @@ public class ScoreboardService {
     public Scoreboard createScoreboard(Game game){
         Scoreboard newScoreboard = new Scoreboard();
         newScoreboard.setGame(game);
+        Map<Long,Integer> pointsPerUser = new HashMap<>();
+        List<Long> userIds = new ArrayList<>();
+        List<Integer> points = new ArrayList<>();
 
-        //append userPoints Map in Scoreboard
+        //append userPoints Map in Scoreboard where all have 0 points
+        for (User u: game.getUserList()) {
+            pointsPerUser.put(u.getId(), 0);
+        }
 
-        //TODO: update scoreboard entity to save points per round
-        //newScoreboard = addRound();
+        newScoreboard.setUserPoints(pointsPerUser);
 
         newScoreboard = scoreboardRepository.save(newScoreboard);
         scoreboardRepository.flush();
@@ -41,13 +49,20 @@ public class ScoreboardService {
         return newScoreboard;
     }
 
-    public Scoreboard addRound(Long[] userIds, int[] points, Scoreboard scoreboard){
-        Map<Long,Integer> pointsPerUser = new HashMap<>();
-         for(int i = 0; i < userIds.length; i++){
-             pointsPerUser.put(userIds[i], points[i]);
-         }
+    public void updateScoreboard(Map<Long,Integer> pointsPerUsers,List<User> users, Scoreboard scoreboard){
+        Map<Long,Integer> oldPoints = scoreboard.getUserPoints();
+        Map<Long,Integer> newPoints = oldPoints;
 
-         scoreboard.setUserPoints(pointsPerUser);
-         return scoreboard;
+
+        for (User u: users) {
+            int old = oldPoints.get(u.getId());
+            int add = pointsPerUsers.get(u.getId());
+            newPoints.put(u.getId(), old + add);
+        }
+
+        scoreboard.setUserPoints(newPoints);
+
+        scoreboard = scoreboardRepository.save(scoreboard);
+        scoreboardRepository.flush();
     }
 }

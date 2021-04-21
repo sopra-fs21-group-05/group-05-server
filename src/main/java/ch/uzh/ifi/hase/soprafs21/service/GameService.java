@@ -88,7 +88,7 @@ public class GameService {
         gameRepository.flush();
 
         //ToDO: create scoreboard and assign it
-        //Scoreboard scoreboard = scoreboardService.createScoreboard(newGame);
+        Scoreboard scoreboard = scoreboardService.createScoreboard(newGame);
         //newGame.setScoreboard(scoreboard);
 
         //newGame = gameRepository.save(newGame);

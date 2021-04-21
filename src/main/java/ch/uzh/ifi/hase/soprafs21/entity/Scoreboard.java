@@ -30,9 +30,6 @@ public class Scoreboard implements Serializable {
         }
     }
 
-    @ElementCollection
-    private List<Integer> rounds= new ArrayList<>();
-
     //Map with key=userId and points (int)
     @MapKeyColumn(name="userId")
     @Column(name="pointsOfUsers")
@@ -51,7 +48,4 @@ public class Scoreboard implements Serializable {
     public void setGame(Game game) { this.game = game; }
 
     public List<User> getUserList() { return userList; }
-
-    public List<Integer> getrounds() { return rounds; }
-    public void setrounds(List<Integer> rounds) { this.rounds = rounds; }
 }

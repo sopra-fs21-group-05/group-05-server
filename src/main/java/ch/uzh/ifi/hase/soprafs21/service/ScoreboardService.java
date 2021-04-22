@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,14 @@ public class ScoreboardService {
     @Autowired
     public ScoreboardService(@Qualifier("scoreboardRepository") ScoreboardRepository scoreboardRepository) {
         this.scoreboardRepository = scoreboardRepository;
+    }
+
+    public Scoreboard findScoreboardByGame(Game game){
+        Scoreboard scoreboard = scoreboardRepository.getScoreboardByGame(game);
+        if(scoreboard == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Scoreboard was not found.");
+        }
+        return scoreboard;
     }
 
     public Scoreboard createScoreboard(Game game){

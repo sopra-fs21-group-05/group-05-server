@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs21.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
+import ch.uzh.ifi.hase.soprafs21.entity.Scoreboard;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import org.mapstruct.*;
@@ -60,6 +61,10 @@ public interface DTOMapper {
     @Mapping(source = "gameId", target = "gameId")
     @Mapping(source = "roundNr", target = "roundNr")
     Game convertGamePostDTOToEntity(GamePostDTO gamePostDTO);
+
+    @Mapping(source = "scoreboardId", target = "scoreboardId")
+    @Mapping(source = "userPoints", target = "userPoints")
+    ScoreboardGetDTO convertEntityToScoreboardGetDTO(Scoreboard scoreboard);
 
 
 

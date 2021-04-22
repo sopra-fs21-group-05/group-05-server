@@ -20,21 +20,11 @@ public class Scoreboard implements Serializable {
     @OneToOne(fetch = FetchType.EAGER)
     private Game game;
 
-    @OneToMany
-    private List<User> userList= new ArrayList<>();
-
-    @PostLoad
-    public void postLoad() {
-        if(game != null) {
-            this.userList = new ArrayList<>(game.getUserList());
-        }
-    }
-
     //Map with key=userId and points (int)
-    @MapKeyColumn(name="userId")
-    @Column(name="pointsOfUsers")
     @ElementCollection
-    private Map<Long,Integer> userPoints = new HashMap<>();
+    @MapKeyColumn(name="userId")
+    @Column(name="points")
+    private Map<Long,Integer> userPoints = new HashMap<Long,Integer>();
 
     public Map<Long,Integer> getUserPoints() { return userPoints; }
     public void setUserPoints(Map<Long,Integer> userPoints){
@@ -45,7 +35,14 @@ public class Scoreboard implements Serializable {
     public void setScoreboardId(Long scoreboardId) { this.scoreboardId = scoreboardId; }
 
     public Game getGame() { return game; }
-    public void setGame(Game game) { this.game = game; }
+    public void setGame(Game game) {
+        if (game == null) {
+            if (this.game != null) {
+                this.game.setScoreboard(null);
+            }
+        }
+        else {
+            game.setScoreboard(this);}
+        this.game = game; }
 
-    public List<User> getUserList() { return userList; }
 }

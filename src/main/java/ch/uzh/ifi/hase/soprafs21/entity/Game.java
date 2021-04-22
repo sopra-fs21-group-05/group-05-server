@@ -84,15 +84,7 @@ public class Game implements Serializable {
     }
 
     public Scoreboard getScoreboard() { return scoreboard; }
-    public void setScoreboard(Scoreboard scoreboard) {
-        if (scoreboard == null) {
-            if (this.scoreboard != null) {
-                this.scoreboard.setGame(null);
-            }
-        }
-        else {
-            scoreboard.setGame(this);}
-        this.scoreboard = scoreboard; }
+    public void setScoreboard(Scoreboard scoreboard) { this.scoreboard = scoreboard; }
 
 
     public Gameroom getGameroom() { return gameroom; }

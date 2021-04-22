@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
+import ch.uzh.ifi.hase.soprafs21.entity.Scoreboard;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomPostDTO;
@@ -9,6 +10,7 @@ import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.GameService;
 import ch.uzh.ifi.hase.soprafs21.service.GameroomService;
+import ch.uzh.ifi.hase.soprafs21.service.ScoreboardService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +32,14 @@ public class GameroomController {
     private final GameroomService gameroomService;
     private final UserService userService;
     private final GameService gameService;
+    private final ScoreboardService scoreboardService;
 
-    GameroomController(GameroomService gameroomService, UserService userService, GameService gameService) {
+    GameroomController(GameroomService gameroomService, UserService userService, GameService gameService,
+                       ScoreboardService scoreboardService) {
         this.gameroomService = gameroomService;
         this.userService = userService;
         this.gameService = gameService;
+        this.scoreboardService = scoreboardService;
     }
 
     @PostMapping("/gamerooms")
@@ -88,7 +93,9 @@ public class GameroomController {
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
         // create and initialize new game
         Game newGame = gameService.createGame(gameroom);
-        //add game to gameroom
+        // create scoreboard
+        Scoreboard scoreboard = scoreboardService.createScoreboard(newGame);
+        // add game to gameroom
         gameroom = gameroomService.addGame(gameroom, newGame);
 
         return newGame.getGameId();

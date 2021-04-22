@@ -33,8 +33,6 @@ public class ScoreboardService {
         Scoreboard newScoreboard = new Scoreboard();
         newScoreboard.setGame(game);
         Map<Long,Integer> pointsPerUser = new HashMap<>();
-        List<Long> userIds = new ArrayList<>();
-        List<Integer> points = new ArrayList<>();
 
         //append userPoints Map in Scoreboard where all have 0 points
         for (User u: game.getUserList()) {
@@ -45,6 +43,8 @@ public class ScoreboardService {
 
         newScoreboard = scoreboardRepository.save(newScoreboard);
         scoreboardRepository.flush();
+
+        log.debug("Created Information for Scoreboard: {}", newScoreboard);
 
         return newScoreboard;
     }

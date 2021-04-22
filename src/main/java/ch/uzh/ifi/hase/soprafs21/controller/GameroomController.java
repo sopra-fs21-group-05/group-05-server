@@ -128,7 +128,6 @@ public class GameroomController {
         // convert API gameroom to internal representation
         Gameroom gameroomInput = DTOMapper.INSTANCE.convertGameroomPostDTOtoEntity(gameroomPostDTO);
         gameroomService.joinGameroom(gameroomInput, user);
-
     }
 
     @PostMapping("/gamerooms/{roomId}")

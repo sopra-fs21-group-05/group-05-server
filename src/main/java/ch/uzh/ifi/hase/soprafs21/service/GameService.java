@@ -24,6 +24,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -126,8 +128,7 @@ public class GameService {
         return user;
     }
 
-    //assigns pictures to recreate to all players
-    //TODO: test once createGame endpoint is added
+    //assigns unique pictures to recreate to all players
     public Map<String, String> assignPicture(Long gameId, Long userId) {
         Game game = getExistingGame(gameId);
         User user = getPlayerInGame(userId,gameId);
@@ -140,23 +141,25 @@ public class GameService {
 
         Random rand = new Random();
         //assign each user random coordinates (each coordinate removed once assigned)
-
         //picks random index from list
         int randomIndex = rand.nextInt(coordinatesList.size());
         //gets the coordinates at the randomIndex
         GridCoordinates randomElement = coordinatesList.get(randomIndex);
         //remove the index to prevent it to be picked again
         coordinatesList.remove(randomIndex);
+        System.out.println(coordinatesList.size());
         //assign the coordinates to player
         user.setCoordinatesAssignedPicture(randomElement);
 
         System.out.println(randomElement);
+
 
         int pictureIndex = randomElement.getPictureNr();
         System.out.println(pictureIndex);
 
         Map<String, String> assignedPicture = new HashMap<>();
         assignedPicture.put(randomElement.toString(),game.getGridPictures().get(pictureIndex));
+
 
         return assignedPicture;
     }
@@ -371,6 +374,44 @@ public class GameService {
         List<String> submittedPictures = new ArrayList<String>(userRecreations.values());
 
         return submittedPictures;
+    }
+
+
+    //TODO: test in Postman
+    //submit guesses of all users via dictionary (k:userId, v: guess as String) & add their scores
+    public void submitAndCheckGuesses(Long gameId, Long userId, Map<Long,String> guesses){
+        User playerThatRecreatedPicture = getPlayerInGame(userId,gameId);
+
+        //get the originally assigned picture coordinates as a string
+        String rightGuess = playerThatRecreatedPicture.getCoordinatesAssignedPicture().toString();
+
+        //List<String> gridCoordinates = Arrays.asList(GridCoordinates.values().toString());
+        List<String> gridCoordinates = Stream.of(GridCoordinates.values())
+                .map(GridCoordinates::name)
+                .collect(Collectors.toList());
+
+
+        String baseErrorMessage = "Contains invalid guesses.";
+        for(String guess : guesses.values()){
+            System.out.println(guess);
+            if(!gridCoordinates.stream().anyMatch(coordinate -> guess.equals(coordinate))){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage));
+            }
+        }
+
+        //iterate through dictionary and check if guess is correct
+        for(Map.Entry<Long,String> entry : guesses.entrySet()){
+            if(entry.getValue().equals(rightGuess)){
+                //update points for both players in user entity
+                User guessingUser = getPlayerInGame(entry.getKey(), gameId);
+                int updatedScore1 = playerThatRecreatedPicture.getPoints() + 1;
+                playerThatRecreatedPicture.setPoints(updatedScore1);
+                int updatedScore2 = guessingUser.getPoints() + 1;
+                guessingUser.setPoints(updatedScore2);
+                System.out.println(guessingUser.getPoints());
+
+            }
+        }
     }
 }
 

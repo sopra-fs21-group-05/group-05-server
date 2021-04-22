@@ -119,7 +119,7 @@ public class GameController {
     @GetMapping("/game/recreations/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<String> getSubmittedPictures(@PathVariable Long gameId){
+    public List<String> getSubmittedPictures(@PathVariable("gameId") Long gameId){
         //get list of all submitted pictures
         List<String> submittedPictures = gameService.getSubmittedPictures(gameId);
 
@@ -127,15 +127,31 @@ public class GameController {
     }
 
     //submit guesses endpoint
-   /* @PostMapping("/game/round/{roundNr}")
+    @PostMapping("/game/round/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<String> submitGuesses(@PathVariable Long gameId){
-        //get list of all submitted pictures
-        List<String> submittedPictures = gameService.getSubmittedPictures(gameId);
+    public ResponseEntity<String> submitAndCheckGuesses(@RequestBody GamePostDTO gamePostDTO, @PathVariable ("userId") Long userId){
 
-        return submittedPictures;
-    }*/
+        Game currentGame = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
+
+        //get list of all submitted pictures
+        gameService.submitAndCheckGuesses(currentGame.getGameId(), userId, gamePostDTO.getGuesses());
+
+        String locationAsString = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .build()
+                .toString();
+
+        URI locationAsUrl = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .build()
+                .toUri();
+
+        //returns url as a string
+        return ResponseEntity.created(locationAsUrl).body(locationAsString);
+    }
+
+
 
 
 

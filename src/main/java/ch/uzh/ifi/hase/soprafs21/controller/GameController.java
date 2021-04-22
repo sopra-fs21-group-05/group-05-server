@@ -120,6 +120,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<String> getSubmittedPictures(@PathVariable("gameId") Long gameId){
+        //commit for referencing respective task
         //get list of all submitted pictures
         List<String> submittedPictures = gameService.getSubmittedPictures(gameId);
 

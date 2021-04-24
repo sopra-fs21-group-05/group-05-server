@@ -27,8 +27,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -192,6 +194,86 @@ public class GameroomControllerTest {
         mockMvc.perform(putRequest)
                 .andExpect(status().isConflict());
     }
+
+    @Test
+    public void givenGamerooms_getGameroomList_thenReturnJsonArray() throws Exception {
+
+        Gameroom gameroom = new Gameroom();
+        gameroom.setId(2L);
+        gameroom.setRoomname("test");
+
+        List<Gameroom> gamerooms = Collections.singletonList(gameroom);
+
+        // this mocks the UserService -> we define above what the userService should return when getUsers() is called
+        given(gameroomService.getGamerooms()).willReturn(gamerooms);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/gamerooms/list")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest).andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(gameroom.getId()), Long.class))
+                .andExpect(jsonPath("$[0].roomname", is(gameroom.getRoomname())));
+    }
+
+    @Test
+    public void joinGameroom_validInput_userAdded() throws Exception {
+
+        GameroomPostDTO gameroomPostDTO = new GameroomPostDTO();
+        gameroomPostDTO.setRoomname("test");
+        gameroomPostDTO.setRoomId(2L);
+        gameroomPostDTO.setPassword("123");
+        gameroomPostDTO.setUserId(1L);
+
+        User user = new User();
+        user.setId(1L);
+        List<User> users = Collections.singletonList(user);
+
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("test");
+        gameroom.setPassword("123");
+        gameroom.setId(2L);
+        gameroom.setUsers(users);
+
+        given(userService.getExistingUser(Mockito.any())).willReturn(user);
+        given(gameroomService.joinGameroom(Mockito.any(),Mockito.any())).willReturn(gameroom);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder putRequest = put("/gamerooms/list/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(gameroomPostDTO));;
+
+        // then
+        mockMvc.perform(putRequest)
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void joinGameroom_invalidInput_Unauthorized() throws Exception {
+
+        GameroomPostDTO gameroomPostDTO = new GameroomPostDTO();
+        gameroomPostDTO.setRoomname("test");
+        gameroomPostDTO.setRoomId(2L);
+        gameroomPostDTO.setPassword("123");
+        gameroomPostDTO.setUserId(1L);
+
+        given(userService.getExistingUser(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        given(gameroomService.joinGameroom(Mockito.any(),Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder putRequest = put("/gamerooms/list/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(gameroomPostDTO));;
+
+        // then
+        mockMvc.perform(putRequest)
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    //TODO: get winner endpoint?
 
     /**
      * Helper Method to convert DTOs into a JSON string such that the input can be processed

@@ -262,7 +262,7 @@ public class UserControllerTest {
 
         given(userService.isRestricted(user)).willReturn(false);
 
-        MockHttpServletRequestBuilder getRequest = get("/restricted")
+        MockHttpServletRequestBuilder getRequest = get("/users/1/restricted")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(userAuthDTO));
 

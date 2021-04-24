@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class ScoreboardController {
@@ -39,5 +40,16 @@ public class ScoreboardController {
 
         return foundScoreboard;
 
+    }
+
+    @PostMapping("/scoreboards/{gameId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void updateScoreboard(@PathVariable("gameId") Long gameId){
+        Game game = gameService.getExistingGame(gameId);
+        Scoreboard scoreboard = game.getScoreboard();
+        List<User> userList = game.getUserList();
+
+        scoreboardService.updateScoreboard(userList,scoreboard);
     }
 }

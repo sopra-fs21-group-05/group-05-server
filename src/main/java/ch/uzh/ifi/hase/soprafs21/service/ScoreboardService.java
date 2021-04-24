@@ -59,14 +59,14 @@ public class ScoreboardService {
         return newScoreboard;
     }
 
-    public void updateScoreboard(Map<Long,Integer> pointsPerUsers,List<User> users, Scoreboard scoreboard){
+    public void updateScoreboard(List<User> users, Scoreboard scoreboard){
         Map<Long,Integer> oldPoints = scoreboard.getUserPoints();
         Map<Long,Integer> newPoints = oldPoints;
 
 
         for (User u: users) {
             int old = oldPoints.get(u.getId());
-            int add = pointsPerUsers.get(u.getId());
+            int add = u.getPoints();
             newPoints.put(u.getId(), old + add);
         }
 

@@ -376,8 +376,7 @@ public class GameService {
         return submittedPictures;
     }
 
-
-    //TODO: test in Postman
+    
     //submit guesses of all users via dictionary (k:userId, v: guess as String) & add their scores
     public void submitAndCheckGuesses(Long gameId, Long userId, Map<Long,String> guesses){
         User playerThatRecreatedPicture = getPlayerInGame(userId,gameId);
@@ -408,7 +407,7 @@ public class GameService {
                 playerThatRecreatedPicture.setPoints(updatedScore1);
                 int updatedScore2 = guessingUser.getPoints() + 1;
                 guessingUser.setPoints(updatedScore2);
-                System.out.println(guessingUser.getPoints());
+                System.out.println("userId"+guessingUser.getId() +":"+ guessingUser.getPoints());
 
             }
         }

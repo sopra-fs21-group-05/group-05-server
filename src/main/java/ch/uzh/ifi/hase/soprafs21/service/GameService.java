@@ -412,6 +412,17 @@ public class GameService {
             }
         }
     }
+
+    public Game updateGame(Long gameId){
+        Game game = gameRepository.getOne(gameId);
+        game.setRoundNr(game.getRoundNr() + 1);
+        Map<Long,String> userRecreations = new HashMap<>();
+        game.setUserRecreations(userRecreations);
+        gameRepository.save(game);
+        gameRepository.flush();
+
+        return game;
+    }
 }
 
 

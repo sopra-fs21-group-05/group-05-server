@@ -152,6 +152,14 @@ public class GameController {
         return ResponseEntity.created(locationAsUrl).body(locationAsString);
     }
 
+    @PutMapping("game/{gameId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public int updateGame(@PathVariable ("gameId") Long gameId){
+        Game game = gameService.updateGame(gameId);
+        return game.getRoundNr();
+    }
+
 
 
 

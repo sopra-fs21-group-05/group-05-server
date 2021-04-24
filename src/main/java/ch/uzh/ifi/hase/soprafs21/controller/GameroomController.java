@@ -130,11 +130,4 @@ public class GameroomController {
         Gameroom updatedGameroom = gameroomService.joinGameroom(gameroomInput, user);
     }
 
-    @PostMapping("/gamerooms/{roomId}")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public void getWinner(@PathVariable("roomId") Long roomId) {
-        Gameroom gameroom = gameroomService.getGameroomById(roomId);
-        //TODO: get winner
-    }
 }

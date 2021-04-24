@@ -1,8 +1,11 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
 import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
+import ch.uzh.ifi.hase.soprafs21.entity.Scoreboard;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomPostDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs21.service.GameService;
@@ -20,15 +23,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 /**
  * GameroomControllerTest
@@ -99,6 +106,90 @@ public class GameroomControllerTest {
 
         // then
         mockMvc.perform(postRequest)
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void getGameroom_validInput_returnGameroom() throws Exception {
+
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("test");
+        gameroom.setId(2L);
+
+        Long roomId = 2L;
+
+        given(gameroomService.getGameroomById(roomId)).willReturn(gameroom);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder getRequest = get("/gamerooms/overview/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(gameroom.getId()), Long.class))
+                .andExpect(jsonPath("$.roomname", is(gameroom.getRoomname())));
+    }
+
+    @Test
+    public void getGameroom_invalidInput_notFound() throws Exception {
+
+        Long roomId = 3L;
+
+        given(gameroomService.getGameroomById(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder getRequest = get("/gamerooms/overview/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void putGameroom_validInput_startGame() throws Exception {
+
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("test");
+        gameroom.setId(2L);
+
+        Game game = new Game();
+        game.setGameroom(gameroom);
+        game.setGameId(3L);
+
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.setGame(game);
+
+        given(gameroomService.getGameroomById(Mockito.any())).willReturn(gameroom);
+        given(gameService.createGame(gameroom)).willReturn(game);
+        given(scoreboardService.createScoreboard(game)).willReturn(scoreboard);
+        given(gameroomService.addGame(gameroom, game)).willReturn(gameroom);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder putRequest = put("/gamerooms/overview/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(putRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", is(game.getGameId()), Long.class));
+    }
+
+    @Test
+    public void putGameroom_invalidInput_conflict() throws Exception {
+
+        given(gameroomService.getGameroomById(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.CONFLICT));
+        given(gameService.createGame(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.CONFLICT));
+        given(scoreboardService.createScoreboard(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.CONFLICT));
+        given(gameroomService.addGame(Mockito.any(), Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.CONFLICT));
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder putRequest = put("/gamerooms/overview/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(putRequest)
                 .andExpect(status().isConflict());
     }
 

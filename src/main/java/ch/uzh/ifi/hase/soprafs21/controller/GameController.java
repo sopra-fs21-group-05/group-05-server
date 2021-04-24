@@ -45,7 +45,6 @@ public class GameController {
     }
 
     //returns gridCoordinates and assigned picture as Base 64 encoded string per player
-    //TODO: fix & test once initial game setup is done
     @GetMapping("/game/{gameId}/{userId}/picture")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

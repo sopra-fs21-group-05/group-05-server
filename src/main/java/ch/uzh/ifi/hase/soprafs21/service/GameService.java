@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
@@ -224,11 +225,17 @@ public class GameService {
 
         //get one base64 encoded picture for each keyword
         for (String k:keywords) {
-            String responseBody = sendGetRequest(k);
-            String url = parseJson(responseBody);
-            byte[] byteArray = getPictureFromUrl(url);
-            String encodedPicture = encodePicture(byteArray);
-            pictures.add(encodedPicture);
+            try {
+                String responseBody = sendGetRequest(k);
+                String urlString = parseJson(responseBody);
+                URL url = new URL(urlString);
+                byte[] byteArray = getPictureFromUrl(url);
+                String encodedPicture = encodePicture(byteArray);
+                pictures.add(encodedPicture);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
         return pictures;
@@ -267,10 +274,8 @@ public class GameService {
     }
 
 
-    private byte[] getPictureFromUrl(String urlString){
-        try {
-            URL url = new URL(urlString);
-            InputStream in = new BufferedInputStream(url.openStream());
+    private byte[] getPictureFromUrl(URL url){
+        try(InputStream in = new BufferedInputStream(url.openStream())) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             byte[] buf = new byte[1024];
             int n = 0;

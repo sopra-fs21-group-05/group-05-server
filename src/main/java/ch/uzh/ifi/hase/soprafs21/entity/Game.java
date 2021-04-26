@@ -56,11 +56,6 @@ public class Game implements Serializable {
     private Gameroom gameroom;
 
 
-    //TODO: uncomment if needed, else delete
-    /*
-    @OneToMany
-    private List<User> previousWinnersList = null;
-     */
 
 
     public Long getGameId() { return gameId; }

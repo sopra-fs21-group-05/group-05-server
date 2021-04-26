@@ -307,11 +307,11 @@ public class GameService {
     }
 
     private void checkIfGameExists(Gameroom gameroom) {
-        Game game = gameRepository.findByGameroom(gameroom);
+        Long gameId = gameroom.getStartedGame();
 
         String baseErrorMessage = "The game already exist. Therefore, the game could not be created!";
 
-        if (game != null) {
+        if (gameId != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, baseErrorMessage);
         }
     }

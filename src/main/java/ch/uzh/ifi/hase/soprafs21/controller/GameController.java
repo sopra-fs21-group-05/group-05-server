@@ -6,6 +6,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.Picture;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.AssignedPictureDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GamePostDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
@@ -48,10 +49,22 @@ public class GameController {
     @GetMapping("/game/{gameId}/{userId}/picture")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Map<String, String> getAssignedPicture(@PathVariable ("userId")Long userId, @PathVariable ("gameId") Long gameId){
+    public AssignedPictureDTO getAssignedPicture(@PathVariable ("userId")Long userId, @PathVariable ("gameId") Long gameId){
         //call game service methods
         Map<String,String> assignedCoordinates = gameService.assignPicture(gameId,userId);
-        return assignedCoordinates;
+        //get coordinate and picture
+        String coordinate = "";
+        String picture = "";
+        for (Map.Entry<String, String> entry : assignedCoordinates.entrySet()) {
+            coordinate = entry.getKey();
+            picture = entry.getValue();
+            System.out.println("Key: " + coordinate + ", Value: " + picture);
+        }
+        AssignedPictureDTO pic = new AssignedPictureDTO();
+        pic.setCoordinate(coordinate);
+        pic.setPicture(picture);
+
+        return pic;
     }
 
 

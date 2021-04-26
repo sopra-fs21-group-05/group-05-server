@@ -428,6 +428,27 @@ public class GameService {
 
         return game;
     }
+
+    public Map<String, String> getPictureGrid(Long gameId, int roundNr) {
+        Game game = getExistingGame(gameId);
+        Map<String,String> pictureGrid = new HashMap<>();
+
+        List<GridCoordinates> coordinatesList = game.getGridCoordinates();
+        System.out.println(coordinatesList);
+        List<String> pictureList = game.getGridPictures();
+
+        String baseErrorMessage = "The provided %s is not the current %s. ";
+        if(roundNr != gameRepository.getOne(game.getGameId()).getRoundNr()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "roundNr", "roundNr"));
+        }
+
+        for(GridCoordinates g : coordinatesList){
+            pictureGrid.put(g.toString(),pictureList.get(g.getPictureNr()));
+
+        }
+
+        return pictureGrid;
+    }
 }
 
 

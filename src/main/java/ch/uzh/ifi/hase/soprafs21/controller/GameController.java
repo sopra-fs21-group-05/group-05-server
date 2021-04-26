@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
+import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
@@ -172,8 +173,13 @@ public class GameController {
         return game.getRoundNr();
     }
 
-
-
+    @GetMapping("game/grid/{gameId}/{roundNr}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Map<String,String> getPicturegrid(@PathVariable ("gameId") Long gameId, @PathVariable ("roundNr") Integer roundNr){
+        Map<String,String> grid = gameService.getPictureGrid(gameId, roundNr);
+        return grid;
+    }
 
 
 }

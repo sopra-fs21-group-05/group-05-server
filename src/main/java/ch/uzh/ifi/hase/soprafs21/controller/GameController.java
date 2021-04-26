@@ -173,6 +173,7 @@ public class GameController {
         return game.getRoundNr();
     }
 
+    //returns the picture grid (coordinates with respective picture) as a hashmap
     @GetMapping("game/grid/{gameId}/{roundNr}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

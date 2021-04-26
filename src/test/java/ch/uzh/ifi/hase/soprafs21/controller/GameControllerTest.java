@@ -33,6 +33,7 @@ import java.util.Map;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -153,7 +154,7 @@ public class GameControllerTest {
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk());
     }
-    
+
 
     @Test
     public void getWinner_returnsListOfWinners() throws Exception {
@@ -280,6 +281,27 @@ public class GameControllerTest {
 
         // then
         mockMvc.perform(putRequest)
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getPictureGrid_returnsMapOfPictureGrid() throws Exception {
+        Game game = new Game();
+        game.setGameId(1L);
+        game.setRoundNr(0);
+
+        Map<String,String> pictureGrid = new HashMap<>();
+        pictureGrid.put("A1","pictureOne");
+        pictureGrid.put("A2","pictureTwo");
+
+        given(gameService.getPictureGrid(Mockito.any(),Mockito.any())).willReturn(pictureGrid);
+
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder getRequest = get("/game/grid/{gameId}/{roundNr}",game.getGameId(),game.getRoundNr());
+
+        // then
+        mockMvc.perform(getRequest)
                 .andExpect(status().isOk());
     }
 

@@ -429,7 +429,7 @@ public class GameService {
         return game;
     }
 
-    public Map<String, String> getPictureGrid(Long gameId, int roundNr) {
+    public Map<String, String> getPictureGrid(Long gameId, Integer roundNr) {
         Game game = getExistingGame(gameId);
         Map<String,String> pictureGrid = new HashMap<>();
 
@@ -444,7 +444,6 @@ public class GameService {
 
         for(GridCoordinates g : coordinatesList){
             pictureGrid.put(g.toString(),pictureList.get(g.getPictureNr()));
-
         }
 
         return pictureGrid;

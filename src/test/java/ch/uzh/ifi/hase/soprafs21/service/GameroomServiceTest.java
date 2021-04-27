@@ -118,5 +118,21 @@ public class GameroomServiceTest {
         // then -> attempt to create second gameroom with same gameroom -> check that an error is thrown
         assertThrows(ResponseStatusException.class, () -> gameroomService.joinGameroom(wrongGameroom, testUser));
     }
+
+    @Test
+    public void joinGameroom_userAlreadyJoined_throwsException() {
+        // gameroom where user already joined
+        List<User> users = Collections.singletonList(testUser);
+        testGameroom.setUsers(users);
+
+        // given -> a first gameroom has already been created
+        gameroomService.createGameroom(testGameroom);
+
+        // when -> setup additional mocks for GameroomRepository
+        Mockito.when(gameroomRepository.getOne(Mockito.any())).thenReturn(testGameroom);
+
+        // then -> attempt to create second gameroom with same gameroom -> check that an error is thrown
+        assertThrows(ResponseStatusException.class, () -> gameroomService.joinGameroom(testGameroom, testUser));
+    }
 }
 

@@ -61,7 +61,7 @@ public class GameServiceIntegrationTest {
         Game createdGame = gameService.createGame(gameroom);
 
         // then
-        assertEquals(testGame.getGameId(), createdGame.getGameId());
+        assertNotNull(createdGame.getGameId());
         assertEquals(testGame.getRoundNr(), createdGame.getRoundNr());
         assertEquals(testGame.getGameroom(), createdGame.getGameroom());
         assertNotNull(createdGame.getGameId());

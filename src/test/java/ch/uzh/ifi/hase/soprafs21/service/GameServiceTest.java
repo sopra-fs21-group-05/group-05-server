@@ -1,4 +1,4 @@
-/*
+
 package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
@@ -36,7 +36,7 @@ public class GameServiceTest {
 
         testGame = new Game();
         testGame.setGameId(1L);
-        testGame.setRoundNr(0);
+        testGame.setRoundNr(1);
 
 
         // when -> any object is being save in the gameRepository -> return the dummy testGame
@@ -106,4 +106,4 @@ public class GameServiceTest {
     }
 
 }
-*/
+

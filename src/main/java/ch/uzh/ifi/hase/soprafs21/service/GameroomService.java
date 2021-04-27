@@ -4,7 +4,7 @@ import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
-import ch.uzh.ifi.hase.soprafs21.repository.GameroomRespository;
+import ch.uzh.ifi.hase.soprafs21.repository.GameroomRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +32,10 @@ public class GameroomService {
 
     private final Logger log = LoggerFactory.getLogger(GameroomService.class);
 
-    private final GameroomRespository gameroomRespository;
+    private final GameroomRepository gameroomRespository;
 
     @Autowired
-    public GameroomService(@Qualifier("gameroomRepository") GameroomRespository gameroomRespository) {
+    public GameroomService(@Qualifier("gameroomRepository") GameroomRepository gameroomRespository) {
         this.gameroomRespository = gameroomRespository;
     }
 

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("gameroomRepository")
-public interface GameroomRespository extends JpaRepository<Gameroom, Long>{
+public interface GameroomRepository extends JpaRepository<Gameroom, Long>{
     Gameroom getOne(Long id);
 
     Gameroom findByRoomname(String roomName);

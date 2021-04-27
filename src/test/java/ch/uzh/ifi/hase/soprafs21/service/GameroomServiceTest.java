@@ -3,7 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.service;
 import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
-import ch.uzh.ifi.hase.soprafs21.repository.GameroomRespository;
+import ch.uzh.ifi.hase.soprafs21.repository.GameroomRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameroomServiceTest {
 
     @Mock
-    private GameroomRespository gameroomRepository;
+    private GameroomRepository gameroomRepository;
 
     @InjectMocks
     private GameroomService gameroomService;

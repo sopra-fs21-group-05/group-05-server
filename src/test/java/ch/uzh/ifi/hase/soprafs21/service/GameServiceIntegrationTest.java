@@ -88,6 +88,4 @@ public class GameServiceIntegrationTest {
         assertThrows(ResponseStatusException.class, () -> gameService.createGame(gameroom));
     }
 
-
-
 }

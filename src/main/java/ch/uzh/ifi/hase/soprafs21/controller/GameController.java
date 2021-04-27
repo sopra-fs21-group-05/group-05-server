@@ -174,11 +174,11 @@ public class GameController {
     }
 
     //returns the picture grid (coordinates with respective picture) as a hashmap
-    @GetMapping("game/grid/{gameId}/{roundNr}")
+    @GetMapping("game/grid/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Map<String,String> getPicturegrid(@PathVariable ("gameId") Long gameId, @PathVariable ("roundNr") Integer roundNr){
-        Map<String,String> grid = gameService.getPictureGrid(gameId, roundNr);
+    public Map<String,String> getPicturegrid(@PathVariable ("gameId") Long gameId){
+        Map<String,String> grid = gameService.getPictureGrid(gameId);
         return grid;
     }
 

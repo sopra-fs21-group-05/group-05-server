@@ -429,7 +429,7 @@ public class GameService {
         return game;
     }
 
-    public Map<String, String> getPictureGrid(Long gameId, Integer roundNr) {
+    public Map<String, String> getPictureGrid(Long gameId) {
         Game game = getExistingGame(gameId);
         Map<String,String> pictureGrid = new HashMap<>();
 
@@ -438,7 +438,7 @@ public class GameService {
         List<String> pictureList = game.getGridPictures();
 
         String baseErrorMessage = "The provided %s is not the current %s. ";
-        if(roundNr != gameRepository.getOne(game.getGameId()).getRoundNr()){
+        if(game.getRoundNr() != gameRepository.getOne(game.getGameId()).getRoundNr()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "roundNr", "roundNr"));
         }
 

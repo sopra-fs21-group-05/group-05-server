@@ -30,12 +30,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * GameControllerTest
@@ -294,11 +292,11 @@ public class GameControllerTest {
         pictureGrid.put("A1","pictureOne");
         pictureGrid.put("A2","pictureTwo");
 
-        given(gameService.getPictureGrid(Mockito.any(),Mockito.any())).willReturn(pictureGrid);
+        given(gameService.getPictureGrid(Mockito.any())).willReturn(pictureGrid);
 
 
         // when/then -> do the request + validate the result
-        MockHttpServletRequestBuilder getRequest = get("/game/grid/{gameId}/{roundNr}",game.getGameId(),game.getRoundNr());
+        MockHttpServletRequestBuilder getRequest = get("/game/grid/{gameId}",game.getGameId());
 
         // then
         mockMvc.perform(getRequest)

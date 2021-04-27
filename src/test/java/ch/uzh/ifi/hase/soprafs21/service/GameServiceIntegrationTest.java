@@ -1,4 +1,4 @@
-/*
+
 package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
@@ -14,12 +14,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-*/
+
 /**
  * Test class for the UserResource REST resource.
  *
  * @see UserService
- *//*
+ */
 
 @WebAppConfiguration
 @SpringBootTest
@@ -40,12 +40,12 @@ public class GameServiceIntegrationTest {
     }
 
     @Test
-    public void createUser_validInputs_success() {
+    public void createGame_validInputs_success() {
 
         // Create a game
         Game testGame = new Game();
         testGame.setGameId(1L);
-        testGame.setRoundNr(0);
+        testGame.setRoundNr(1);
 
         Gameroom gameroom = new Gameroom();
         gameroom.setRoomname("room1");
@@ -89,4 +89,4 @@ public class GameServiceIntegrationTest {
     }
 
 }
-*/
+

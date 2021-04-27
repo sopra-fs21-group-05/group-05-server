@@ -83,7 +83,7 @@ public class GameService {
         }
 
         newGame.setUserList(players);
-        newGame.setRoundNr(0);
+        newGame.setRoundNr(1);
         newGame.setGameroom(gameroom);
 
         // saves the given entity but data is only persisted in the database once flush() is called

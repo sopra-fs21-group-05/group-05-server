@@ -193,7 +193,6 @@ public class GameControllerTest {
 
         GamePostDTO gamePostDTO = new GamePostDTO();
         gamePostDTO.setGameId(3L);
-        gamePostDTO.setRoundNr(1);
         gamePostDTO.setSubmittedPicture("recreatedPicture");
 
         Map<Long,String> userRecreations = new HashMap<>();
@@ -241,7 +240,6 @@ public class GameControllerTest {
 
         GamePostDTO gamePostDTO = new GamePostDTO();
         gamePostDTO.setGameId(3L);
-        gamePostDTO.setRoundNr(1);
 
 
         Map<Long,String> userGuesses = new HashMap<>();

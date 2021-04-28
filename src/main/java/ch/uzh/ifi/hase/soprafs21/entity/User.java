@@ -48,6 +48,9 @@ public class User implements Serializable {
     @Column
     private GridCoordinates coordinatesAssignedPicture;
 
+    @Lob
+    private String recreatedPicture;
+
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -98,6 +101,12 @@ public class User implements Serializable {
     }
 
     public GridCoordinates getCoordinatesAssignedPicture() { return coordinatesAssignedPicture; }
-
     public void setCoordinatesAssignedPicture(GridCoordinates coordinatesAssignedPicture) { this.coordinatesAssignedPicture = coordinatesAssignedPicture; }
+
+    public String getRecreatedPicture() {
+        return recreatedPicture;
+    }
+    public void setRecreatedPicture(String recreatedPicture) {
+        this.recreatedPicture = recreatedPicture;
+    }
 }

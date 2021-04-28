@@ -326,6 +326,23 @@ public class GameService {
     public Map<Long,String> submitPicture(Game gameInput,String submittedPicture,Long userId) {
         Game currentGame = getExistingGame(gameInput.getGameId());
         User user = getPlayerInGame(userId,currentGame.getGameId());
+        String baseErrorMessage = "The provided %s was not found. ";
+
+        if(submittedPicture==null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "picture"));
+        }
+        // add recreation to user
+        user.setRecreatedPicture(submittedPicture);
+        userRepository.save(user);
+        userRepository.flush();
+
+        Map<Long,String> submissions = new HashMap<>();
+        submissions.put(user.getId(),user.getRecreatedPicture());
+
+        return submissions;
+
+        /*Game currentGame = getExistingGame(gameInput.getGameId());
+        User user = getPlayerInGame(userId,currentGame.getGameId());
         Map<Long,String> submissions = new HashMap<>();
         submissions.putAll(currentGame.getUserRecreations());
 
@@ -341,7 +358,7 @@ public class GameService {
         currentGame.setUserRecreations(submissions);
 
         //return Map
-        return currentGame.getUserRecreations();
+        return currentGame.getUserRecreations();*/
     }
 
     public List<Picture> makePictureList(){
@@ -368,14 +385,24 @@ public class GameService {
     //returns a list of all submitted pictures in the current round
     public Map<Long,String> getSubmittedPictures(Long gameId) {
         Game game = getExistingGame(gameId);
+        Map<Long,String> submissions = new HashMap<>();
 
-        String baseErrorMessage = "Could not find the submitted pictures.";
+        for (User u: game.getUserList()) {
+            if(u.getRecreatedPicture().isEmpty()){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find the submitted pictures.");
+            }
+            submissions.put(u.getId(),u.getRecreatedPicture());
+        }
+
+        return submissions;
+
+        /*String baseErrorMessage = "Could not find the submitted pictures.";
 
         if(game.getUserRecreations().isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage));
         }
 
-        return game.getUserRecreations();
+        return game.getUserRecreations();*/
     }
 
     
@@ -420,6 +447,13 @@ public class GameService {
         game.setUserRecreations(userRecreations);
         gameRepository.save(game);
         gameRepository.flush();
+
+        //delete user recreations
+        for (User u: game.getUserList()) {
+            u.setRecreatedPicture("");
+            userRepository.save(u);
+        }
+        userRepository.flush();
 
         return game;
     }

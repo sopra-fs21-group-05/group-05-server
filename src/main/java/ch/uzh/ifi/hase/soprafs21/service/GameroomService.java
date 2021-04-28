@@ -44,11 +44,13 @@ public class GameroomService {
     }
 
     public Gameroom getGameroomById(Long id){
-        Gameroom gameroomById = gameroomRespository.getOne(id);
-        if(gameroomById == null){
+        Optional<Gameroom> gameroomById = gameroomRespository.findById(id);
+        Gameroom fetchedgameroom = gameroomById.orElse(null);
+
+        if(fetchedgameroom == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Gameroom was not found.");
         }
-        return gameroomById;
+        return fetchedgameroom;
     }
 
     public Gameroom addGame(Gameroom gameroom, Game game){
@@ -101,19 +103,20 @@ public class GameroomService {
     }
 
     private Gameroom checkGameroomCredentials(Gameroom gameroom){
-        Gameroom gameroomById = gameroomRespository.getOne(gameroom.getId());
+
+        Gameroom fetchedgameroom = getGameroomById(gameroom.getId());
 
         //throw exception if no user with this username is found
         String baseErrorMessage = "Credentials are invalid.";
-        if (gameroomById == null) {
+        if (fetchedgameroom == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, baseErrorMessage);
         }
 
         //throw exception if the password doesn't match for the username
-        if(!gameroomById.getPassword().equals(gameroom.getPassword())){
+        if(!fetchedgameroom.getPassword().equals(gameroom.getPassword())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, baseErrorMessage);
         }
 
-        return gameroomById;
+        return fetchedgameroom;
     }
 }

@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -41,7 +42,7 @@ public class GameroomRepositoryIntegrationTest {
     }
 
     @Test
-    public void getOne_success() {
+    public void findById_success() {
         // given
         Gameroom gameroom = new Gameroom();
         gameroom.setRoomname("test");
@@ -51,7 +52,7 @@ public class GameroomRepositoryIntegrationTest {
         entityManager.flush();
 
         // when
-        Gameroom found = gameroomRepository.getOne(gameroom.getId());
+        Gameroom found = gameroomRepository.findById(gameroom.getId()).orElse(null);
 
         //then
         assertEquals(found.getRoomname(), gameroom.getRoomname());

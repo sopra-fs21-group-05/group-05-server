@@ -78,9 +78,12 @@ public class GameroomService {
         Gameroom gameroomById = checkGameroomCredentials(gameroom);
 
         List<User> currentUsers = gameroomById.getUsers();
-        if (currentUsers.contains(user)){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already joined this gameroom!");
+        for (User u:currentUsers) {
+            if (u.getId().equals(user.getId())){
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "User already joined this gameroom!");
+            }
         }
+
         currentUsers.add(user);
         gameroomById.setUsers(currentUsers);
 

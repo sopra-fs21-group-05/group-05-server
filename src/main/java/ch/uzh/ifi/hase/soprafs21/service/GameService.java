@@ -321,7 +321,7 @@ public class GameService {
     }
 
 
-    //TODO: if picture is submitted per User, the game.userRecreations needs to be "cleared" after every round
+
     //submits the recreated picture of one user --> adds to game.userRecreations
     public Map<Long,String> submitPicture(Game gameInput,String submittedPicture,Long userId) {
         Game currentGame = getExistingGame(gameInput.getGameId());
@@ -366,7 +366,7 @@ public class GameService {
 
 
     //returns a list of all submitted pictures in the current round
-    public List<String> getSubmittedPictures(Long gameId) {
+    public Map<Long,String> getSubmittedPictures(Long gameId) {
         Game game = getExistingGame(gameId);
 
         String baseErrorMessage = "Could not find the submitted pictures.";
@@ -375,26 +375,20 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage));
         }
 
-        Map<Long,String> userRecreations = game.getUserRecreations();
-        List<String> submittedPictures = new ArrayList<String>(userRecreations.values());
-
-        return submittedPictures;
+        return game.getUserRecreations();
     }
 
     
-    //submit guesses of all users via dictionary (k:userId, v: guess as String) & add their scores
+    //submit guesses of one user via dictionary (k:userId, v: guess as String) & add their scores
     public void submitAndCheckGuesses(Long gameId, Long userId, Map<Long,String> guesses){
-        User playerThatRecreatedPicture = getPlayerInGame(userId,gameId);
+        Game game = getExistingGame(gameId);
+        User playerThatSubmitsGuesses = getPlayerInGame(userId,game.getGameId());
 
-        //get the originally assigned picture coordinates as a string
-        String rightGuess = playerThatRecreatedPicture.getCoordinatesAssignedPicture().toString();
-
-        //List<String> gridCoordinates = Arrays.asList(GridCoordinates.values().toString());
         List<String> gridCoordinates = Stream.of(GridCoordinates.values())
                 .map(GridCoordinates::name)
                 .collect(Collectors.toList());
 
-
+        //check if guesses are all valid
         String baseErrorMessage = "Contains invalid guesses.";
         for(String guess : guesses.values()){
             System.out.println(guess);
@@ -403,19 +397,20 @@ public class GameService {
             }
         }
 
+
         //iterate through dictionary and check if guess is correct
         for(Map.Entry<Long,String> entry : guesses.entrySet()){
+            User playerThatRecreatedPicture = getPlayerInGame(entry.getKey(),game.getGameId());
+            String rightGuess = playerThatRecreatedPicture.getCoordinatesAssignedPicture().toString();
             if(entry.getValue().equals(rightGuess)){
-                //update points for both players in user entity
-                User guessingUser = getPlayerInGame(entry.getKey(), gameId);
-                int updatedScore1 = playerThatRecreatedPicture.getPoints() + 1;
-                playerThatRecreatedPicture.setPoints(updatedScore1);
-                int updatedScore2 = guessingUser.getPoints() + 1;
-                guessingUser.setPoints(updatedScore2);
-                System.out.println("userId"+guessingUser.getId() +":"+ guessingUser.getPoints());
-
+                int updatedScore1 = playerThatSubmitsGuesses.getPoints()+1;
+                playerThatSubmitsGuesses.setPoints(updatedScore1);
+                int updatedScore2 = playerThatRecreatedPicture.getPoints()+1;
+                playerThatRecreatedPicture.setPoints(updatedScore2);
+                System.out.println("userId"+playerThatSubmitsGuesses.getId() +":"+ playerThatSubmitsGuesses.getPoints());
             }
         }
+
     }
 
     public Game updateGame(Long gameId){
@@ -433,7 +428,7 @@ public class GameService {
         Game game = getExistingGame(gameId);
         Map<String,String> pictureGrid = new HashMap<>();
 
-        List<GridCoordinates> coordinatesList = game.getGridCoordinates();
+        List<GridCoordinates> coordinatesList = Arrays.asList(GridCoordinates.values());
         System.out.println(coordinatesList);
         List<String> pictureList = game.getGridPictures();
 

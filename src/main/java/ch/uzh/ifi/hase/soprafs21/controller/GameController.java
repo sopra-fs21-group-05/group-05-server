@@ -129,13 +129,13 @@ public class GameController {
     }
 
     //get a list of all submitted pictures in the current round
-    @GetMapping("/game/recreations/{gameId}")
+    @GetMapping("/game/recreations/overview/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<String> getSubmittedPictures(@PathVariable("gameId") Long gameId){
+    public Map<Long,String> getSubmittedPictures(@PathVariable("gameId") Long gameId){
         //commit for referencing respective task
         //get list of all submitted pictures
-        List<String> submittedPictures = gameService.getSubmittedPictures(gameId);
+        Map<Long,String> submittedPictures = gameService.getSubmittedPictures(gameId);
 
         return submittedPictures;
     }

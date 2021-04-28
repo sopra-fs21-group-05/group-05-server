@@ -113,7 +113,7 @@ public class GameroomServiceTest {
         gameroomService.createGameroom(testGameroom);
 
         // when -> setup additional mocks for GameroomRepository
-        Mockito.when(gameroomRepository.getOne(Mockito.any())).thenReturn(testGameroom);
+        Mockito.when(gameroomRepository.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(testGameroom));
 
         // then -> attempt to create second gameroom with same gameroom -> check that an error is thrown
         assertThrows(ResponseStatusException.class, () -> gameroomService.joinGameroom(wrongGameroom, testUser));
@@ -129,7 +129,7 @@ public class GameroomServiceTest {
         gameroomService.createGameroom(testGameroom);
 
         // when -> setup additional mocks for GameroomRepository
-        Mockito.when(gameroomRepository.getOne(Mockito.any())).thenReturn(testGameroom);
+        Mockito.when(gameroomRepository.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(testGameroom));
 
         // then -> attempt to create second gameroom with same gameroom -> check that an error is thrown
         assertThrows(ResponseStatusException.class, () -> gameroomService.joinGameroom(testGameroom, testUser));

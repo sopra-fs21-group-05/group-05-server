@@ -366,7 +366,7 @@ public class GameService {
 
 
     //returns a list of all submitted pictures in the current round
-    public List<String> getSubmittedPictures(Long gameId) {
+    public Map<Long,String> getSubmittedPictures(Long gameId) {
         Game game = getExistingGame(gameId);
 
         String baseErrorMessage = "Could not find the submitted pictures.";
@@ -375,10 +375,7 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage));
         }
 
-        Map<Long,String> userRecreations = game.getUserRecreations();
-        List<String> submittedPictures = new ArrayList<String>(userRecreations.values());
-
-        return submittedPictures;
+        return game.getUserRecreations();
     }
 
     

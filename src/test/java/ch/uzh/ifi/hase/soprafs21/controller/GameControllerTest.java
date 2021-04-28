@@ -219,14 +219,14 @@ public class GameControllerTest {
         Game game = new Game();
         game.setGameId(1L);
 
-        List<String> userRecreations = new ArrayList<>();
-        userRecreations.add("recreatedPicture");
-        userRecreations.add("recreatedPicture2");
+        Map<Long, String> userRecreations = new HashMap<>();
+        userRecreations.put(2L,"recreatedPicture");
+        userRecreations.put(3L,"recreatedPicture2");
 
         given(gameService.getSubmittedPictures(Mockito.any())).willReturn(userRecreations);
 
         // when/then -> do the request + validate the result
-        MockHttpServletRequestBuilder getRequest = get("/game/recreations/{gameId}",game.getGameId());
+        MockHttpServletRequestBuilder getRequest = get("/game/recreations/overview/{gameId}",game.getGameId());
 
 
         // then

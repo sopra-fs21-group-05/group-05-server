@@ -89,7 +89,7 @@ public class GameroomServiceTest {
         joinedTestGameroom.setUsers(users);
 
         // when -> setup additional mocks for GameroomRepository
-        Mockito.when(gameroomRepository.getOne(Mockito.any())).thenReturn(testGameroom);
+        Mockito.when(gameroomRepository.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(testGameroom));
         Mockito.when(gameroomRepository.save(Mockito.any())).thenReturn(joinedTestGameroom);
 
         Gameroom joinedGameroom = gameroomService.joinGameroom(testGameroom, testUser);

@@ -266,8 +266,6 @@ public class GameControllerTest {
         Game game = new Game();
         game.setGameId(1L);
         game.setRoundNr(2);
-        Map<Long, String> userRecreations = new HashMap<>();
-        game.setUserRecreations(userRecreations);
 
 
         given(gameService.updateGame(Mockito.any())).willReturn(game);

@@ -30,21 +30,6 @@ public class Game implements Serializable {
     @OneToMany
     private List<Picture> gridPictures;
 
-
-    //Map with key=userId and value=string(Base64 encoded) recreated picture
-    @MapKeyColumn(name="userId")
-    @Column(name="submittedPicture")
-    @ElementCollection
-    private Map<Long,String> userRecreations = new HashMap<>();
-
-   /* //gridCoordinates1 and gridCoordinates2 are joined in gridCoordinates
-    @ElementCollection
-    private final List<GridCoordinates> gridCoordinates1 = Arrays.asList(GridCoordinates.values());
-
-    @ElementCollection
-    private List<GridCoordinates> gridCoordinates2 = Arrays.asList(GridCoordinates.values());*/
-
-
     @ElementCollection
     private List<GridCoordinates> gridCoordinates = Arrays.asList(GridCoordinates.values());
 
@@ -63,12 +48,6 @@ public class Game implements Serializable {
 
     public int getRoundNr() { return roundNr; }
     public void setRoundNr(int roundNr) { this.roundNr = roundNr; }
-
-    public Map<Long,String> getUserRecreations() { return userRecreations; }
-    public void setUserRecreations(Map<Long,String> userRecreations){
-        this.userRecreations = userRecreations;
-    }
-
 
     public List<User> getUserList() { return userList; }
     public void setUserList(List<User> userList) { this.userList = userList; }

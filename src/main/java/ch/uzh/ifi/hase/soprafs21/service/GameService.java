@@ -340,25 +340,6 @@ public class GameService {
         submissions.put(user.getId(),user.getRecreatedPicture());
 
         return submissions;
-
-        /*Game currentGame = getExistingGame(gameInput.getGameId());
-        User user = getPlayerInGame(userId,currentGame.getGameId());
-        Map<Long,String> submissions = new HashMap<>();
-        submissions.putAll(currentGame.getUserRecreations());
-
-        String baseErrorMessage = "The provided %s was not found. ";
-
-        if(submittedPicture==null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "picture"));
-        }
-
-        //append userRecreations Map in currentGame
-        submissions.put(user.getId(),submittedPicture);
-        System.out.println(submissions);
-        currentGame.setUserRecreations(submissions);
-
-        //return Map
-        return currentGame.getUserRecreations();*/
     }
 
     public List<Picture> makePictureList(){
@@ -395,14 +376,6 @@ public class GameService {
         }
 
         return submissions;
-
-        /*String baseErrorMessage = "Could not find the submitted pictures.";
-
-        if(game.getUserRecreations().isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage));
-        }
-
-        return game.getUserRecreations();*/
     }
 
     
@@ -443,8 +416,6 @@ public class GameService {
     public Game updateGame(Long gameId){
         Game game = gameRepository.getOne(gameId);
         game.setRoundNr(game.getRoundNr() + 1);
-        Map<Long,String> userRecreations = new HashMap<>();
-        game.setUserRecreations(userRecreations);
         gameRepository.save(game);
         gameRepository.flush();
 

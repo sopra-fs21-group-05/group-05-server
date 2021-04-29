@@ -55,6 +55,8 @@ public class Game implements Serializable {
     public List<GridCoordinates> getGridCoordinates() {
         return gridCoordinates;
     }
+    public void setGridCoordinates(List<GridCoordinates> gridCoordinates){ this.gridCoordinates=gridCoordinates;}
+
 
     public Scoreboard getScoreboard() { return scoreboard; }
     public void setScoreboard(Scoreboard scoreboard) { this.scoreboard = scoreboard; }

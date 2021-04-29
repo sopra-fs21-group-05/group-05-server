@@ -92,7 +92,7 @@ public class UserService {
 
         //Setting the user ONLINE & saving the information in the userRepository
         userByUsername.setStatus(UserStatus.ONLINE);
-        userByUsername.setToken("1L");
+        userByUsername.setToken(UUID.randomUUID().toString());
         userRepository.save(userByUsername);
         userRepository.flush();
         return userByUsername;

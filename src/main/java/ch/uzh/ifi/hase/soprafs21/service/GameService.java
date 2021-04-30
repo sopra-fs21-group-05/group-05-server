@@ -369,10 +369,12 @@ public class GameService {
         Map<Long,String> submissions = new HashMap<>();
 
         for (User u: game.getUserList()) {
-            if(u.getRecreatedPicture().isEmpty()){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find the submitted pictures.");
+            if(u.getRecreatedPicture() == null){
+                submissions.put(u.getId(),"");
+                //throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find the submitted pictures.");
+            } else{
+                submissions.put(u.getId(),u.getRecreatedPicture());
             }
-            submissions.put(u.getId(),u.getRecreatedPicture());
         }
 
         return submissions;

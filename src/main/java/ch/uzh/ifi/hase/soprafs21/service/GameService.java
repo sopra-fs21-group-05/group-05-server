@@ -391,10 +391,12 @@ public class GameService {
                 .collect(Collectors.toList());
 
         //check if guesses are all valid
-        String baseErrorMessage = "Contains invalid guesses.";
+        String baseErrorMessage = "Contains invalid guesses. Please enter valid coordinates!";
         for(String guess : guesses.values()){
             System.out.println(guess);
-            if(!gridCoordinates.stream().anyMatch(coordinate -> guess.equals(coordinate))){
+            String finalGuess = guess.toUpperCase();
+            System.out.println(finalGuess);
+            if(!gridCoordinates.stream().anyMatch(coordinate -> finalGuess.equals(coordinate))){
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage));
             }
         }
@@ -404,7 +406,7 @@ public class GameService {
         for(Map.Entry<Long,String> entry : guesses.entrySet()){
             User playerThatRecreatedPicture = getPlayerInGame(entry.getKey(),game.getGameId());
             String rightGuess = playerThatRecreatedPicture.getCoordinatesAssignedPicture().toString();
-            if(entry.getValue().equals(rightGuess)){
+            if(entry.getValue().toUpperCase().equals(rightGuess)){
                 int updatedScore1 = playerThatSubmitsGuesses.getPoints()+1;
                 playerThatSubmitsGuesses.setPoints(updatedScore1);
                 int updatedScore2 = playerThatRecreatedPicture.getPoints()+1;

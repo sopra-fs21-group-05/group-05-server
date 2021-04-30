@@ -60,14 +60,10 @@ public class ScoreboardService {
     }
 
     public void updateScoreboard(List<User> users, Scoreboard scoreboard){
-        Map<Long,Integer> oldPoints = scoreboard.getUserPoints();
-        Map<Long,Integer> newPoints = oldPoints;
-
-
+        Map<Long,Integer> newPoints = new HashMap<>();
+        
         for (User u: users) {
-            int old = oldPoints.get(u.getId());
-            int add = u.getPoints();
-            newPoints.put(u.getId(), old + add);
+            newPoints.put(u.getId(),u.getPoints());
         }
 
         scoreboard.setUserPoints(newPoints);

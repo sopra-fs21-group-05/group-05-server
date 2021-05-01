@@ -68,7 +68,7 @@ public class GameController {
         return pic;
     }
 
-
+    // get list of winners
     @GetMapping("/winner")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -82,7 +82,7 @@ public class GameController {
         return winners;
 
     }
-
+    //get the 16 grid pictures
     @GetMapping("/game/setup/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -180,6 +180,14 @@ public class GameController {
     public Map<String,String> getPicturegrid(@PathVariable ("gameId") Long gameId){
         Map<String,String> grid = gameService.getPictureGrid(gameId);
         return grid;
+    }
+    // get the current round nr
+    @GetMapping("game/round/{gameId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public int getRoundNr(@PathVariable ("gameId") Long gameId){
+        Game game = gameService.getExistingGame(gameId);
+        return game.getRoundNr();
     }
 
 

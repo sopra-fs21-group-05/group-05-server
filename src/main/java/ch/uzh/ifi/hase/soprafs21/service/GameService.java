@@ -219,12 +219,27 @@ public class GameService {
 
     public List<String> getPicturesFromPixabay(){
         List<String> pictures = new ArrayList<>();
-        List<String> keywords = new ArrayList<String>();
-        Collections.addAll(keywords, "yellow+flower", "red+car", "tree", "fruits", "butterfly", "mushroom",
-                "school", "beach", "bike", "farm", "safari", "balloon", "rainbow", "books", "street", "sunrise");
+        List<String> keywords = new ArrayList<>();
+        Collections.addAll(keywords, "yellow+flower", "red+car", "jungle", "fruits", "butterfly", "mushroom",
+                "palm+tree", "bike", "farm", "safari", "balloon", "rainbow", "book+shelf", "traffic", "sunrise", "swan",
+                "computer", "calculator", "coffee", "chocolate", "swiss+alps", "sandcastle", "frog", "waterfall",
+                "hot+dog", "cat", "snowman", "waffle", "sunglasses", "surfboard", "jellyfish", "horse", "pyramids",
+                "flame", "cow", "guitar", "piano", "clock", "storm", "umbrella", "baseball", "mailbox", "toast",
+                "reef", "hill", "police", "subway", "tent", "skyscraper", "tower+bridge", "parachute", "space+shuttle");
+
+        //choose 16 random keywords of the list
+        List<String> selected = new ArrayList<>();
+        int keywordNo = keywords.size();
+        Random rand = new Random();
+        while(selected.size() < 16){
+            int randomIndex = rand.nextInt(keywordNo);
+            if(!selected.contains(keywords.get(randomIndex))){
+                selected.add(keywords.get(randomIndex));
+            }
+        }
 
         //get one base64 encoded picture for each keyword
-        for (String k:keywords) {
+        for (String k:selected) {
             try {
                 String responseBody = sendGetRequest(k);
                 String urlString = parseJson(responseBody);

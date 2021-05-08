@@ -240,20 +240,32 @@ public class GameService {
 
         //get one base64 encoded picture for each keyword
         for (String k:selected) {
-            try {
-                String responseBody = sendGetRequest(k);
-                String urlString = parseJson(responseBody);
-                URL url = new URL(urlString);
-                byte[] byteArray = getPictureFromUrl(url);
-                String encodedPicture = encodePicture(byteArray);
-                pictures.add(encodedPicture);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+            String responseBody = sendGetRequest(k);
+            String encodedPicture = getEncodedPictureFromResponse(responseBody);
 
+            //check if this picture duplicated, get another one till not a duplicate
+            while(pictures.contains(encodedPicture)){
+                encodedPicture = getEncodedPictureFromResponse(responseBody);
+            }
+            pictures.add(encodedPicture);
         }
         return pictures;
+    }
+
+    private String getEncodedPictureFromResponse(String responseBody){
+        String encodedPicture = "";
+        try {
+            String urlString = parseJson(responseBody);
+            URL url = new URL(urlString);
+            byte[] byteArray = getPictureFromUrl(url);
+            encodedPicture = encodePicture(byteArray);
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return encodedPicture;
     }
 
 
@@ -312,7 +324,7 @@ public class GameService {
         JSONObject json = new JSONObject(jsonString);
 
         JSONArray hitsJSONArray = json.getJSONArray("hits");
-        //get webformaturl of  one of the 5 results, as we only need 1 picture of each categroy
+        //get webformaturl of  one of the 5 results, as we only need 1 picture of each category
         Random random = new Random();
         int i = random.nextInt(5); //random int from 0 to 4
         JSONObject hitJSONObject = hitsJSONArray.getJSONObject(i);

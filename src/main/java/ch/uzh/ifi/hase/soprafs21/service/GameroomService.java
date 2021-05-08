@@ -95,6 +95,22 @@ public class GameroomService {
         return gameroomById;
     }
 
+    public void leaveGameroom(Long roomId, User user){
+        Gameroom gameroom = getGameroomById(roomId);
+
+        List<User> userList = gameroom.getUsers();
+
+        if (!userList.contains(user)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Can't leave a gameroom you never joined!");
+        }
+        else{
+            userList.remove(user);
+            gameroom.setUsers(userList);
+            gameroomRespository.save(gameroom);
+            gameroomRespository.flush();
+        }
+    }
+
     private void checkIfGameroomExists(Gameroom gameroom) {
         Gameroom gameroomByName = gameroomRespository.findByRoomname(gameroom.getRoomname());
 

@@ -130,4 +130,14 @@ public class GameroomController {
         Gameroom updatedGameroom = gameroomService.joinGameroom(gameroomInput, user);
     }
 
+
+    @PutMapping("/gamerooms/list/{roomId}/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void leaveGameroom(@PathVariable("roomId")Long roomId, @PathVariable("userId") Long userId){
+        User user = userService.getExistingUser(userId);
+
+        gameroomService.leaveGameroom(roomId,user);
+    }
+
 }

@@ -71,4 +71,10 @@ public class ScoreboardService {
         scoreboard = scoreboardRepository.save(scoreboard);
         scoreboardRepository.flush();
     }
+
+    public void endGame(Game game){
+        Scoreboard scoreboard = scoreboardRepository.getScoreboardByGame(game);
+        scoreboardRepository.delete(scoreboard);
+        scoreboardRepository.flush();
+    }
 }

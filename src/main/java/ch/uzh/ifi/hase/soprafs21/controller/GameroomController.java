@@ -140,4 +140,15 @@ public class GameroomController {
         gameroomService.leaveGameroom(roomId,user);
     }
 
+    @PutMapping("/gamerooms/{roomId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void endGame(@PathVariable Long roomId){
+        Gameroom gameroom = gameroomService.getGameroomById(roomId);
+        Game endedGame = gameroom.getGame();
+
+        gameroomService.endGame(roomId);
+        gameService.endGame(endedGame.getGameId());
+    }
+
 }

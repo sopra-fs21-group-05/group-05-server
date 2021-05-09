@@ -138,4 +138,12 @@ public class GameroomService {
 
         return fetchedgameroom;
     }
+
+    public void endGame(Long roomId){
+        Gameroom gameroom = getGameroomById(roomId);
+        gameroom.setGame(null);
+        gameroom.setStartedGame(null);
+        gameroomRespository.save(gameroom);
+        gameroomRespository.flush();
+    }
 }

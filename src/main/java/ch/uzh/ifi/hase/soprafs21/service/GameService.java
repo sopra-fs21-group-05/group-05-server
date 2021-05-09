@@ -479,6 +479,12 @@ public class GameService {
 
         return pictureGrid;
     }
+
+    public void endGame(Long gameId){
+        scoreboardService.endGame(gameRepository.getOne(gameId));
+        gameRepository.deleteById(gameId);
+        gameRepository.flush();
+    }
 }
 
 

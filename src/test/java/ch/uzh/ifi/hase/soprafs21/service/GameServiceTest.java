@@ -8,6 +8,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.Picture;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
+import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,12 @@ public class GameServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PictureRepository pictureRepository;
+
+    @Mock
+    private GameroomService gameroomService;
 
     @InjectMocks
     private GameService gameService;
@@ -187,6 +194,102 @@ public class GameServiceTest {
         assertEquals(assignedPicture.size(),1);
     }
 
+
+    @Test
+    void getExistingGame_returnsGameIfGameExists() {
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("room1");
+        gameroom.setPassword("pass");
+        gameroom.setId(2L);
+
+        Game createdGame = gameService.createGame(gameroom);
+        createdGame.setRoundNr(1);
+
+        // when -> setup additional mocks for GameRepository
+        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
+        when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
+        when(gameRepository.getOne(any())).thenReturn(createdGame);
+
+        Game existingGame = gameService.getExistingGame(createdGame.getGameId());
+        assertNotNull(existingGame);
+        assertEquals(createdGame.getGameId(), existingGame.getGameId());
+        assertEquals(createdGame.getRoundNr(),existingGame.getRoundNr());
+    }
+
+    @Test
+    void getExistingGame_ThrowsExceptionForNonExistentGame() {
+        assertThrows(ResponseStatusException.class, () -> gameService.getExistingGame(1L));
+    }
+
+    @Test
+    void getPlayerInGame_returnsUserIfPlayerInGame() {
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("room1");
+        gameroom.setPassword("pass");
+        gameroom.setId(2L);
+
+        Game createdGame = gameService.createGame(gameroom);
+        createdGame.setRoundNr(1);
+
+        User user = new User();
+        user.setToken("token");
+        user.setId(3L);
+
+        User user2 = new User();
+        user2.setToken("token");
+        user2.setId(4L);
+
+        List<User> players = new ArrayList<>();
+        players.add(user);
+        players.add(user2);
+
+        createdGame.setUserList(players);
+
+        // when -> setup additional mocks for GameRepository
+        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
+        when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
+        when(gameRepository.getOne(any())).thenReturn(createdGame);
+
+        User existingPlayer = gameService.getPlayerInGame(user2.getId(),createdGame.getGameId());
+        assertNotNull(existingPlayer);
+        assertEquals(user2.getId(), existingPlayer.getId());
+        assertEquals(user2.getToken(),existingPlayer.getToken());
+    }
+
+
+    @Test
+    void getPlayerInGame_ThrowsExceptionIfPlayerNotInGame() {
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("room1");
+        gameroom.setPassword("pass");
+        gameroom.setId(2L);
+
+        Game createdGame = gameService.createGame(gameroom);
+        createdGame.setRoundNr(1);
+
+        User user = new User();
+        user.setToken("token");
+        user.setId(3L);
+
+        User user2 = new User();
+        user2.setToken("token");
+        user2.setId(4L);
+
+        List<User> players = new ArrayList<>();
+        players.add(user);
+        players.add(user2);
+
+        createdGame.setUserList(players);
+
+        // when -> setup additional mocks for GameRepository
+        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
+        when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
+        when(gameRepository.getOne(any())).thenReturn(createdGame);
+
+        assertThrows(ResponseStatusException.class, () -> gameService.getPlayerInGame(5L,createdGame.getGameId()));
+    }
+
+
     @Test
     void getPlayers_returnsListOfPlayers() {
         Gameroom gameroom = new Gameroom();
@@ -305,7 +408,152 @@ public class GameServiceTest {
         assertTrue(user3.getRestrictedMode());
     }
 
-    
+    @Test
+    void getPicturesFromPixabay_returnsListOfEncodedStrings(){
+        List<String> pictures = gameService.getPicturesFromPixabay();
+        assertNotNull(pictures);
+        assertEquals(pictures.size(),16);
+        assertEquals(pictures.get(0).getClass(), String.class);
+    }
+
+    @Test
+    void getGameroomById_returnsGameroom(){
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("room1");
+        gameroom.setPassword("pass");
+        gameroom.setId(2L);
+
+        //mock the gameroom service method
+        when(gameroomService.getGameroomById(Mockito.any())).thenReturn(gameroom);
+
+        Gameroom retrievedGameroom = gameService.getGameroomById(gameroom.getId());
+        assertNotNull(retrievedGameroom);
+        assertEquals(retrievedGameroom.getId(),gameroom.getId());
+        assertEquals(retrievedGameroom.getRoomname(),gameroom.getRoomname());
+    }
+
+
+    @Test
+    void submitPicture_returnsMapOfSubmittedPictures() {
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("room1");
+        gameroom.setPassword("pass");
+        gameroom.setId(2L);
+
+        Game createdGame = gameService.createGame(gameroom);
+
+        User user = new User();
+        user.setToken("token");
+        user.setId(3L);
+
+        List<User> players = new ArrayList<>();
+        players.add(user);
+
+        createdGame.setUserList(players);
+
+        String pictureAsString = "recreatedPicture";
+
+        // when -> setup additional mocks for GameRepository
+        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
+        when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
+        when(gameRepository.getOne(any())).thenReturn(createdGame);
+
+
+        Map<Long,String> submittedPictures = gameService.submitPicture(createdGame,pictureAsString,user.getId());
+        assertFalse(submittedPictures.isEmpty());
+        assertEquals(submittedPictures.size(),1);
+        assertTrue(submittedPictures.containsKey(user.getId()));
+    }
+
+    @Test
+    void makePictureList_returnsPictureList(){
+        List<Picture> pictureList = gameService.makePictureList();
+        assertFalse(pictureList.isEmpty());
+        assertEquals(pictureList.size(),16);
+    }
+
+    @Test
+    void createPicture_returnsPicture(){
+        String pictureAsString = "pictureString";
+        Picture picture = gameService.createPicture(pictureAsString);
+        assertEquals(picture.getClass(), Picture.class);
+    }
+
+    @Test
+    void getSubmittedPictures_returnsMapOfSubmissions(){
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("room1");
+        gameroom.setPassword("pass");
+        gameroom.setId(2L);
+
+        Game createdGame = gameService.createGame(gameroom);
+
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setRecreatedPicture("recreation1");
+
+        List<User> players = new ArrayList<>();
+        players.add(user1);
+
+        createdGame.setUserList(players);
+
+
+        // when -> setup additional mocks for GameRepository
+        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
+        when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
+        when(gameRepository.getOne(any())).thenReturn(createdGame);
+
+        Map<Long,String> submissions = gameService.getSubmittedPictures(createdGame.getGameId());
+        assertFalse(submissions.isEmpty());
+        assertTrue(submissions.containsKey(user1.getId()));
+        assertEquals(submissions.size(),1);
+    }
+
+    @Test
+    void submitAndCheckGuesses_updatesScores(){
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("room1");
+        gameroom.setPassword("pass");
+        gameroom.setId(2L);
+
+        Game createdGame = gameService.createGame(gameroom);
+
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setCoordinatesAssignedPicture(GridCoordinates.A1);
+
+        User user2 = new User();
+        user2.setId(2L);
+
+
+        List<User> players = new ArrayList<>();
+        players.add(user1);
+        players.add(user2);
+
+        createdGame.setUserList(players);
+
+        Map<Long,String> guesses = new HashMap<>();
+        guesses.put(1L,"A1");
+
+        // when -> setup additional mocks for GameRepository
+        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
+        when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
+        when(gameRepository.getOne(any())).thenReturn(createdGame);
+
+        gameService.submitAndCheckGuesses(createdGame.getGameId(), user2.getId(), guesses);
+        assertEquals(user1.getPoints(), 1);
+        assertEquals(user2.getPoints(), 1);
+    }
+
+
+
+
+
+
+
+
+
+
 
 }
 

@@ -545,10 +545,85 @@ public class GameServiceTest {
         assertEquals(user2.getPoints(), 1);
     }
 
+    @Test
+    void updateGame_returnsUpdatedGame(){
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("room1");
+        gameroom.setPassword("pass");
+        gameroom.setId(2L);
+
+        Game createdGame = gameService.createGame(gameroom);
+
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setRecreatedPicture("recreation1");
 
 
+        List<User> players = new ArrayList<>();
+        players.add(user1);
+
+        createdGame.setUserList(players);
+
+        // when -> setup additional mocks for GameRepository
+        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
+        when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
+        when(gameRepository.getOne(any())).thenReturn(createdGame);
+
+        Game updatedGame = gameService.updateGame(createdGame.getGameId());
+        assertEquals(updatedGame.getRoundNr(), 2);
+        assertEquals(user1.getRecreatedPicture(),"");
+    }
+
+    @Test
+    void getPictureGrid_returnsMapOfGridPictures(){
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("room1");
+        gameroom.setPassword("pass");
+        gameroom.setId(2L);
+
+        Game createdGame = gameService.createGame(gameroom);
+
+        Picture picture1 = new Picture();
+        picture1.setPictureId(1L);
+        Picture picture2 = new Picture();
+        picture2.setPictureId(3L);
+        Picture picture3 = new Picture();
+        picture3.setPictureId(4L);
+        Picture picture4 = new Picture();
+        picture4.setPictureId(5L);
 
 
+        List<Picture> gridPictures = new ArrayList<>();
+        gridPictures.add(picture1);
+        gridPictures.add(picture2);
+        gridPictures.add(picture3);
+        gridPictures.add(picture4);
+        gridPictures.add(picture1);
+        gridPictures.add(picture2);
+        gridPictures.add(picture3);
+        gridPictures.add(picture4);
+        gridPictures.add(picture1);
+        gridPictures.add(picture2);
+        gridPictures.add(picture3);
+        gridPictures.add(picture4);
+        gridPictures.add(picture1);
+        gridPictures.add(picture2);
+        gridPictures.add(picture3);
+        gridPictures.add(picture4);
+
+        createdGame.setGridPictures(gridPictures);
+
+        // when -> setup additional mocks for GameRepository
+        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
+        when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
+        when(gameRepository.getOne(any())).thenReturn(createdGame);
+
+        Map<String, String> pictureGrid = gameService.getPictureGrid(createdGame.getGameId());
+        assertEquals(pictureGrid.size(), 16);
+        assertTrue(pictureGrid.keySet().contains("A3"));
+        assertTrue(pictureGrid.keySet().contains("D4"));
+
+    }
 
 
 

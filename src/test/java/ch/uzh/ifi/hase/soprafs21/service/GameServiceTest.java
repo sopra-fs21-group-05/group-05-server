@@ -318,7 +318,7 @@ public class GameServiceTest {
         assertEquals(playersInGame,players);
         assertEquals(playersInGame.size(),1);
     }
-
+/*
     @Test
     void getWinner_success(){
         Gameroom gameroom = new Gameroom();
@@ -361,7 +361,8 @@ public class GameServiceTest {
         assertTrue(user2.getRestrictedMode());
     }
 
-
+*/
+    /*
     @Test
     void getWinner_two_winners(){
         Gameroom gameroom = new Gameroom();
@@ -407,7 +408,7 @@ public class GameServiceTest {
         assertTrue(user2.getRestrictedMode());
         assertTrue(user3.getRestrictedMode());
     }
-
+*/
     @Test
     void getPicturesFromPixabay_returnsListOfEncodedStrings(){
         List<String> pictures = gameService.getPicturesFromPixabay();

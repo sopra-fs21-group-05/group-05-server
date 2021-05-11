@@ -32,6 +32,9 @@ public class Gameroom implements Serializable{
     @OneToMany
     private List<User> users = new ArrayList<User>();
 
+    @OneToMany
+    private List<User> lastWinner = new ArrayList<>();
+
     @OneToOne
     private Game game;
 
@@ -63,4 +66,11 @@ public class Gameroom implements Serializable{
     public Long getStartedGame() { return startedGame; }
     public void setStartedGame(Long startedGame) { this.startedGame = startedGame; }
 
+    public List<User> getLastWinner() {
+        return lastWinner;
+    }
+
+    public void setLastWinner(List<User> lastWinner) {
+        this.lastWinner = lastWinner;
+    }
 }

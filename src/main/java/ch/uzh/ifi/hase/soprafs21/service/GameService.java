@@ -211,7 +211,6 @@ public class GameService {
         for (User user: getPlayers(gameId)){
             if(user.getPoints() == max){
                 winners.add(user);
-                UserService.restrictPlayer(user);
             }
         }
         return winners;

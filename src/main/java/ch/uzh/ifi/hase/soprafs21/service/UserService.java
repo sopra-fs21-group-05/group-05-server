@@ -118,7 +118,7 @@ public class UserService {
         return optionalUser.get();
     }
 
-    public static void restrictPlayer(User user){
+    public void restrictPlayer(User user){
         user.setRestrictedMode(true);
     }
 

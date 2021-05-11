@@ -91,6 +91,12 @@ public class GameroomController {
     @ResponseBody
     public Long putGameroom(@PathVariable("roomId") Long roomId) {
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
+        //restrict the winner(s) from the previous round, if any
+        if(!gameroom.getLastWinner().isEmpty()){
+            for (User winner: gameroom.getLastWinner()){
+                userService.restrictPlayer(winner);
+            }
+        }
         // create and initialize new game
         Game newGame = gameService.createGame(gameroom);
         // create scoreboard

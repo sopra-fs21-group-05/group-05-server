@@ -1,20 +1,17 @@
 package ch.uzh.ifi.hase.soprafs21.controller;
 
-import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
-import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.Picture;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
-import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.AssignedPictureDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GamePostDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.GameService;
+import ch.uzh.ifi.hase.soprafs21.service.GameroomService;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +25,13 @@ import java.util.Map;
 @RestController
 public class GameController {
     private final GameService gameService;
+    private final GameroomService gameroomService;
+    private final UserService userService;
 
-    GameController(GameService gameService) {
+    GameController(GameService gameService, GameroomService gameroomService, UserService userService) {
         this.gameService = gameService;
+        this.gameroomService = gameroomService;
+        this.userService = userService;
     }
 
 
@@ -69,13 +70,18 @@ public class GameController {
     }
 
     // get list of winners
-    @GetMapping("/winner")
+    @GetMapping("/{gameId}/winner")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<UserGetDTO> getWinner(@RequestBody GameGetDTO gameGetDTO) {
-        List<User> winnerList = gameService.getWinner(gameGetDTO.getGameId());
-        List<UserGetDTO> winners = new ArrayList<>();
+    public List<UserGetDTO> getWinner(@PathVariable Long gameId) {
+        List<User> winnerList = gameService.getWinner(gameId);
 
+        //store the last winner in the gameroom
+        Gameroom gameroom = gameroomService.getGameroomByGameId(gameId);
+        gameroomService.storeWinner(gameroom.getId(), winnerList);
+
+        //convert winner list
+        List<UserGetDTO> winners = new ArrayList<>();
         for (User user : winnerList) {
             winners.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
         }
@@ -87,8 +93,8 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<String> gameSetup(@PathVariable Long roomId){
-        //get 16 pictures via api call to pixabay
         Gameroom gameroom = gameService.getGameroomById(roomId);
+        //get 16 pictures
         List<Picture> pictureList = gameService.makePictureList();
 
         Game game = gameroom.getGame();

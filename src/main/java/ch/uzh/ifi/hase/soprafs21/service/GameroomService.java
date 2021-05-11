@@ -111,6 +111,23 @@ public class GameroomService {
         }
     }
 
+    public void storeWinner(Long roomId, List<User> winners){
+        Gameroom gameroom = getGameroomById(roomId);
+        gameroom.setLastWinner(winners);
+        gameroomRespository.save(gameroom);
+        gameroomRespository.flush();
+    }
+
+    public Gameroom getGameroomByGameId(Long gameId){
+        List<Gameroom> allGamerooms = gameroomRespository.findAll();
+        for(Gameroom gameroom : allGamerooms){
+            if(gameroom.getGame().getGameId() == gameId){
+                return gameroom;
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game was found in this gameroom");
+    }
+
     private void checkIfGameroomExists(Gameroom gameroom) {
         Gameroom gameroomByName = gameroomRespository.findByRoomname(gameroom.getRoomname());
 

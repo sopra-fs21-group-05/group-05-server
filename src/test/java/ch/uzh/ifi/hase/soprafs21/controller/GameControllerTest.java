@@ -153,7 +153,7 @@ public class GameControllerTest {
                 .andExpect(status().isOk());
     }
 
-/*
+
     @Test
     public void getWinner_returnsListOfWinners() throws Exception {
         User user = new User();
@@ -168,6 +168,9 @@ public class GameControllerTest {
         winnersList.add(user);
         winnersList.add(user2);
 
+        Gameroom gameroom = new Gameroom();
+        given(gameRoomService.getGameroomByGameId(Mockito.any())).willReturn(gameroom);
+
 
         GameGetDTO gameGetDTO = new GameGetDTO();
         gameGetDTO.setGameId(3L);
@@ -175,8 +178,9 @@ public class GameControllerTest {
 
         given(gameService.getWinner(Mockito.any())).willReturn(winnersList);
 
+
         // when/then -> do the request + validate the result
-        MockHttpServletRequestBuilder getRequest = get("/winner")
+        MockHttpServletRequestBuilder getRequest = get("/3/winner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(gameGetDTO));
 
@@ -185,7 +189,7 @@ public class GameControllerTest {
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk());
     }
-*/
+
     @Test
     public void submitRecreatedPicture_returnsLocationAsString() throws Exception {
         User user = new User();

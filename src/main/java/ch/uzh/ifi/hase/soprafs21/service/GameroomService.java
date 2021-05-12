@@ -105,9 +105,15 @@ public class GameroomService {
         }
         else{
             userList.remove(user);
-            gameroom.setUsers(userList);
-            gameroomRespository.save(gameroom);
-            gameroomRespository.flush();
+            if(userList.isEmpty()){
+                gameroomRespository.delete(gameroom);
+                gameroomRespository.flush();
+            }
+            else {
+                gameroom.setUsers(userList);
+                gameroomRespository.save(gameroom);
+                gameroomRespository.flush();
+            }
         }
     }
 

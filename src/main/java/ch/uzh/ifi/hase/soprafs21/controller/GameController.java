@@ -60,7 +60,7 @@ public class GameController {
         for (Map.Entry<String, String> entry : assignedCoordinates.entrySet()) {
             coordinate = entry.getKey();
             picture = entry.getValue();
-            System.out.println("Key: " + coordinate + ", Value: " + picture);
+            //System.out.println("Key: " + coordinate + ", Value: " + picture);
         }
         AssignedPictureDTO pic = new AssignedPictureDTO();
         pic.setCoordinate(coordinate);

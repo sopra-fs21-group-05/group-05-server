@@ -161,6 +161,8 @@ public class GameService {
         Map<String, String> assignedPicture = new HashMap<>();
         assignedPicture.put(randomElement.toString(),game.getGridPictures().get(pictureIndex));
 
+        System.out.println(coordinatesList);
+        game.setGridCoordinates(coordinatesList);
 
         return assignedPicture;
     }

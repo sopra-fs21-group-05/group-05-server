@@ -3,6 +3,8 @@ package ch.uzh.ifi.hase.soprafs21.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
@@ -26,12 +28,17 @@ public class Game implements Serializable {
     @OneToMany
     private List<User> userList = new ArrayList<User>();
 
-
     @OneToMany
     private List<Picture> gridPictures;
 
     @ElementCollection
-    private List<GridCoordinates> gridCoordinates = Arrays.asList(GridCoordinates.values());
+    private List<GridCoordinates> gridCoordinates1 = Arrays.asList(GridCoordinates.values());
+
+    @ElementCollection
+    private List<GridCoordinates> gridCoordinates2 = Arrays.asList(GridCoordinates.values());
+
+    @ElementCollection
+    private List<GridCoordinates> gridCoordinates = Stream.concat(gridCoordinates1.stream(),gridCoordinates2.stream()).collect(Collectors.toList());
 
 
     @OneToOne(mappedBy = "game")

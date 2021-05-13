@@ -106,13 +106,7 @@ public class GameService {
 
     //assigns the "next" materialset to specific player
     public User assignMaterialset(Long gameId, Long userId) {
-        Game game = getExistingGame(gameId);
         User user = getPlayerInGame(userId, gameId);
-
-        String baseErrorMessage = "The provided %s is not the current %s. ";
-        if(game.getRoundNr() != gameRepository.getOne(game.getGameId()).getRoundNr()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "roundNr", "roundNr"));
-        }
 
         MaterialSet newSet;
         int newSetNr;
@@ -136,11 +130,6 @@ public class GameService {
         User user = getPlayerInGame(userId,gameId);
         List<GridCoordinates> coordinatesList = game.getGridCoordinates();
 
-        String baseErrorMessage = "The provided %s is not the current %s. ";
-        if(game.getRoundNr() != gameRepository.getOne(game.getGameId()).getRoundNr()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "roundNr", "roundNr"));
-        }
-
         Random rand = new Random();
         //assign each user random coordinates (each coordinate removed once assigned)
         //picks random index from list
@@ -152,9 +141,7 @@ public class GameService {
         System.out.println(coordinatesList.size());
         //assign the coordinates to player
         user.setCoordinatesAssignedPicture(randomElement);
-
         System.out.println(randomElement);
-
 
         int pictureIndex = randomElement.getPictureNr();
         System.out.println(pictureIndex);
@@ -203,6 +190,7 @@ public class GameService {
         return game.getUserList();
     }
 
+    //returns player(s) with the highest score
     public List<User> getWinner(Long gameId){
         List<User> winners = new ArrayList<>();
         int max = 0;
@@ -219,6 +207,7 @@ public class GameService {
         return winners;
     }
 
+    //gets 16 pictures from the Pixabay API and returns them as a list of strings (encoded pictures)
     public List<String> getPicturesFromPixabay(){
         List<String> pictures = new ArrayList<>();
         List<String> keywords = new ArrayList<>();
@@ -253,6 +242,7 @@ public class GameService {
         }
         return pictures;
     }
+
 
     private String getEncodedPictureFromResponse(String responseBody){
         String encodedPicture = "";
@@ -350,7 +340,6 @@ public class GameService {
     }
 
 
-
     //submits the recreated picture of one user --> adds to game.userRecreations
     public Map<Long,String> submitPicture(Game gameInput,String submittedPicture,Long userId) {
         Game currentGame = getExistingGame(gameInput.getGameId());
@@ -371,6 +360,7 @@ public class GameService {
         return submissions;
     }
 
+    //creates a list of pictures from the API call and saves them to the picture repository
     public List<Picture> makePictureList(){
         List<String> pictureStringList = getPicturesFromPixabay();
         List<Picture> pictureList = new ArrayList<>();
@@ -383,6 +373,7 @@ public class GameService {
         return pictureList;
     }
 
+    //saves encoded picture to picture repository
     public Picture createPicture(String picture){
             Picture newPicture = new Picture();
             newPicture.setEncodedPicture(picture);
@@ -435,11 +426,11 @@ public class GameService {
             }
         }
 
-
         //iterate through dictionary and check if guess is correct
         for(Map.Entry<Long,String> entry : guesses.entrySet()){
             User playerThatRecreatedPicture = getPlayerInGame(entry.getKey(),game.getGameId());
             String rightGuess = playerThatRecreatedPicture.getCoordinatesAssignedPicture().toString();
+            //update player scores
             if(entry.getValue().toUpperCase().equals(rightGuess)){
                 int updatedScore1 = playerThatSubmitsGuesses.getPoints()+1;
                 playerThatSubmitsGuesses.setPoints(updatedScore1);
@@ -451,6 +442,7 @@ public class GameService {
 
     }
 
+    //updates roundNr and userRecreations (when entering a new round)
     public Game updateGame(Long gameId){
         //go to next round and set guesses to 0
         Game game = gameRepository.getOne(gameId);
@@ -469,6 +461,8 @@ public class GameService {
         return game;
     }
 
+    //returns picture grid
+    // keys: grid coordinates, values: indices (0-15) mapped to 4x4 grid, row by row from top to bottom
     public Map<String, String> getPictureGrid(Long gameId) {
         Game game = getExistingGame(gameId);
         Map<String,String> pictureGrid = new HashMap<>();
@@ -477,10 +471,6 @@ public class GameService {
         System.out.println(coordinatesList);
         List<String> pictureList = game.getGridPictures();
 
-        String baseErrorMessage = "The provided %s is not the current %s. ";
-        if(game.getRoundNr() != gameRepository.getOne(game.getGameId()).getRoundNr()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "roundNr", "roundNr"));
-        }
 
         for(GridCoordinates g : coordinatesList){
             pictureGrid.put(g.toString(),pictureList.get(g.getPictureNr()));
@@ -489,6 +479,7 @@ public class GameService {
         return pictureGrid;
     }
 
+    //removes the game from the game repository
     public void endGame(Long gameId){
         scoreboardService.endGame(gameRepository.getOne(gameId));
         gameRepository.deleteById(gameId);

@@ -85,6 +85,7 @@ public class GameService {
         newGame.setUserList(players);
         newGame.setRoundNr(1);
         newGame.setGameroom(gameroom);
+        newGame.setSubmittedGuesses(0);
 
         // saves the given entity but data is only persisted in the database once flush() is called
         newGame = gameRepository.save(newGame);
@@ -414,6 +415,11 @@ public class GameService {
         Game game = getExistingGame(gameId);
         User playerThatSubmitsGuesses = getPlayerInGame(userId,game.getGameId());
 
+        int newGuesses = game.getSubmittedGuesses()+1;
+        game.setSubmittedGuesses(newGuesses);
+        game = gameRepository.save(game);
+        gameRepository.flush();
+
         List<String> gridCoordinates = Stream.of(GridCoordinates.values())
                 .map(GridCoordinates::name)
                 .collect(Collectors.toList());
@@ -446,8 +452,10 @@ public class GameService {
     }
 
     public Game updateGame(Long gameId){
+        //go to next round and set guesses to 0
         Game game = gameRepository.getOne(gameId);
         game.setRoundNr(game.getRoundNr() + 1);
+        game.setSubmittedGuesses(0);
         gameRepository.save(game);
         gameRepository.flush();
 

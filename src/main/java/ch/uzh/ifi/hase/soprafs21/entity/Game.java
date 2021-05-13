@@ -47,8 +47,11 @@ public class Game implements Serializable {
     @OneToOne(mappedBy = "game")
     private Gameroom gameroom;
 
+    @Column
+    private int submittedGuesses;
 
-
+    public int getSubmittedGuesses() { return submittedGuesses; }
+    public void setSubmittedGuesses(int submittedGuesses) { this.submittedGuesses = submittedGuesses; }
 
     public Long getGameId() { return gameId; }
     public void setGameId(Long gameId) { this.gameId = gameId; }

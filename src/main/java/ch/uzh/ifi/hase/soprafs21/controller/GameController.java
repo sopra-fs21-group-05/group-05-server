@@ -196,5 +196,20 @@ public class GameController {
         return game.getRoundNr();
     }
 
+    // get if all players submitted their guesses
+    @GetMapping("game/guesses/{gameId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public boolean getAllGuessesSubmitted(@PathVariable ("gameId") Long gameId){
+        boolean allGuessed = false;
+        Game game = gameService.getExistingGame(gameId);
+        int noGuesses = game.getSubmittedGuesses();
+        int noPlayers = game.getUserList().size();
+        if(noGuesses == noPlayers){
+            allGuessed = true;
+        }
+        return allGuessed;
+    }
+
 
 }

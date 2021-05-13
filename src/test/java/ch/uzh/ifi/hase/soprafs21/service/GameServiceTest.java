@@ -97,7 +97,7 @@ public class GameServiceTest {
 
     @Test
     void assignGridPictures_success(){
-        // given -> a first user has already been created
+        // given
         Gameroom gameroom = new Gameroom();
         gameroom.setRoomname("room1");
         gameroom.setPassword("pass");
@@ -123,13 +123,14 @@ public class GameServiceTest {
 
     @Test
     void assignMaterialSet_getsNextMaterialSet(){
-        // given -> a first user has already been created
+        // given
         Gameroom gameroom = new Gameroom();
         gameroom.setRoomname("room1");
         gameroom.setPassword("pass");
         gameroom.setId(2L);
 
         Game createdGame = gameService.createGame(gameroom);
+
 
         User user = new User();
         user.setToken("token");

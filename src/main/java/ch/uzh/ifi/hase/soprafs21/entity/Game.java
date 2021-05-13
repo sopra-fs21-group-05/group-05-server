@@ -28,7 +28,7 @@ public class Game implements Serializable {
     @OneToMany
     private List<User> userList = new ArrayList<User>();
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Picture> gridPictures;
 
     @ElementCollection

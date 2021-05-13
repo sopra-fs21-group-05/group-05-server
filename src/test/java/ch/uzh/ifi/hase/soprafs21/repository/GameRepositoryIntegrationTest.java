@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs21.repository;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
+import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,23 +42,28 @@ public class GameRepositoryIntegrationTest {
         assertThat(userRepository).isNotNull();
     }
 
-/*
-    @Test
+
+    //TODO: check if findByGameroom is used anywhere (except in tests)
+    /*@Test
     public void findByGameroom_success(){
         // given
         Gameroom gameroom = new Gameroom();
         gameroom.setRoomname("room1");
         gameroom.setPassword("pass");
 
-        entityManager.persist(gameroom);
-        entityManager.flush();
+        gameroomRepository.save(gameroom);
+        gameroomRepository.flush();
+
 
 
         Game game = new Game();
         game.setRoundNr(2);
+        game.setGameroom(gameroom);
+        gameroom.setGame(game);
 
-        entityManager.persist(game);
-        entityManager.flush();
+
+        gameRepository.save(game);
+        gameRepository.flush();
 
 
         // when

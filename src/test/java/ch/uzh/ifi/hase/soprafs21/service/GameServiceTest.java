@@ -3,10 +3,7 @@ package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
-import ch.uzh.ifi.hase.soprafs21.entity.Game;
-import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
-import ch.uzh.ifi.hase.soprafs21.entity.Picture;
-import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.entity.*;
 import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
@@ -22,6 +19,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 public class GameServiceTest {
@@ -40,6 +38,9 @@ public class GameServiceTest {
 
     @InjectMocks
     private GameService gameService;
+
+    @Mock
+    private ScoreboardService scoreboardService;
 
     private Game testGame;
 
@@ -542,6 +543,40 @@ public class GameServiceTest {
     }
 
     @Test
+    void submitAndCheckGuesses_invalidInput_throwsException(){
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("room1");
+        gameroom.setPassword("pass");
+        gameroom.setId(2L);
+
+        Game createdGame = gameService.createGame(gameroom);
+
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setCoordinatesAssignedPicture(GridCoordinates.A1);
+
+        User user2 = new User();
+        user2.setId(2L);
+
+
+        List<User> players = new ArrayList<>();
+        players.add(user1);
+        players.add(user2);
+
+        createdGame.setUserList(players);
+
+        Map<Long,String> guesses = new HashMap<>();
+        guesses.put(1L,"Q2");
+
+        // when -> setup additional mocks for GameRepository
+        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
+        when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
+        when(gameRepository.getOne(any())).thenReturn(createdGame);
+
+        assertThrows(ResponseStatusException.class, () -> gameService.submitAndCheckGuesses(createdGame.getGameId(), user2.getId(), guesses));
+    }
+
+    @Test
     void updateGame_returnsUpdatedGame(){
         Gameroom gameroom = new Gameroom();
         gameroom.setRoomname("room1");
@@ -622,11 +657,25 @@ public class GameServiceTest {
     }
 
 
+    @Test
+    void endGame_deletedGame(){
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("room1");
+        gameroom.setPassword("pass");
+        gameroom.setId(2L);
 
+        Game createdGame = gameService.createGame(gameroom);
 
+        Scoreboard scoreboard = new Scoreboard();
+        createdGame.setScoreboard(scoreboard);
 
+        Long id = createdGame.getGameId();
 
+        doNothing().when(scoreboardService).endGame(any());
 
+        gameService.endGame(createdGame.getGameId());
+        assertNull(gameRepository.getOne(id));
+    }
 
 
 }

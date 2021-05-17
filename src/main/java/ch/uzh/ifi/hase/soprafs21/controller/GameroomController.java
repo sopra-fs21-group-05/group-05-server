@@ -152,9 +152,10 @@ public class GameroomController {
     public void endGame(@PathVariable Long roomId){
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
         Game endedGame = gameroom.getGame();
-
-        gameroomService.endGame(roomId);
-        gameService.endGame(endedGame.getGameId());
+        if(!(endedGame == null)) {
+            gameroomService.endGame(roomId);
+            gameService.endGame(endedGame.getGameId());
+        }
     }
 
 }

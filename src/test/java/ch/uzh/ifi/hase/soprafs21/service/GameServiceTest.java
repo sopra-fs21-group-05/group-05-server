@@ -666,14 +666,21 @@ public class GameServiceTest {
 
         Game createdGame = gameService.createGame(gameroom);
 
+        List<Picture> pictureList = new ArrayList<>();
+        createdGame.setGridPictures(pictureList);
+
         Scoreboard scoreboard = new Scoreboard();
         createdGame.setScoreboard(scoreboard);
 
         Long id = createdGame.getGameId();
-
+        
+        Mockito.when(gameRepository.findById(Mockito.any())).thenReturn(Optional.of(createdGame));
         doNothing().when(scoreboardService).endGame(any());
+        doNothing().when(pictureRepository).delete(any());
 
-        gameService.endGame(createdGame.getGameId());
+
+
+        gameService.endGame(id);
         assertNull(gameRepository.getOne(id));
     }
 

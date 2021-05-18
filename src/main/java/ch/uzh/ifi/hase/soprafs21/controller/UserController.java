@@ -4,7 +4,6 @@ import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserAuthDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.UserPostDTO;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -32,6 +31,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    //gets a list of all users
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -47,6 +47,7 @@ public class UserController {
         return userGetDTOs;
     }
 
+    //creates a new user
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -94,22 +95,7 @@ public class UserController {
         return DTOMapper.INSTANCE.convertEntityToUserAuthDTO(user);
     }
 
-    /*
-    @GetMapping("/winner")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public List<UserGetDTO> getWinner() {
-        List<User> winnerList = userService.getWinner();
-        List<UserGetDTO> winners = new ArrayList<>();
-
-        for (User user : winnerList) {
-            winners.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
-        }
-        return winners;
-
-    }
-    */
-
+    //checks if a user is restricted
     @GetMapping("/users/{userId}/restricted")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

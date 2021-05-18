@@ -6,7 +6,6 @@ import ch.uzh.ifi.hase.soprafs21.entity.Scoreboard;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomPostDTO;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.GameService;
 import ch.uzh.ifi.hase.soprafs21.service.GameroomService;
@@ -42,6 +41,7 @@ public class GameroomController {
         this.scoreboardService = scoreboardService;
     }
 
+    // creates a new gameroom with the user that creates it
     @PostMapping("/gamerooms")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -76,16 +76,17 @@ public class GameroomController {
         return ResponseEntity.created(locationAsUrl).body(locationAsString);
     }
 
+    //gets the gameroom with the corresponding id
     @GetMapping("/gamerooms/overview/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameroomGetDTO getGameroom(@PathVariable("roomId") Long roomId) {
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
-        GameroomGetDTO foundGameroom = DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(gameroom);
 
-        return foundGameroom;
+        return DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(gameroom);
     }
 
+    //start the game from inside of the gameroom
     @PutMapping("/gamerooms/overview/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -100,13 +101,14 @@ public class GameroomController {
         // create and initialize new game
         Game newGame = gameService.createGame(gameroom);
         // create scoreboard
-        Scoreboard scoreboard = scoreboardService.createScoreboard(newGame);
+        scoreboardService.createScoreboard(newGame);
         // add game to gameroom
-        gameroom = gameroomService.addGame(gameroom, newGame);
+        gameroomService.addGame(gameroom, newGame);
 
         return newGame.getGameId();
     }
 
+    //get a list of all existing gamerooms
     @GetMapping("/gamerooms/list")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -122,6 +124,7 @@ public class GameroomController {
         return gameroomGetDTOs;
     }
 
+    //add user to an existing gameroom
     @PutMapping("/gamerooms/list/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -133,10 +136,10 @@ public class GameroomController {
 
         // convert API gameroom to internal representation
         Gameroom gameroomInput = DTOMapper.INSTANCE.convertGameroomPostDTOtoEntity(gameroomPostDTO);
-        Gameroom updatedGameroom = gameroomService.joinGameroom(gameroomInput, user);
+        gameroomService.joinGameroom(gameroomInput, user);
     }
 
-
+    //remove user from a gameroom
     @PutMapping("/gamerooms/list/{roomId}/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -146,6 +149,7 @@ public class GameroomController {
         gameroomService.leaveGameroom(roomId,user);
     }
 
+    //ends the game
     @PutMapping("/gamerooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

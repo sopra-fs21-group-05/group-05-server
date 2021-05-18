@@ -20,6 +20,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Game Controller
+ * This class is responsible for handling all REST request that are related to the game.
+ * The controller will receive the request and delegate the execution to the GameService and finally return the result.
+ */
 @RestController
 public class GameController {
     private final GameService gameService;
@@ -58,7 +63,6 @@ public class GameController {
         for (Map.Entry<String, String> entry : assignedCoordinates.entrySet()) {
             coordinate = entry.getKey();
             picture = entry.getValue();
-            //System.out.println("Key: " + coordinate + ", Value: " + picture);
         }
         AssignedPictureDTO pic = new AssignedPictureDTO();
         pic.setCoordinate(coordinate);
@@ -97,9 +101,8 @@ public class GameController {
 
         Game game = gameroom.getGame();
         gameService.assignGridPictures(game,pictureList);
-        List<String> pictures = game.getGridPicturesAsString();
 
-        return pictures;
+        return game.getGridPicturesAsString();
     }
 
 
@@ -113,7 +116,7 @@ public class GameController {
         Game gameInput = DTOMapper.INSTANCE.convertGamePostDTOToEntity(gamePostDTO);
 
         //call gameservice method
-        Map<Long,String> userRecreations = gameService.submitPicture(gameInput,submittedPicture,userId);
+        gameService.submitPicture(gameInput,submittedPicture,userId);
 
 
         String locationAsString = ServletUriComponentsBuilder
@@ -129,7 +132,6 @@ public class GameController {
 
         //returns url as a string
         return ResponseEntity.created(locationAsUrl).body(locationAsString);
-        //return userRecreations;
     }
 
     //get a list of all submitted pictures in the current round
@@ -137,7 +139,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public RecreationGetDTO getSubmittedPictures(@PathVariable("gameId") Long gameId){
-        //commit for referencing respective task
+
         //get list of all submitted pictures
         Map<Long,String> submittedPictures = gameService.getSubmittedPictures(gameId);
 
@@ -180,6 +182,7 @@ public class GameController {
         return ResponseEntity.created(locationAsUrl).body(locationAsString);
     }
 
+    //starts new game round
     @PutMapping("game/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -193,8 +196,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Map<String,String> getPicturegrid(@PathVariable ("gameId") Long gameId){
-        Map<String,String> grid = gameService.getPictureGrid(gameId);
-        return grid;
+        return gameService.getPictureGrid(gameId);
     }
     // get the current round nr
     @GetMapping("game/round/{gameId}")

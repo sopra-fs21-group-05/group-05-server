@@ -131,7 +131,7 @@ public class GameroomService {
     public Gameroom getGameroomByGameId(Long gameId){
         List<Gameroom> allGamerooms = gameroomRespository.findAll();
         for(Gameroom gameroom : allGamerooms){
-            if(gameroom.getGame().getGameId() == gameId){
+            if(gameroom.getGame().getGameId().equals(gameId)){
                 return gameroom;
             }
         }

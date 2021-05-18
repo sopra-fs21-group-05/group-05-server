@@ -7,11 +7,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
-import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
-import ch.uzh.ifi.hase.soprafs21.entity.User;
 
 import static java.util.Collections.emptyList;
 
+/**
+ * Internal Game Representation
+ * This class composes the internal representation of the game and defines how the game is stored in the database.
+ * Every variable will be mapped into a database field with the @Column annotation
+ * - nullable = false -> this cannot be left empty
+ * - unique = true -> this value must be unqiue across the database -> composes the primary key
+ */
 @Entity
 @Table(name = "GAME")
 public class Game implements Serializable {

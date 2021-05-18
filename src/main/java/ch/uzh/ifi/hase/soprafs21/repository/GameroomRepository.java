@@ -10,6 +10,5 @@ import java.util.Optional;
 public interface GameroomRepository extends JpaRepository<Gameroom, Long>{
     Gameroom getOne(Long id);
     Optional<Gameroom> findById(Long id);
-
     Gameroom findByRoomname(String roomName);
 }

@@ -2,11 +2,16 @@ package ch.uzh.ifi.hase.soprafs21.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * Internal Scoreboard Representation
+ * This class composes the internal representation of the scoreboard and defines how the scoreboard is stored in the database.
+ * Every variable will be mapped into a database field with the @Column annotation
+ * - nullable = false -> this cannot be left empty
+ * - unique = true -> this value must be unqiue across the database -> composes the primary key
+ */
 @Entity
 @Table(name = "SCOREBOARD")
 public class Scoreboard implements Serializable {
@@ -24,7 +29,7 @@ public class Scoreboard implements Serializable {
     @ElementCollection
     @MapKeyColumn(name="userId")
     @Column(name="points")
-    private Map<Long,Integer> userPoints = new HashMap<Long,Integer>();
+    private Map<Long,Integer> userPoints = new HashMap<>();
 
     public Map<Long,Integer> getUserPoints() { return userPoints; }
     public void setUserPoints(Map<Long,Integer> userPoints){

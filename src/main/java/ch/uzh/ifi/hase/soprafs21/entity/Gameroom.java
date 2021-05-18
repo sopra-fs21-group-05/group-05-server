@@ -12,7 +12,6 @@ import java.util.List;
  * - nullable = false -> this cannot be left empty
  * - unique = true -> this value must be unqiue across the database -> composes the primary key
  */
-
 @Entity
 @Table(name = "GAMEROOM")
 public class Gameroom implements Serializable{
@@ -69,7 +68,6 @@ public class Gameroom implements Serializable{
     public List<User> getLastWinner() {
         return lastWinner;
     }
-
     public void setLastWinner(List<User> lastWinner) {
         this.lastWinner = lastWinner;
     }

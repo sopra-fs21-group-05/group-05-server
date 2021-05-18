@@ -1,15 +1,17 @@
 package ch.uzh.ifi.hase.soprafs21.entity;
 
-import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
-import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Internal Picture Representation
+ * This class composes the internal representation of the picture and defines how the picture is stored in the database.
+ * Every variable will be mapped into a database field with the @Column annotation
+ * - nullable = false -> this cannot be left empty
+ * - unique = true -> this value must be unqiue across the database -> composes the primary key
+ */
 @Entity
-@Table(name = "Picture")
+@Table(name = "PICTURE")
 public class Picture implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -23,7 +25,6 @@ public class Picture implements Serializable {
     public Long getPictureId() {
         return pictureId;
     }
-
     public void setPictureId(Long pictureId) {
         this.pictureId = pictureId;
     }
@@ -31,7 +32,6 @@ public class Picture implements Serializable {
     public String getEncodedPicture() {
         return encodedPicture;
     }
-
     public void setEncodedPicture(String encodedPicture) {
         this.encodedPicture = encodedPicture;
     }

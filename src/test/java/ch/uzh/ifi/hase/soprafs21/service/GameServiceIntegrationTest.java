@@ -1,7 +1,5 @@
-
 package ch.uzh.ifi.hase.soprafs21.service;
 
-import ch.uzh.ifi.hase.soprafs21.constant.GridCoordinates;
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
@@ -14,8 +12,6 @@ import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,15 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-
-/**
- * Test class for the UserResource REST resource.
- *
- * @see UserService
- */
 
 @WebAppConfiguration
 @SpringBootTest
@@ -234,19 +221,19 @@ public class GameServiceIntegrationTest {
         gridPictures.add(pic15);
         gridPictures.add(pic16);
 
-        assertEquals(gridPictures.size(), 16);
+        assertEquals(16, gridPictures.size());
 
         Game createdGame = gameService.createGame(gameroom);
         System.out.println("gameId createdGame: "+createdGame.getGameId());
 
         gameService.assignGridPictures(createdGame,gridPictures);
 
-        assertEquals(createdGame.getGridPictures().size(), 16);
+        assertEquals(16, createdGame.getGridPictures().size());
         assertNotNull(createdGame.getUserList());
 
         Map<String, String> assignedPicture = gameService.assignPicture(createdGame.getGameId(), createdGame.getUserList().get(0).getId());
         assertNotNull(assignedPicture);
-        assertEquals(assignedPicture.size(),1);
+        assertEquals(1, assignedPicture.size());
     }
 
     @Test
@@ -269,12 +256,5 @@ public class GameServiceIntegrationTest {
         assertEquals(game.getRoundNr(), createdGame.getRoundNr());
         assertEquals(game.getGridPictures().size(), createdGame.getGridPictures().size());
     }
-
-
-
-
-
-
-
 }
 

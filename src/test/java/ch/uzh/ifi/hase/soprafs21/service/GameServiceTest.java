@@ -150,7 +150,7 @@ public class GameServiceTest {
 
 
         User updatedUser = gameService.assignMaterialset(createdGame.getGameId(),user.getId());
-        assertEquals(updatedUser.getMaterialSet(),MaterialSet.BUILDING_BLOCKS );
+        assertEquals(MaterialSet.BUILDING_BLOCKS, updatedUser.getMaterialSet());
     }
 
     @Test
@@ -193,7 +193,7 @@ public class GameServiceTest {
 
 
         Map<String,String> assignedPicture = gameService.assignPicture(createdGame.getGameId(),user.getId());
-        assertEquals(assignedPicture.size(),1);
+        assertEquals(1, assignedPicture.size());
     }
 
 
@@ -317,8 +317,8 @@ public class GameServiceTest {
 
 
         List<User> playersInGame = gameService.getPlayers(createdGame.getGameId());
-        assertEquals(playersInGame,players);
-        assertEquals(playersInGame.size(),1);
+        assertEquals(players, playersInGame);
+        assertEquals(1, playersInGame.size());
     }
 
     @Test
@@ -409,8 +409,8 @@ public class GameServiceTest {
     void getPicturesFromPixabay_returnsListOfEncodedStrings(){
         List<String> pictures = gameService.getPicturesFromPixabay();
         assertNotNull(pictures);
-        assertEquals(pictures.size(),16);
-        assertEquals(pictures.get(0).getClass(), String.class);
+        assertEquals(16, pictures.size());
+        assertEquals(String.class, pictures.get(0).getClass());
     }
 
     @Test
@@ -425,8 +425,8 @@ public class GameServiceTest {
 
         Gameroom retrievedGameroom = gameService.getGameroomById(gameroom.getId());
         assertNotNull(retrievedGameroom);
-        assertEquals(retrievedGameroom.getId(),gameroom.getId());
-        assertEquals(retrievedGameroom.getRoomname(),gameroom.getRoomname());
+        assertEquals(gameroom.getId(), retrievedGameroom.getId());
+        assertEquals(gameroom.getRoomname(), retrievedGameroom.getRoomname());
     }
 
 
@@ -458,7 +458,7 @@ public class GameServiceTest {
 
         Map<Long,String> submittedPictures = gameService.submitPicture(createdGame,pictureAsString,user.getId());
         assertFalse(submittedPictures.isEmpty());
-        assertEquals(submittedPictures.size(),1);
+        assertEquals(1, submittedPictures.size());
         assertTrue(submittedPictures.containsKey(user.getId()));
     }
 
@@ -466,14 +466,14 @@ public class GameServiceTest {
     void makePictureList_returnsPictureList(){
         List<Picture> pictureList = gameService.makePictureList();
         assertFalse(pictureList.isEmpty());
-        assertEquals(pictureList.size(),16);
+        assertEquals(16, pictureList.size());
     }
 
     @Test
     void createPicture_returnsPicture(){
         String pictureAsString = "pictureString";
         Picture picture = gameService.createPicture(pictureAsString);
-        assertEquals(picture.getClass(), Picture.class);
+        assertEquals(Picture.class, picture.getClass());
     }
 
     @Test
@@ -503,7 +503,7 @@ public class GameServiceTest {
         Map<Long,String> submissions = gameService.getSubmittedPictures(createdGame.getGameId());
         assertFalse(submissions.isEmpty());
         assertTrue(submissions.containsKey(user1.getId()));
-        assertEquals(submissions.size(),1);
+        assertEquals(1, submissions.size());
     }
 
     @Test
@@ -538,8 +538,8 @@ public class GameServiceTest {
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
         gameService.submitAndCheckGuesses(createdGame.getGameId(), user2.getId(), guesses);
-        assertEquals(user1.getPoints(), 1);
-        assertEquals(user2.getPoints(), 1);
+        assertEquals(1, user1.getPoints());
+        assertEquals(1, user2.getPoints());
     }
 
     @Test
@@ -601,8 +601,8 @@ public class GameServiceTest {
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
         Game updatedGame = gameService.updateGame(createdGame.getGameId());
-        assertEquals(updatedGame.getRoundNr(), 2);
-        assertEquals(user1.getRecreatedPicture(),"");
+        assertEquals(2, updatedGame.getRoundNr());
+        assertEquals("", user1.getRecreatedPicture());
     }
 
     @Test
@@ -650,7 +650,7 @@ public class GameServiceTest {
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
         Map<String, String> pictureGrid = gameService.getPictureGrid(createdGame.getGameId());
-        assertEquals(pictureGrid.size(), 16);
+        assertEquals(16,pictureGrid.size());
         assertTrue(pictureGrid.keySet().contains("A3"));
         assertTrue(pictureGrid.keySet().contains("D4"));
 

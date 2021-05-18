@@ -21,7 +21,7 @@ public class Application {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public String helloWorld() {
-        return "The application is running.";
+        return "The Pictures Server is running, have fun playing :)";
     }
 
     @Bean

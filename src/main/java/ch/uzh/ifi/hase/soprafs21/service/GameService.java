@@ -24,6 +24,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -75,11 +76,10 @@ public class GameService {
 
         //assign each user a material set
         MaterialSet[] sets = MaterialSet.values();
-        int SetNr = 0;
+        int setNr = 0;
         for (User user : users) {
-            //User userById = userRepository.getOne(user.getId());
-            user.setMaterialSet(sets[SetNr]);
-            SetNr++;
+            user.setMaterialSet(sets[setNr]);
+            setNr++;
 
             user = userRepository.save(user);
             userRepository.flush();
@@ -303,11 +303,10 @@ public class GameService {
                 out.write(buf, 0, n);
             }
             out.close();
-            in.close();
             return out.toByteArray();
         } catch (Exception e){
             log.debug(e.toString());
-            return null;
+            return new byte[0];
         }
     }
 
@@ -392,7 +391,6 @@ public class GameService {
         for (User u: game.getUserList()) {
             if(u.getRecreatedPicture() == null){
                 submissions.put(u.getId(),"");
-                //throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find the submitted pictures.");
             } else{
                 submissions.put(u.getId(),u.getRecreatedPicture());
             }
@@ -420,7 +418,7 @@ public class GameService {
         String baseErrorMessage = "Contains invalid guesses. Please enter valid coordinates!";
         for(String guess : guesses.values()){
             String finalGuess = guess.toUpperCase();
-            if(!gridCoordinates.stream().anyMatch(coordinate -> finalGuess.equals(coordinate))){
+            if(gridCoordinates.stream().noneMatch(finalGuess::equals)){
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, baseErrorMessage);
             }
         }
@@ -436,7 +434,7 @@ public class GameService {
                 int updatedScore2 = playerThatRecreatedPicture.getPoints()+1;
                 playerThatRecreatedPicture.setPoints(updatedScore2);
 
-                log.debug("Score of userId"+playerThatSubmitsGuesses.getId() +":"+ playerThatSubmitsGuesses.getPoints());
+                log.debug("Score of user with userId {}: {}", playerThatSubmitsGuesses.getId(), playerThatSubmitsGuesses.getPoints());
             }
         }
 

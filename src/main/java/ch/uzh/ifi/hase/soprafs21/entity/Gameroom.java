@@ -29,7 +29,7 @@ public class Gameroom implements Serializable{
     private String roomname;
 
     @OneToMany
-    private List<User> users = new ArrayList<User>();
+    private List<User> users = new ArrayList<>();
 
     @OneToMany
     private List<User> lastWinner = new ArrayList<>();

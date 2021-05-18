@@ -31,7 +31,7 @@ public class Game implements Serializable {
     private int roundNr;
 
     @OneToMany
-    private List<User> userList = new ArrayList<User>();
+    private List<User> userList = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<Picture> gridPictures;

@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs21.controller;
 
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
-import ch.uzh.ifi.hase.soprafs21.entity.Scoreboard;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomGetDTO;
 import ch.uzh.ifi.hase.soprafs21.rest.dto.GameroomPostDTO;
@@ -156,7 +155,7 @@ public class GameroomController {
     public void endGame(@PathVariable Long roomId){
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
         Game endedGame = gameroom.getGame();
-        if(!(endedGame == null)) {
+        if(endedGame != null) {
             gameroomService.endGame(roomId);
             gameService.endGame(endedGame.getGameId());
         }

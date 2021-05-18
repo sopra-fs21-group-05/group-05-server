@@ -1,9 +1,9 @@
 package ch.uzh.ifi.hase.soprafs21.rest.dto;
 
 public class UserAuthDTO {
+
     private String token;
     private Long id;
-
 
     public String getToken() {
         return token;

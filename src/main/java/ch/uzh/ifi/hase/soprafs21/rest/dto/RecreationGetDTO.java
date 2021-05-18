@@ -12,5 +12,4 @@ public class RecreationGetDTO {
 
     public Map<Long, String> getUserNames() { return userNames; }
     public void setUserNames(Map<Long, String> userNames) { this.userNames = userNames; }
-
 }

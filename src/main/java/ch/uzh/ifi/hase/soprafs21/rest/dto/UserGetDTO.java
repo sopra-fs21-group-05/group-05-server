@@ -11,49 +11,12 @@ public class UserGetDTO {
     private UserStatus status;
     private int points;
     private boolean restrictedMode;
-
-    public MaterialSet getMaterialSet() {
-        return materialSet;
-    }
-
-    public void setMaterialSet(MaterialSet materialSet) {
-        this.materialSet = materialSet;
-    }
-
     private MaterialSet materialSet;
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     private String token;
-
-
-    public boolean getRestrictedMode() {
-        return restrictedMode;
-    }
-
-    public void setRestrictedMode(boolean restrictedMode) {
-        this.restrictedMode = restrictedMode;
-    }
-
-
-    public int getPoints() {
-        return points;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
 
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -61,7 +24,6 @@ public class UserGetDTO {
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -69,7 +31,6 @@ public class UserGetDTO {
     public String getUsername() {
         return username;
     }
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -77,8 +38,35 @@ public class UserGetDTO {
     public UserStatus getStatus() {
         return status;
     }
-
     public void setStatus(UserStatus status) {
         this.status = status;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public boolean getRestrictedMode() {
+        return restrictedMode;
+    }
+    public void setRestrictedMode(boolean restrictedMode) {
+        this.restrictedMode = restrictedMode;
+    }
+
+    public MaterialSet getMaterialSet() {
+        return materialSet;
+    }
+    public void setMaterialSet(MaterialSet materialSet) {
+        this.materialSet = materialSet;
+    }
+
+    public String getToken() {
+        return token;
+    }
+    public void setToken(String token) {
+        this.token = token;
     }
 }

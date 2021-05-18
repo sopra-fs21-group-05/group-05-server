@@ -40,6 +40,8 @@ public class ScoreboardControllerTest {
     private ScoreboardService scoreboardService;
     @MockBean
     private GameService gameService;
+    @MockBean
+    private UserService userService;
 
     @Test
     public void getScoreboard_success() throws Exception {
@@ -54,9 +56,15 @@ public class ScoreboardControllerTest {
         scoreboard.setScoreboardId(1L);
         scoreboard.setUserPoints(userPoints);
 
+        //create User
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("test");
+
         //ensure the services return the above specified entities
         given(gameService.getExistingGame(Mockito.any())).willReturn(game);
         given(scoreboardService.findScoreboardByGame(Mockito.any())).willReturn(scoreboard);
+        given(userService.getExistingUser(Mockito.any())).willReturn(user);
 
         //build the server request
         MockHttpServletRequestBuilder getRequest = get("/scoreboards/1");

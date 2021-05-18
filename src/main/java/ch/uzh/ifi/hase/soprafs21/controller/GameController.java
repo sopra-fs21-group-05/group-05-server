@@ -4,10 +4,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.Picture;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.AssignedPictureDTO;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.GameGetDTO;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.GamePostDTO;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserGetDTO;
+import ch.uzh.ifi.hase.soprafs21.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs21.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs21.service.GameService;
 import ch.uzh.ifi.hase.soprafs21.service.GameroomService;
@@ -19,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -138,12 +136,23 @@ public class GameController {
     @GetMapping("/game/recreations/overview/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Map<Long,String> getSubmittedPictures(@PathVariable("gameId") Long gameId){
+    public RecreationGetDTO getSubmittedPictures(@PathVariable("gameId") Long gameId){
         //commit for referencing respective task
         //get list of all submitted pictures
         Map<Long,String> submittedPictures = gameService.getSubmittedPictures(gameId);
 
-        return submittedPictures;
+        //get map of usernames
+        Map<Long, String> userNames = new HashMap<>();
+        for (Long id: submittedPictures.keySet()) {
+            String name = userService.getExistingUser(id).getUsername();
+            userNames.put(id,name);
+        }
+
+        RecreationGetDTO recreations = new RecreationGetDTO();
+        recreations.setRecreations(submittedPictures);
+        recreations.setUserNames(userNames);
+
+        return recreations;
     }
 
     //submit guesses endpoint

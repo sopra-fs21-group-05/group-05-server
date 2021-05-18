@@ -40,6 +40,7 @@ import org.json.JSONArray;
 public class GameService {
 
     private final Logger log = LoggerFactory.getLogger(GameService.class);
+    private Random rand = new Random();
 
     private final GameRepository gameRepository;
     private final GameroomService gameroomService;
@@ -134,7 +135,6 @@ public class GameService {
         User user = getPlayerInGame(userId,gameId);
         List<GridCoordinates> coordinatesList = game.getGridCoordinates();
 
-        Random rand = new Random();
         //assign each user random coordinates (each coordinate removed once assigned)
         //picks random index from list
         int randomIndex = rand.nextInt(coordinatesList.size());
@@ -223,7 +223,6 @@ public class GameService {
         //choose 16 random keywords of the list
         List<String> selected = new ArrayList<>();
         int keywordNo = keywords.size();
-        Random rand = new Random();
         while(selected.size() < 16){
             int randomIndex = rand.nextInt(keywordNo);
             if(!selected.contains(keywords.get(randomIndex))){

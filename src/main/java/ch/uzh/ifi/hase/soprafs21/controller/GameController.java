@@ -97,7 +97,7 @@ public class GameController {
 
         Game game = gameroom.getGame();
         gameService.assignGridPictures(game,pictureList);
-        List<String> pictures = game.getGridPictures();
+        List<String> pictures = game.getGridPicturesAsString();
 
         return pictures;
     }

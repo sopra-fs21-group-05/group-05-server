@@ -147,7 +147,7 @@ public class GameService {
         System.out.println(pictureIndex);
 
         Map<String, String> assignedPicture = new HashMap<>();
-        List<String> gridPictures = game.getGridPictures();
+        List<String> gridPictures = game.getGridPicturesAsString();
         System.out.println("gridPictures size: "+gridPictures.size());
         assignedPicture.put(randomElement.toString(),gridPictures.get(pictureIndex));
 
@@ -471,7 +471,7 @@ public class GameService {
 
         List<GridCoordinates> coordinatesList = Arrays.asList(GridCoordinates.values());
         System.out.println(coordinatesList);
-        List<String> pictureList = game.getGridPictures();
+        List<String> pictureList = game.getGridPicturesAsString();
 
 
         for(GridCoordinates g : coordinatesList){
@@ -483,7 +483,17 @@ public class GameService {
 
     //removes the game from the game repository
     public void endGame(Long gameId){
+        Game endingGame = getExistingGame(gameId);
         scoreboardService.endGame(gameRepository.getOne(gameId));
+        //delete pictures from the database
+        List <Picture> toDeletePictures = endingGame.getGridPictures();
+        endingGame.setGridPictures(null);
+        for(Picture picture: toDeletePictures){
+            pictureRepository.delete(picture);
+            pictureRepository.flush();
+        }
+
+        //delete game
         gameRepository.deleteById(gameId);
         gameRepository.flush();
     }

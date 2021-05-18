@@ -83,12 +83,16 @@ public class Game implements Serializable {
             gameroom.setGame(this);}
         this.gameroom = gameroom; }
 
-    public List<String> getGridPictures() {
+    public List<String> getGridPicturesAsString() {
         List<String> picturesAsStrings= new ArrayList<>();
         for(Picture picture: gridPictures){
             picturesAsStrings.add(picture.getEncodedPicture());
         }
         return picturesAsStrings;
+    }
+
+    public List<Picture> getGridPictures(){
+        return gridPictures;
     }
 
     public void setGridPictures(List<Picture> gridPictures) {

@@ -3,7 +3,6 @@ package ch.uzh.ifi.hase.soprafs21.service;
 import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
-import ch.uzh.ifi.hase.soprafs21.rest.dto.UserAuthDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,10 +34,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    //get list with all users
     public List<User> getUsers() {
         return this.userRepository.findAll();
     }
 
+    //create a new user
     public User createUser(User newUser) {
         newUser.setStatus(UserStatus.OFFLINE);
         
@@ -54,14 +53,7 @@ public class UserService {
         return newUser;
     }
 
-    /**
-     * This is a helper method that will check the uniqueness criteria of the username and the name
-     * defined in the User entity. The method will do nothing if the input is unique and throw an error otherwise.
-     *
-     * @param userToBeCreated
-     * @throws org.springframework.web.server.ResponseStatusException
-     * @see User
-     */
+    //throws exception if a username is not unique
     private void checkIfUserExists(User userToBeCreated) {
         User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
 
@@ -71,6 +63,7 @@ public class UserService {
         }
     }
 
+    //login user with given credentials
     public User loginUser(String username, String password){
         //checks if the provided username is in the userRepository
         User userByUsername = userRepository.findByUsername(username);
@@ -98,6 +91,7 @@ public class UserService {
         return userByUsername;
     }
 
+    //logout user
     public User logoutUser(Long userId) {
         User user = getExistingUser(userId);
         user.setStatus(UserStatus.OFFLINE);
@@ -118,31 +112,14 @@ public class UserService {
         return optionalUser.get();
     }
 
+    //restrict a user for the next game
     public void restrictPlayer(User user){
         user.setRestrictedMode(true);
     }
 
+    //check if user is restricted
     public boolean isRestricted(User user){
         return user.getRestrictedMode();
     }
-
-    /*
-    public List<User> getWinner(){
-        List<User> winners = new ArrayList<>();
-        int max = 0;
-        for(User user: getUsers()){
-            if(user.getPoints() >= max){
-                max = user.getPoints();
-            }
-        }
-        for (User user: getUsers()){
-            if(user.getPoints() == max){
-                winners.add(user);
-                restrictPlayer(user);
-            }
-        }
-        return winners;
-    }
-     */
 
 }

@@ -18,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
@@ -31,9 +30,15 @@ import java.util.stream.Stream;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+/**
+ * Game Service
+ * This class is the "worker" and responsible for all functionality related to the game
+ * (e.g., it creates, modifies, deletes, finds). The result will be passed back to the caller.
+ */
 @Service
 @Transactional
 public class GameService {
+
     private final Logger log = LoggerFactory.getLogger(GameService.class);
 
     private final GameRepository gameRepository;
@@ -45,7 +50,6 @@ public class GameService {
     private final HttpClient httpClient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .build();
-
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
@@ -60,6 +64,7 @@ public class GameService {
         this.scoreboardService = scoreboardService;
     }
 
+    //create a new game
     public Game createGame(Gameroom gameroom) {
 
         checkIfGameExists(gameroom);
@@ -96,13 +101,13 @@ public class GameService {
         return newGame;
     }
 
+    //assign grid pictures to a game
     public Game assignGridPictures(Game game, List<Picture> pictureList){
         game.setGridPictures(pictureList);
         game = gameRepository.save(game);
         gameRepository.flush();
         return game;
     }
-
 
     //assigns the "next" materialset to specific player
     public User assignMaterialset(Long gameId, Long userId) {
@@ -138,20 +143,16 @@ public class GameService {
         GridCoordinates randomElement = coordinatesList.get(randomIndex);
         //remove the index to prevent it to be picked again
         coordinatesList.remove(randomIndex);
-        System.out.println(coordinatesList.size());
         //assign the coordinates to player
         user.setCoordinatesAssignedPicture(randomElement);
-        System.out.println(randomElement);
 
         int pictureIndex = randomElement.getPictureNr();
-        System.out.println(pictureIndex);
 
         Map<String, String> assignedPicture = new HashMap<>();
         List<String> gridPictures = game.getGridPicturesAsString();
-        System.out.println("gridPictures size: "+gridPictures.size());
+
         assignedPicture.put(randomElement.toString(),gridPictures.get(pictureIndex));
 
-        System.out.println(coordinatesList);
         game.setGridCoordinates(coordinatesList);
 
         return assignedPicture;
@@ -245,7 +246,7 @@ public class GameService {
         return pictures;
     }
 
-
+    //gets a base64 encoded picture from the provided url
     private String getEncodedPictureFromResponse(String responseBody){
         String encodedPicture = "";
         try {
@@ -262,7 +263,7 @@ public class GameService {
         return encodedPicture;
     }
 
-
+    //sends a get request to pixabay for the rpovided keyword
     private String sendGetRequest(String keyword) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -274,27 +275,24 @@ public class GameService {
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // print status code
-            System.out.println(response.statusCode());
-
-            // print response body
-            System.out.println(response.body());
+            log.debug("Response: {} {}", response.statusCode(), response.body());
             return response.body();
 
         } catch (Exception e){
-            System.out.println(e);
+            log.debug(e.toString());
             return null;
         }
     }
 
+    //encode a byte array picture in base64
     private String encodePicture(byte[] pictureBytes){
         String encoded = Base64.getEncoder().encodeToString(pictureBytes);
 
-        System.out.println(encoded);
+        log.debug("Encoded picture: {}", encoded);
         return encoded;
     }
 
-
+    //get a byte array picture from a url
     private byte[] getPictureFromUrl(URL url){
         try(InputStream in = new BufferedInputStream(url.openStream())) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -306,14 +304,14 @@ public class GameService {
             }
             out.close();
             in.close();
-            byte[] response = out.toByteArray();
-            return response;
+            return out.toByteArray();
         } catch (Exception e){
-            System.out.println(e);
+            log.debug(e.toString());
             return null;
         }
     }
 
+    //parse json response
     private String parseJson(String jsonString){
         JSONObject json = new JSONObject(jsonString);
 
@@ -323,10 +321,11 @@ public class GameService {
         int i = random.nextInt(5); //random int from 0 to 4
         JSONObject hitJSONObject = hitsJSONArray.getJSONObject(i);
         String url = hitJSONObject.getString("webformatURL");
-        System.out.println(url);
+        log.debug("URL: {}", url);
         return url;
     }
 
+    //throws exception if a game already exists for a given gameroom
     private void checkIfGameExists(Gameroom gameroom) {
         Long gameId = gameroom.getStartedGame();
 
@@ -337,10 +336,10 @@ public class GameService {
         }
     }
 
+    //get gameroom by its id
     public Gameroom getGameroomById(Long roomId){
         return gameroomService.getGameroomById(roomId);
     }
-
 
     //submits the recreated picture of one user --> adds to game.userRecreations
     public Map<Long,String> submitPicture(Game gameInput,String submittedPicture,Long userId) {
@@ -420,11 +419,9 @@ public class GameService {
         //check if guesses are all valid
         String baseErrorMessage = "Contains invalid guesses. Please enter valid coordinates!";
         for(String guess : guesses.values()){
-            System.out.println(guess);
             String finalGuess = guess.toUpperCase();
-            System.out.println(finalGuess);
             if(!gridCoordinates.stream().anyMatch(coordinate -> finalGuess.equals(coordinate))){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage));
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, baseErrorMessage);
             }
         }
 
@@ -438,7 +435,8 @@ public class GameService {
                 playerThatSubmitsGuesses.setPoints(updatedScore1);
                 int updatedScore2 = playerThatRecreatedPicture.getPoints()+1;
                 playerThatRecreatedPicture.setPoints(updatedScore2);
-                System.out.println("userId"+playerThatSubmitsGuesses.getId() +":"+ playerThatSubmitsGuesses.getPoints());
+
+                log.debug("Score of userId"+playerThatSubmitsGuesses.getId() +":"+ playerThatSubmitsGuesses.getPoints());
             }
         }
 
@@ -470,7 +468,6 @@ public class GameService {
         Map<String,String> pictureGrid = new HashMap<>();
 
         List<GridCoordinates> coordinatesList = Arrays.asList(GridCoordinates.values());
-        System.out.println(coordinatesList);
         List<String> pictureList = game.getGridPicturesAsString();
 
 

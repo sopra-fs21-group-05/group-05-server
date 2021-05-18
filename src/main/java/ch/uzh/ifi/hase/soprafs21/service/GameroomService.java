@@ -1,11 +1,9 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
-import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.GameroomRepository;
-import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Gameroom Service
@@ -39,10 +34,12 @@ public class GameroomService {
         this.gameroomRespository = gameroomRespository;
     }
 
+    //returns a list with all gamerooms
     public List<Gameroom> getGamerooms() {
         return this.gameroomRespository.findAll();
     }
 
+    //gets a gameroom by its id
     public Gameroom getGameroomById(Long id){
         Optional<Gameroom> gameroomById = gameroomRespository.findById(id);
         Gameroom fetchedgameroom = gameroomById.orElse(null);
@@ -53,6 +50,7 @@ public class GameroomService {
         return fetchedgameroom;
     }
 
+    //add a game to a gameroom
     public Gameroom addGame(Gameroom gameroom, Game game){
         gameroom.setGame(game);
         gameroom = gameroomRespository.save(gameroom);
@@ -60,6 +58,7 @@ public class GameroomService {
         return gameroom;
     }
 
+    //create a new gameroom
     public Gameroom createGameroom(Gameroom newGameroom) {
 
         //check if gameroom already exists
@@ -73,6 +72,7 @@ public class GameroomService {
         return newGameroom;
     }
 
+    //adds user to the gameroom
     public Gameroom joinGameroom(Gameroom gameroom, User user){
 
         Gameroom gameroomById = checkGameroomCredentials(gameroom);
@@ -95,6 +95,7 @@ public class GameroomService {
         return gameroomById;
     }
 
+    //removes user from a gameroom
     public void leaveGameroom(Long roomId, User user){
         Gameroom gameroom = getGameroomById(roomId);
 
@@ -107,16 +108,18 @@ public class GameroomService {
             userList.remove(user);
             if(userList.isEmpty()){
                 gameroomRespository.delete(gameroom);
-                gameroomRespository.flush();
             }
             else {
                 gameroom.setUsers(userList);
                 gameroomRespository.save(gameroom);
-                gameroomRespository.flush();
             }
+            gameroomRespository.flush();
         }
+
+        log.debug("User {} left gameroom {}",user, gameroom);
     }
 
+    //saves winners of last game to gameroom
     public void storeWinner(Long roomId, List<User> winners){
         Gameroom gameroom = getGameroomById(roomId);
         gameroom.setLastWinner(winners);
@@ -124,6 +127,7 @@ public class GameroomService {
         gameroomRespository.flush();
     }
 
+    //get a gameroom by the corresponding game
     public Gameroom getGameroomByGameId(Long gameId){
         List<Gameroom> allGamerooms = gameroomRespository.findAll();
         for(Gameroom gameroom : allGamerooms){
@@ -134,6 +138,7 @@ public class GameroomService {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game was found in this gameroom");
     }
 
+    //throws exception if a gameroom name already exists
     private void checkIfGameroomExists(Gameroom gameroom) {
         Gameroom gameroomByName = gameroomRespository.findByRoomname(gameroom.getRoomname());
 
@@ -144,6 +149,7 @@ public class GameroomService {
         }
     }
 
+    //checks if gameroom credentials are correct
     private Gameroom checkGameroomCredentials(Gameroom gameroom){
 
         Gameroom fetchedgameroom = getGameroomById(gameroom.getId());
@@ -162,6 +168,7 @@ public class GameroomService {
         return fetchedgameroom;
     }
 
+    //end game for a provided gameroom
     public void endGame(Long roomId){
         Gameroom gameroom = getGameroomById(roomId);
         gameroom.setGame(null);

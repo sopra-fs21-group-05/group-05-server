@@ -276,6 +276,10 @@ public class GameService {
             log.debug("Response: {} {}", response.statusCode(), response.body());
             return response.body();
 
+        } catch(InterruptedException e){
+            Thread.currentThread().interrupt();
+            log.debug(e.toString());
+            return null;
         } catch (Exception e){
             log.debug(e.toString());
             return null;
@@ -314,8 +318,7 @@ public class GameService {
 
         JSONArray hitsJSONArray = json.getJSONArray("hits");
         //get webformaturl of  one of the 5 results, as we only need 1 picture of each category
-        Random random = new Random();
-        int i = random.nextInt(5); //random int from 0 to 4
+        int i = rand.nextInt(5); //random int from 0 to 4
         JSONObject hitJSONObject = hitsJSONArray.getJSONObject(i);
         String url = hitJSONObject.getString("webformatURL");
         log.debug("URL: {}", url);

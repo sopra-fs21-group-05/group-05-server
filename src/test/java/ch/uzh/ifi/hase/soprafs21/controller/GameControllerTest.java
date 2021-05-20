@@ -346,8 +346,6 @@ public class GameControllerTest {
     }
 
 
-
-
     /**
      * Helper Method to convert DTOs into a JSON string such that the input can be processed
      * Example Input will look like this: {"name": "Test User", "username": "testUsername"}

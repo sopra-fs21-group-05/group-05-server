@@ -52,6 +52,9 @@ public class GameroomController {
         // convert API gameroom to internal representation
         Gameroom gameroomInput = DTOMapper.INSTANCE.convertGameroomPostDTOtoEntity(gameroomPostDTO);
 
+        //add creator to gameroom
+        gameroomInput.setCreator(userId);
+        
         //create gameroom
         Gameroom createdGameroom = gameroomService.createGameroom(gameroomInput);
 
@@ -82,7 +85,9 @@ public class GameroomController {
     public GameroomGetDTO getGameroom(@PathVariable("roomId") Long roomId) {
         Gameroom gameroom = gameroomService.getGameroomById(roomId);
 
-        return DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(gameroom);
+
+        Gameroom checkedGameroom = gameroomService.checkCreator(gameroom);
+        return DTOMapper.INSTANCE.convertEntityToGameroomGetDTO(checkedGameroom);
     }
 
     //start the game from inside of the gameroom

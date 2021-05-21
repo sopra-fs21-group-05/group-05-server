@@ -176,4 +176,23 @@ public class GameroomService {
         gameroomRespository.save(gameroom);
         gameroomRespository.flush();
     }
+
+    //checks if creator is still in gameroom, assigns new one if not
+    public Gameroom checkCreator(Gameroom gameroom){
+        Long creator = gameroom.getCreator();
+        boolean creatorExists = false;
+        for (User u: gameroom.getUsers()) {
+            if(u.getId().equals(creator)){
+                creatorExists = true;
+                break;
+            }
+        }
+        if(!creatorExists){
+            gameroom.setCreator(gameroom.getUsers().get(0).getId());
+        }
+        gameroomRespository.save(gameroom);
+        gameroomRespository.flush();
+
+        return gameroom;
+    }
 }

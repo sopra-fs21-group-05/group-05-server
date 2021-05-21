@@ -40,6 +40,9 @@ public class Gameroom implements Serializable{
     @Column
     private Long startedGame;
 
+    @Column
+    private Long creator;
+
     @PostLoad
     public void postLoad() {
         if(game != null) {
@@ -71,4 +74,7 @@ public class Gameroom implements Serializable{
     public void setLastWinner(List<User> lastWinner) {
         this.lastWinner = lastWinner;
     }
+
+    public Long getCreator() { return creator; }
+    public void setCreator(Long creator) { this.creator = creator; }
 }

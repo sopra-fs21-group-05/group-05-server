@@ -12,6 +12,7 @@ public class GameroomGetDTO {
     private String roomname;
     private List<UserGetDTO> users;
     private Long startedGame;
+    private Long creator;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -32,4 +33,7 @@ public class GameroomGetDTO {
 
     public Long getStartedGame() { return startedGame; }
     public void setStartedGame(Long startedGame) { this.startedGame = startedGame; }
+
+    public Long getCreator() { return creator; }
+    public void setCreator(Long creator) { this.creator = creator; }
 }

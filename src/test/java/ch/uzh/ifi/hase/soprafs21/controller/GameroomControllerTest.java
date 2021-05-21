@@ -113,10 +113,17 @@ public class GameroomControllerTest {
 
     @Test
     public void getGameroom_validInput_returnGameroom() throws Exception {
+        // given
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("test");
+        List<User> users = new ArrayList<>();
+        users.add(user);
 
         Gameroom gameroom = new Gameroom();
         gameroom.setRoomname("test");
         gameroom.setId(2L);
+        gameroom.setUsers(users);
 
         Long roomId = 2L;
 
@@ -130,7 +137,8 @@ public class GameroomControllerTest {
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(gameroom.getId()), Long.class))
-                .andExpect(jsonPath("$.roomname", is(gameroom.getRoomname())));
+                .andExpect(jsonPath("$.roomname", is(gameroom.getRoomname())))
+                .andExpect(jsonPath("$.users[0].username", is(user.getUsername())));
     }
 
     @Test

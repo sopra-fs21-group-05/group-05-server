@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Scoreboard;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.ScoreboardRepository;
+import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,12 @@ public class ScoreboardService {
     private final Logger log = LoggerFactory.getLogger(ScoreboardService.class);
 
     private final ScoreboardRepository scoreboardRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ScoreboardService(@Qualifier("scoreboardRepository") ScoreboardRepository scoreboardRepository) {
+    public ScoreboardService(@Qualifier("scoreboardRepository") ScoreboardRepository scoreboardRepository, @Qualifier("userRepository") UserRepository userRepository) {
         this.scoreboardRepository = scoreboardRepository;
+        this.userRepository = userRepository;
     }
 
     //get a scoreboard by its corresponding game
@@ -82,6 +85,11 @@ public class ScoreboardService {
     //delete scoreboard when game ends
     public void endGame(Game game){
         Scoreboard scoreboard = scoreboardRepository.getScoreboardByGame(game);
+        for(User user: game.getUserList()){
+            user.setPoints(0);
+            userRepository.save(user);
+            userRepository.flush();
+        }
         scoreboardRepository.delete(scoreboard);
         scoreboardRepository.flush();
     }

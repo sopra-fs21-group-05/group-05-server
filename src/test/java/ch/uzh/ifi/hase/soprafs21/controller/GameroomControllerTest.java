@@ -124,10 +124,12 @@ public class GameroomControllerTest {
         gameroom.setRoomname("test");
         gameroom.setId(2L);
         gameroom.setUsers(users);
+        gameroom.setCreator(1L);
 
         Long roomId = 2L;
 
         given(gameroomService.getGameroomById(roomId)).willReturn(gameroom);
+        given(gameroomService.checkCreator(gameroom)).willReturn(gameroom);
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder getRequest = get("/gamerooms/overview/2")

@@ -2,10 +2,7 @@ package ch.uzh.ifi.hase.soprafs21.service;
 
 import ch.uzh.ifi.hase.soprafs21.constant.MaterialSet;
 import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
-import ch.uzh.ifi.hase.soprafs21.entity.Game;
-import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
-import ch.uzh.ifi.hase.soprafs21.entity.Picture;
-import ch.uzh.ifi.hase.soprafs21.entity.User;
+import ch.uzh.ifi.hase.soprafs21.entity.*;
 import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.GameroomRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
@@ -52,6 +49,9 @@ public class GameServiceIntegrationTest {
 
     @Autowired
     private GameroomService gameroomService;
+
+    @Autowired
+    private ScoreboardService scoreboardService;
 
 
     @BeforeEach
@@ -256,5 +256,108 @@ public class GameServiceIntegrationTest {
         assertEquals(game.getRoundNr(), createdGame.getRoundNr());
         assertEquals(game.getGridPictures().size(), createdGame.getGridPictures().size());
     }
-}
+
+
+
+    @Test
+    public void getWinner_success(){
+        Gameroom gameroom1 = new Gameroom();
+        gameroom1.setRoomname("room1");
+        gameroom1.setPassword("pass");
+        Gameroom gameroom = gameroomService.createGameroom(gameroom1);
+
+        User user1 = new User();
+        user1.setPassword("pass");
+        user1.setUsername("name");
+        user1.setPoints(12);
+        user1 = userService.createUser(user1);
+        User user2 = new User();
+        user2.setPassword("pass");
+        user2.setUsername("name2");
+        user2.setPoints(12);
+        user2 = userService.createUser(user2);
+        List<User> userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+        gameroom.setUsers(userList);
+
+        Game createdGame = gameService.createGame(gameroom);
+
+        Picture pic1 = gameService.createPicture("encodedPicture");
+        List<Picture> pictureList = new ArrayList<>();
+        pictureList.add(pic1);
+
+        gameService.assignGridPictures(createdGame,pictureList);
+
+        List<User> winners = gameService.getWinner(createdGame.getGameId());
+        assertEquals(winners.size(), 2);
+    }
+
+
+    @Test
+    public void submitPicture_success(){
+        Gameroom gameroom1 = new Gameroom();
+        gameroom1.setRoomname("room1");
+        gameroom1.setPassword("pass");
+        Gameroom gameroom = gameroomService.createGameroom(gameroom1);
+
+        User user1 = new User();
+        user1.setPassword("pass");
+        user1.setUsername("name");
+        user1.setPoints(12);
+        user1 = userService.createUser(user1);
+
+        List<User> userList = new ArrayList<>();
+        userList.add(user1);
+        gameroom.setUsers(userList);
+
+        Game createdGame = gameService.createGame(gameroom);
+
+        String pic1 = "recreatedPicture";
+
+
+        Map<Long,String> submittedPicture = gameService.submitPicture(createdGame,pic1,user1.getId());
+        User submittingUser = gameService.getPlayerInGame(user1.getId(),createdGame.getGameId());
+        assertEquals(submittingUser.getRecreatedPicture(), submittedPicture.get(user1.getId()));
+    }
+
+
+    @Test
+    public void endGame_success() {
+        Gameroom gameroom1 = new Gameroom();
+        gameroom1.setRoomname("room1");
+        gameroom1.setPassword("pass");
+        Gameroom gameroom = gameroomService.createGameroom(gameroom1);
+
+        User user1 = new User();
+        user1.setPassword("pass");
+        user1.setUsername("name");
+        user1.setPoints(12);
+        user1 = userService.createUser(user1);
+
+        List<User> userList = new ArrayList<>();
+        userList.add(user1);
+        gameroom.setUsers(userList);
+
+        Game createdGame = gameService.createGame(gameroom);
+        Scoreboard scoreboard=scoreboardService.createScoreboard(createdGame);
+        createdGame.setScoreboard(scoreboard);
+
+        Long id = createdGame.getGameId();
+
+        Picture pic1 = gameService.createPicture("encodedPicture");
+        List<Picture> pictureList = new ArrayList<>();
+        pictureList.add(pic1);
+
+        gameService.assignGridPictures(createdGame,pictureList);
+        assertEquals(createdGame.getGridPictures().size(), 1);
+
+        gameService.endGame(createdGame.getGameId());
+        assertThrows(ResponseStatusException.class, () -> gameService.getExistingGame(id));
+
+    }
+
+
+
+    }
 

@@ -288,7 +288,9 @@ public class GameServiceTest {
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
-        assertThrows(ResponseStatusException.class, () -> gameService.getPlayerInGame(5L,createdGame.getGameId()));
+        Long id = createdGame.getGameId();
+
+        assertThrows(ResponseStatusException.class, () -> gameService.getPlayerInGame(5L,id));
     }
 
 
@@ -573,7 +575,9 @@ public class GameServiceTest {
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
-        assertThrows(ResponseStatusException.class, () -> gameService.submitAndCheckGuesses(createdGame.getGameId(), user2.getId(), guesses));
+        Long gameId = createdGame.getGameId();
+
+        assertThrows(ResponseStatusException.class, () -> gameService.submitAndCheckGuesses(gameId, user2.getId(), guesses));
     }
 
     @Test

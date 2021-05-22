@@ -94,7 +94,9 @@ public class UserServiceTest {
         // when -> setup additional mocks for UserRepository
         Mockito.when(userRepository.findByUsername(Mockito.any())).thenReturn(testUser);
 
-        assertThrows(ResponseStatusException.class, () -> userService.loginUser(testUser.getUsername(), "notPassword"));
+        String username = testUser.getUsername();
+
+        assertThrows(ResponseStatusException.class, () -> userService.loginUser(username, "notPassword"));
     }
 
     @Test
@@ -103,7 +105,10 @@ public class UserServiceTest {
         userService.createUser(testUser);
         testUser.setStatus(UserStatus.ONLINE);
 
-        assertThrows(ResponseStatusException.class, () -> userService.loginUser(testUser.getUsername(), testUser.getPassword()));
+        String username = testUser.getUsername();
+        String password = testUser.getPassword();
+
+        assertThrows(ResponseStatusException.class, () -> userService.loginUser(username, password));
     }
 
     @Test

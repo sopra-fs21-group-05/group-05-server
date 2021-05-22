@@ -7,6 +7,9 @@ import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.GameroomRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @WebAppConfiguration
 @SpringBootTest
 public class GameServiceIntegrationTest {
+    private SessionFactory sessionFactory;
+    private Session session = null;
 
     @Qualifier("gameRepository")
     @Autowired
@@ -290,7 +295,7 @@ public class GameServiceIntegrationTest {
         gameService.assignGridPictures(createdGame,pictureList);
 
         List<User> winners = gameService.getWinner(createdGame.getGameId());
-        assertEquals(winners.size(), 2);
+        assertEquals(2,winners.size());
     }
 
 
@@ -320,7 +325,6 @@ public class GameServiceIntegrationTest {
         User submittingUser = gameService.getPlayerInGame(user1.getId(),createdGame.getGameId());
         assertEquals(submittingUser.getRecreatedPicture(), submittedPicture.get(user1.getId()));
     }
-
 
     @Test
     public void endGame_success() {

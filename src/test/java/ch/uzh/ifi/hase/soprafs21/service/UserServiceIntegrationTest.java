@@ -102,7 +102,9 @@ public class UserServiceIntegrationTest {
         notExisting.setUsername("noUsername");
         notExisting.setPassword("noPassword");
 
-        assertThrows(ResponseStatusException.class, () -> userService.loginUser(notExisting.getUsername(),notExisting.getPassword()));
+        String username = notExisting.getUsername();
+        String password = notExisting.getPassword();
+        assertThrows(ResponseStatusException.class, () -> userService.loginUser(username,password));
     }
 
     @Test
@@ -113,8 +115,10 @@ public class UserServiceIntegrationTest {
         testUser.setUsername("testUsername");
         userService.createUser(testUser);
 
+        String username = testUser.getUsername();
+
         //try to login with wrong password
-        assertThrows(ResponseStatusException.class, () -> userService.loginUser(testUser.getUsername(), "notPassword"));
+        assertThrows(ResponseStatusException.class, () -> userService.loginUser(username, "notPassword"));
     }
 
     @Test

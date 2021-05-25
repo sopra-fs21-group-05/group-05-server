@@ -120,11 +120,12 @@ public class GameroomService {
     }
 
     //saves winners of last game to gameroom
-    public void storeWinner(Long roomId, List<User> winners){
+    public Gameroom storeWinner(Long roomId, List<User> winners){
         Gameroom gameroom = getGameroomById(roomId);
         gameroom.setLastWinner(winners);
         gameroomRespository.save(gameroom);
         gameroomRespository.flush();
+        return gameroom;
     }
 
     //get a gameroom by the corresponding game
@@ -169,12 +170,13 @@ public class GameroomService {
     }
 
     //end game for a provided gameroom
-    public void endGame(Long roomId){
+    public Gameroom endGame(Long roomId){
         Gameroom gameroom = getGameroomById(roomId);
         gameroom.setGame(null);
         gameroom.setStartedGame(null);
         gameroomRespository.save(gameroom);
         gameroomRespository.flush();
+        return gameroom;
     }
 
     //checks if creator is still in gameroom, assigns new one if not

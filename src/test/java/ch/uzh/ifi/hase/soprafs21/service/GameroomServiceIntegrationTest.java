@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
-import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Game;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
@@ -9,14 +8,12 @@ import ch.uzh.ifi.hase.soprafs21.repository.GameroomRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -243,4 +240,67 @@ public class GameroomServiceIntegrationTest {
         // assert that exception thrown when trying to get gameroom that does not exist
         assertThrows(ResponseStatusException.class, () -> gameroomService.getGameroomById(2L));
     }
+
+    @Test
+    public void getGameroomByGame_success(){
+
+        // Create a gameroom
+        Gameroom testGameroom = new Gameroom();
+        testGameroom.setPassword("123");
+        testGameroom.setRoomname("test");
+        gameroomService.createGameroom(testGameroom);
+
+        Game createdGame = gameService.createGame(testGameroom);
+        gameroomService.addGame(testGameroom, createdGame);
+
+        //try to get created gameroom
+        Gameroom gameroom = gameroomService.getGameroomByGameId(createdGame.getGameId());
+
+        //assert created gameroom is returned
+        assertEquals(testGameroom.getId(), gameroom.getId());
+    }
+
+    @Test
+    public void getGameroomByGame_exception(){
+        // assert that game with this id does not exist
+        assertNull(gameRepository.findById(2L).orElse(null));
+
+        // assert that exception thrown when trying to get gameroom with gameid that does not exist
+        assertThrows(ResponseStatusException.class, () -> gameroomService.getGameroomByGameId(2L));
+    }
+
+    @Test
+    public void endGame_success(){
+        // Create a gameroom
+        Gameroom testGameroom = new Gameroom();
+        testGameroom.setPassword("123");
+        testGameroom.setRoomname("test");
+        testGameroom = gameroomService.createGameroom(testGameroom);
+
+        // add game to gameroom
+        Game createdGame = gameService.createGame(testGameroom);
+        gameroomService.addGame(testGameroom, createdGame);
+
+        //try to end game
+        Gameroom gameroom = gameroomService.endGame(testGameroom.getId());
+
+        //assert game from gameroom is deleted
+        assertNull(gameroom.getGame());
+    }
+
+    @Test
+    public void leaveGameroom_lastUser(){
+        //TODO
+    }
+
+    @Test
+    public void leaveGameroom_NotlastUser(){
+        //TODO
+    }
+
+    @Test
+    public void leaveGameroom_exception(){
+        //TODO
+    }
+
 }

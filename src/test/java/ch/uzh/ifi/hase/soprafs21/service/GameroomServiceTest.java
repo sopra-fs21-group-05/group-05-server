@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs21.service;
 
-import ch.uzh.ifi.hase.soprafs21.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs21.entity.Gameroom;
 import ch.uzh.ifi.hase.soprafs21.entity.User;
 import ch.uzh.ifi.hase.soprafs21.repository.GameroomRepository;
@@ -12,7 +11,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -134,5 +132,69 @@ public class GameroomServiceTest {
         // then -> attempt to create second gameroom with same gameroom -> check that an error is thrown
         assertThrows(ResponseStatusException.class, () -> gameroomService.joinGameroom(testGameroom, testUser));
     }
+
+    @Test
+    public void checkCreator_creatorExists() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        List<User> users = Collections.singletonList(user);
+
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("test");
+        gameroom.setPassword("123");
+        gameroom.setId(2L);
+        gameroom.setUsers(users);
+        gameroom.setCreator(1L);
+
+        // when -> setup additional mocks for GameroomRepository
+        Mockito.when(gameroomRepository.save(Mockito.any())).thenReturn(gameroom);
+
+        Gameroom checkedGameroom = gameroomService.checkCreator(gameroom);
+
+        assertEquals(gameroom.getCreator(), checkedGameroom.getCreator());
+    }
+
+    @Test
+    public void checkCreator_creatorNotExists() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        List<User> users = Collections.singletonList(user);
+
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("test");
+        gameroom.setPassword("123");
+        gameroom.setId(2L);
+        gameroom.setUsers(users);
+        gameroom.setCreator(3L);
+
+        // when -> setup additional mocks for GameroomRepository
+        Mockito.when(gameroomRepository.save(Mockito.any())).thenReturn(gameroom);
+
+        Gameroom checkedGameroom = gameroomService.checkCreator(gameroom);
+
+        assertEquals(1L, checkedGameroom.getCreator());
+    }
+
+    @Test
+    public void storeWinner_success(){
+        User user = new User();
+        user.setId(1L);
+        List<User> users = Collections.singletonList(user);
+
+        // Create a gameroom
+        Gameroom testGameroom = new Gameroom();
+        testGameroom.setPassword("123");
+        testGameroom.setRoomname("test");
+        testGameroom.setUsers(users);
+        testGameroom = gameroomService.createGameroom(testGameroom);
+
+        Mockito.when(gameroomRepository.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(testGameroom));
+
+        assert testGameroom != null;
+        Gameroom gameroom = gameroomService.storeWinner(testGameroom.getId(), users);
+
+        assertEquals(1, gameroom.getLastWinner().size());
+    }
+
 }
 

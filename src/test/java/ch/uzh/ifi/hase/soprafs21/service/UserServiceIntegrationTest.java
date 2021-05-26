@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -153,5 +154,20 @@ public class UserServiceIntegrationTest {
         assertEquals(testUser.getId(), existingUser.getId());
         assertEquals(testUser.getToken(), existingUser.getToken());
 
+    }
+
+    @Test
+    void getAllUser_success(){
+        //create user
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("testUsername");
+        userService.createUser(testUser);
+
+        //try to get all users
+        List<User> users = userService.getUsers();
+
+        //assert created user is in list
+        assertEquals(testUser.getId(), users.get(0).getId());
     }
 }

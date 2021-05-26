@@ -134,5 +134,25 @@ public class UserServiceTest {
 
     }
 
+    @Test
+    void restrictPlayer(){
+        // given -> a first user has already been created and has already logged in
+        userService.createUser(testUser);
+        // restrict player
+        userService.restrictPlayer(testUser);
+
+        //check if player is restricted
+        assertTrue(testUser.getRestrictedMode());
+    }
+
+    @Test
+    void isRestricted(){
+        // given -> a first user has already been created and has already logged in
+        userService.createUser(testUser);
+        testUser.setRestrictedMode(false);
+
+        assertFalse(userService.isRestricted(testUser));
+    }
+
 
 }

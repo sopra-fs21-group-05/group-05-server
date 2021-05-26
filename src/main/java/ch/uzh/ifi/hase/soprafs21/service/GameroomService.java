@@ -96,7 +96,7 @@ public class GameroomService {
     }
 
     //removes user from a gameroom
-    public void leaveGameroom(Long roomId, User user){
+    public Gameroom leaveGameroom(Long roomId, User user){
         Gameroom gameroom = getGameroomById(roomId);
 
         List<User> userList = gameroom.getUsers();
@@ -108,6 +108,7 @@ public class GameroomService {
             userList.remove(user);
             if(userList.isEmpty()){
                 gameroomRespository.delete(gameroom);
+                gameroom = null;
             }
             else {
                 gameroom.setUsers(userList);
@@ -117,6 +118,7 @@ public class GameroomService {
         }
 
         log.debug("User {} left gameroom {}",user, gameroom);
+        return gameroom;
     }
 
     //saves winners of last game to gameroom

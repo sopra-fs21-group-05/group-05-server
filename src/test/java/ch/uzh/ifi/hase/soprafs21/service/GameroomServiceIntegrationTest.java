@@ -288,19 +288,4 @@ public class GameroomServiceIntegrationTest {
         assertNull(gameroom.getGame());
     }
 
-    @Test
-    public void leaveGameroom_lastUser(){
-        //TODO
-    }
-
-    @Test
-    public void leaveGameroom_NotlastUser(){
-        //TODO
-    }
-
-    @Test
-    public void leaveGameroom_exception(){
-        //TODO
-    }
-
 }

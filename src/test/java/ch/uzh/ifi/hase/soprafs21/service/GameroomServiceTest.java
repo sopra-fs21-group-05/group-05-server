@@ -11,10 +11,13 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 
 public class GameroomServiceTest {
 
@@ -194,6 +197,96 @@ public class GameroomServiceTest {
         Gameroom gameroom = gameroomService.storeWinner(testGameroom.getId(), users);
 
         assertEquals(1, gameroom.getLastWinner().size());
+    }
+
+    @Test
+    public void leaveGameroom_lastUser(){
+        // given -> a first gameroom has already been created
+        gameroomService.createGameroom(testGameroom);
+
+        List<User> users = new ArrayList<>();
+        users.add(testUser);
+        Gameroom joinedTestGameroom = new Gameroom();
+        joinedTestGameroom.setId(2L);
+        joinedTestGameroom.setPassword("123");
+        joinedTestGameroom.setRoomname("test");
+        joinedTestGameroom.setUsers(users);
+
+        // when -> setup additional mocks for GameroomRepository
+        Mockito.when(gameroomRepository.findById(Mockito.any())).thenReturn(java.util.Optional.of(joinedTestGameroom));
+        Mockito.when(gameroomRepository.save(Mockito.any())).thenReturn(joinedTestGameroom);
+        doNothing().when(gameroomRepository).delete(any());
+        doNothing().when(gameroomRepository).flush();
+
+        Gameroom leftGameroom = gameroomService.leaveGameroom(joinedTestGameroom.getId(), testUser);
+
+        assertNull(leftGameroom);
+    }
+
+    @Test
+    public void leaveGameroom_NotlastUser(){
+        // given -> a first gameroom has already been created
+        gameroomService.createGameroom(testGameroom);
+
+        User testUser1 = new User();
+        testUser1.setId(3L);
+        testUser1.setPassword("password");
+        testUser1.setUsername("username");
+
+        List<User> users = new ArrayList<>();
+        users.add(testUser);
+        users.add(testUser1);
+        Gameroom joinedTestGameroom = new Gameroom();
+        joinedTestGameroom.setId(2L);
+        joinedTestGameroom.setPassword("123");
+        joinedTestGameroom.setRoomname("test");
+        joinedTestGameroom.setUsers(users);
+
+        // when -> setup additional mocks for GameroomRepository
+        Mockito.when(gameroomRepository.findById(Mockito.any())).thenReturn(java.util.Optional.of(joinedTestGameroom));
+        Mockito.when(gameroomRepository.save(Mockito.any())).thenReturn(joinedTestGameroom);
+        doNothing().when(gameroomRepository).delete(any());
+        doNothing().when(gameroomRepository).flush();
+
+        // assert 2 users are in gameroom
+        assertEquals(2,joinedTestGameroom.getUsers().size());
+
+        //one of the users leaves, one should be left in gameroom
+        Gameroom leftGameroom = gameroomService.leaveGameroom(joinedTestGameroom.getId(), testUser);
+
+        assertEquals(1, leftGameroom.getUsers().size());
+    }
+
+    @Test
+    public void leaveGameroom_exception(){
+        // given -> a first gameroom has already been created
+        gameroomService.createGameroom(testGameroom);
+
+        User testUser1 = new User();
+        testUser1.setId(3L);
+        testUser1.setPassword("password");
+        testUser1.setUsername("username");
+
+        List<User> users = new ArrayList<>();
+        users.add(testUser);
+
+        Gameroom joinedTestGameroom = new Gameroom();
+        joinedTestGameroom.setId(2L);
+        joinedTestGameroom.setPassword("123");
+        joinedTestGameroom.setRoomname("test");
+        joinedTestGameroom.setUsers(users);
+
+        // when -> setup additional mocks for GameroomRepository
+        Mockito.when(gameroomRepository.findById(Mockito.any())).thenReturn(java.util.Optional.of(joinedTestGameroom));
+        Mockito.when(gameroomRepository.save(Mockito.any())).thenReturn(joinedTestGameroom);
+        doNothing().when(gameroomRepository).delete(any());
+        doNothing().when(gameroomRepository).flush();
+
+        // assert testUser1 not in gameroom
+        assertFalse(joinedTestGameroom.getUsers().contains(testUser1));
+
+        // user tries to leave that isn't in gameroom leaves, one should be left in gameroom
+        assertThrows(ResponseStatusException.class, () -> gameroomService.leaveGameroom(joinedTestGameroom.getId(), testUser1));
     }
 
 }

@@ -161,10 +161,14 @@ public class GameroomControllerTest {
 
     @Test
     public void putGameroom_validInput_startGame() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        List<User> users = Collections.singletonList(user);
 
         Gameroom gameroom = new Gameroom();
         gameroom.setRoomname("test");
         gameroom.setId(2L);
+        gameroom.setLastWinner(users);
 
         Game game = new Game();
         game.setGameroom(gameroom);
@@ -177,6 +181,7 @@ public class GameroomControllerTest {
         given(gameService.createGame(gameroom)).willReturn(game);
         given(scoreboardService.createScoreboard(game)).willReturn(scoreboard);
         given(gameroomService.addGame(gameroom, game)).willReturn(gameroom);
+        //given(userService.restrictPlayer(user)).willReturn()
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder putRequest = put("/gamerooms/overview/2")
@@ -280,6 +285,80 @@ public class GameroomControllerTest {
         // then
         mockMvc.perform(putRequest)
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void leaveGameroom_success() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        List<User> users = Collections.singletonList(user);
+
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("test");
+        gameroom.setPassword("123");
+        gameroom.setId(2L);
+        gameroom.setUsers(users);
+
+        given(userService.getExistingUser(Mockito.any())).willReturn(user);
+        given(gameroomService.leaveGameroom(Mockito.any(),Mockito.any())).willReturn(gameroom);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder putRequest = put("/gamerooms/list/2/1")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(putRequest)
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void leaveGameroom_exception() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        List<User> users = Collections.singletonList(user);
+
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("test");
+        gameroom.setPassword("123");
+        gameroom.setId(2L);
+        gameroom.setUsers(users);
+
+        given(userService.getExistingUser(Mockito.any())).willReturn(user);
+        given(gameroomService.leaveGameroom(Mockito.any(),Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.CONFLICT));
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder putRequest = put("/gamerooms/list/2/1")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(putRequest)
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void endGame_success() throws Exception{
+
+        Gameroom gameroom = new Gameroom();
+        gameroom.setRoomname("test");
+        gameroom.setPassword("123");
+        gameroom.setId(2L);
+
+        Game game = new Game();
+        game.setGameroom(gameroom);
+        game.setGameId(3L);
+
+        gameroom.setGame(game);
+
+        given(gameroomService.getGameroomById(Mockito.any())).willReturn(gameroom);
+        given(gameroomService.endGame(Mockito.any())).willReturn(gameroom);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder putRequest = put("/gamerooms/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(putRequest)
+                .andExpect(status().isOk());
     }
 
 

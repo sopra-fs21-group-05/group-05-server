@@ -1,22 +1,45 @@
-# SoPra RESTful Service Template FS21
+# SoPra FS21 - Group 05 Server - Pictures Game
 
-## Getting started with Spring Boot
+## Project's aim
+The goal of this project was to create an online version of the board game Pictures. 
+The online version follows all main [Pictures game rules](https://www.riograndegames.com/wp-content/uploads/2020/04/Pictures_Rules_EN_web_1.2.pdf).
+The project uses an external API [Pixabay](https://pixabay.com/api/docs/) to retrieve the images for the picture grid.
+An additional feature implemented in the online version, in order to make it more challenging, is that winners of a game are restricted for the next game in terms of the material sets they get to recreate a picture.
+
+## Technologies used
+- **Java** as the main programming language of the server
+- **Gradle** for building and wrapping
+- **Springboot** for running the server
+- **SonarCube** for the code analysis (code smells, test coverage etc.)
+- **Heroku** as the deployment platform
+
+### Getting started with Spring Boot
 
 -   Documentation: https://docs.spring.io/spring-boot/docs/current/reference/html/index.html
 -   Guides: http://spring.io/guides
     -   Building a RESTful Web Service: http://spring.io/guides/gs/rest-service/
     -   Building REST services with Spring: http://spring.io/guides/tutorials/bookmarks/
 
-## Setup this Template with your IDE of choice
+## Main components
+The main game logic is implemented in the [**controller**](https://github.com/sopra-fs21-group-05/group-05-server/tree/main/src/main/java/ch/uzh/ifi/hase/soprafs21/controller) and [**service**](https://github.com/sopra-fs21-group-05/group-05-server/tree/main/src/main/java/ch/uzh/ifi/hase/soprafs21/service) classes.
+The GameroomController and -Service cover all logic regarding creating, joining a gameroom and starting a game.
+The GameController and -Service contain the implementation of all the rules and logic of the Pictures game.
+
+Other important high level components are:
+- [entity](https://github.com/sopra-fs21-group-05/group-05-server/tree/main/src/main/java/ch/uzh/ifi/hase/soprafs21/entity): define the fields each entity type should contain
+- [repository](https://github.com/sopra-fs21-group-05/group-05-server/tree/main/src/main/java/ch/uzh/ifi/hase/soprafs21/repository): store entities
+- [rest](https://github.com/sopra-fs21-group-05/group-05-server/tree/main/src/main/java/ch/uzh/ifi/hase/soprafs21/rest): contains all DTOs (data transfer objects) and the DTO mapper that are used by the controller classes
+##Launch and Deployment
+### Setup this project with your IDE of choice
 
 Download your IDE of choice: (e.g., [Eclipse](http://www.eclipse.org/downloads/), [IntelliJ](https://www.jetbrains.com/idea/download/)), [Visual Studio Code](https://code.visualstudio.com/) and make sure Java 15 is installed on your system (for Windows-users, please make sure your JAVA_HOME environment variable is set to the correct version of Java).
 
-1. File -> Open... -> SoPra Server Template
+1. File -> Open... -> group-05-server
 2. Accept to import the project as a `gradle project`
 
 To build right click the `build.gradle` file and choose `Run Build`
 
-### VS Code
+#### VS Code
 The following extensions will help you to run it more easily:
 -   `pivotal.vscode-spring-boot`
 -   `vscjava.vscode-spring-initializr`
@@ -26,7 +49,7 @@ The following extensions will help you to run it more easily:
 
 **Note:** You'll need to build the project first with Gradle, just click on the `build` command in the _Gradle Tasks_ extension. Then check the _Spring Boot Dashboard_ extension if it already shows `soprafs21` and hit the play button to start the server. If it doesn't show up, restart VS Code and check again.
 
-## Building with Gradle
+### Building with Gradle
 
 You can use the local Gradle Wrapper to build the application.
 
@@ -38,13 +61,13 @@ Plattform-Prefix:
 
 More Information about [Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html) and [Gradle](https://gradle.org/docs/).
 
-### Build
+#### Build
 
 ```bash
 ./gradlew build
 ```
 
-### Run
+#### Run
 
 ```bash
 ./gradlew bootRun
@@ -56,7 +79,7 @@ More Information about [Gradle Wrapper](https://docs.gradle.org/current/userguid
 ./gradlew test
 ```
 
-### Development Mode
+#### Development Mode
 
 You can start the backend in development mode, this will automatically trigger a new build and reload the application
 once the content of a file has been changed and you save the file.
@@ -79,22 +102,44 @@ If you want to avoid running all tests with every change, use the following comm
 
 -   We highly recommend to use [Postman](https://www.getpostman.com) in order to test your API Endpoints.
 
-## Debugging
 
-If something is not working and/or you don't know what is going on. We highly recommend that you use a debugger and step
-through the process step-by-step.
+##Roadmap
 
-To configure a debugger for SpringBoot's Tomcat servlet (i.e. the process you start with `./gradlew bootRun` command),
-do the following:
+Here is a list of features that could be implemented next:
+- Shoe laces can be manipulated
+- Individual material set items can be rotated
 
-1. Open Tab: **Run**/Edit Configurations
-2. Add a new Remote Configuration and name it properly
-3. Start the Server in Debug mode: `./gradlew bootRun --debug-jvm`
-4. Press `Shift + F9` or the use **Run**/Debug"Name of your task"
-5. Set breakpoints in the application where you need it
-6. Step through the process one step at a time
+## Authors and Acknowledgement
 
-## Testing
+**Main contributors**:  
 
-Have a look here: https://www.baeldung.com/spring-boot-testing
-# group-05-server
+Michelle Reiter [@Elinriel](https://github.com/Elinriel)  
+Roman Stadler [@Galva101](https://github.com/Galva101)  
+Kirthan Gengatharan [@kirthan98](https://github.com/kirthan98)  
+Norina Braun [@Strawberry17](https://github.com/Strawberry17)  
+Ashly Kolenchery [@akolen](https://github.com/akolen)  
+
+Special thanks to our supervisor Raphael Imfeld!
+
+## License
+MIT License
+
+Copyright (c) [2021] [SoPra Group 05 - Pictures]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

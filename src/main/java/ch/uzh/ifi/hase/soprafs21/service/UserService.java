@@ -57,9 +57,8 @@ public class UserService {
     private void checkIfUserExists(User userToBeCreated) {
         User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
 
-        String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
         if (userByUsername != null) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "username", "is"));
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "The provided username is already taken, please choose a different username!");
         }
     }
 
@@ -67,16 +66,14 @@ public class UserService {
     public User loginUser(String username, String password){
         //checks if the provided username is in the userRepository
         User userByUsername = userRepository.findByUsername(username);
-
-        String baseErrorMessage = "Invalid %s, make sure that username and password are correct.";
         String loggedInErrorMessage = "The user %s is already logged in.";
 
         if(userByUsername==null){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format(baseErrorMessage, "username"));
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials!");
         }
 
         if (!userByUsername.getPassword().equals(password)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format(baseErrorMessage, "password"));
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials!");
         }
         //If user is already logged in, it is not possible to login again
         if (userByUsername.getStatus() == UserStatus.ONLINE) {

@@ -145,7 +145,7 @@ public class GameroomService {
     private void checkIfGameroomExists(Gameroom gameroom) {
         Gameroom gameroomByName = gameroomRespository.findByRoomname(gameroom.getRoomname());
 
-        String baseErrorMessage = "The roomname provided already exists. Therefore, the gameroom could not be created!";
+        String baseErrorMessage = "The provided roomname is already taken, please choose a different roomname!";
 
         if (gameroomByName != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, baseErrorMessage);
@@ -158,7 +158,7 @@ public class GameroomService {
         Gameroom fetchedgameroom = getGameroomById(gameroom.getId());
 
         //throw exception if no user with this username is found
-        String baseErrorMessage = "Credentials are invalid.";
+        String baseErrorMessage = "Invalid credentials!";
         if (fetchedgameroom == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, baseErrorMessage);
         }

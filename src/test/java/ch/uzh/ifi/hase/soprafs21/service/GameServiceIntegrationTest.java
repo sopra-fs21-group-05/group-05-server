@@ -7,7 +7,6 @@ import ch.uzh.ifi.hase.soprafs21.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.GameroomRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs21.repository.UserRepository;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;

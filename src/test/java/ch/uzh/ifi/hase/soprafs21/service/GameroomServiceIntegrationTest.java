@@ -27,9 +27,11 @@ public class GameroomServiceIntegrationTest {
     @Autowired
     private GameroomRepository gameroomRepository;
 
+    @Qualifier("gameRepository")
     @Autowired
     private GameRepository gameRepository;
 
+    @Qualifier("userRepository")
     @Autowired
     private UserRepository userRepository;
 

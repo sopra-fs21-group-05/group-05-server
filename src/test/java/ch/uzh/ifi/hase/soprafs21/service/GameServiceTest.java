@@ -105,8 +105,6 @@ public class GameServiceTest {
         gameroom.setId(2L);
         Game createdGame = gameService.createGame(gameroom);
 
-        // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(testGame);
 
         Picture pic1 = new Picture();
         pic1.setPictureId(3L);
@@ -144,7 +142,6 @@ public class GameServiceTest {
         createdGame.setUserList(players);
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -187,7 +184,6 @@ public class GameServiceTest {
         createdGame.setUserList(players);
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(testGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -208,7 +204,6 @@ public class GameServiceTest {
         createdGame.setRoundNr(1);
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -248,7 +243,6 @@ public class GameServiceTest {
         createdGame.setUserList(players);
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -284,7 +278,6 @@ public class GameServiceTest {
         createdGame.setUserList(players);
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -313,7 +306,6 @@ public class GameServiceTest {
         createdGame.setUserList(players);
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -349,7 +341,6 @@ public class GameServiceTest {
         createdGame.setUserList(users);
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -392,7 +383,6 @@ public class GameServiceTest {
         createdGame.setUserList(users);
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -453,7 +443,6 @@ public class GameServiceTest {
         String pictureAsString = "recreatedPicture";
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -498,7 +487,6 @@ public class GameServiceTest {
 
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -535,7 +523,6 @@ public class GameServiceTest {
         guesses.put(1L,"A1");
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -571,7 +558,6 @@ public class GameServiceTest {
         guesses.put(1L,"Q2");
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -600,7 +586,6 @@ public class GameServiceTest {
         createdGame.setUserList(players);
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 
@@ -649,7 +634,6 @@ public class GameServiceTest {
         createdGame.setGridPictures(gridPictures);
 
         // when -> setup additional mocks for GameRepository
-        when(gameRepository.findByGameroom(any())).thenReturn(createdGame);
         when(gameRepository.findById(any())).thenReturn(Optional.of(createdGame));
         when(gameRepository.getOne(any())).thenReturn(createdGame);
 

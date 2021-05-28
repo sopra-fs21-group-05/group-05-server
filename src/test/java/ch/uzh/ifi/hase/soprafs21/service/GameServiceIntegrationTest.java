@@ -81,8 +81,6 @@ public class GameServiceIntegrationTest {
         gameroom.setPassword("pass");
         gameroom.setId(2L);
 
-        assertNull(gameRepository.findByGameroom(gameroom));
-
         gameroom.setGame(testGame);
         testGame.setGameroom(gameroom);
 

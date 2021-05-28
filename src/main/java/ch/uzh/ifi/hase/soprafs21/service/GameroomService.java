@@ -124,6 +124,12 @@ public class GameroomService {
     //saves winners of last game to gameroom
     public Gameroom storeWinner(Long roomId, List<User> winners){
         Gameroom gameroom = getGameroomById(roomId);
+        // derestrict previous winner
+        List<User> previousWinners = gameroom.getLastWinner();
+        for(User user: previousWinners){
+            user.setRestrictedMode(false);
+        }
+        //store new winners
         gameroom.setLastWinner(winners);
         gameroomRespository.save(gameroom);
         gameroomRespository.flush();

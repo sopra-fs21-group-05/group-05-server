@@ -110,6 +110,8 @@ If you want to avoid running all tests with every change, use the following comm
 Here is a list of features that could be implemented next:
 - Shoe laces can be manipulated
 - Individual material set items can be rotated
+- Players can "react" to other players recreations (e.g. through likes or emojis)
+- After each round, the correct solutions (recreations and corresponding grid coordinates) are displayed
 
 ## Authors and Acknowledgement
 

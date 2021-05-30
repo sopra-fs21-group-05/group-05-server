@@ -99,7 +99,8 @@ If you want to avoid running all tests with every change, use the following comm
 
 `./gradlew build --continuous -xtest`
 
-###Deployment and Release
+### Deployment and Release
+
 This project is set up to work hand-in-hand with Heroku using GitHub actions. Once a new commit is done to the repository, a deploy to Heroku will be launched. A release can simply be done by setting a tag on the GitHub repository.
 
 ## API Endpoint Testing

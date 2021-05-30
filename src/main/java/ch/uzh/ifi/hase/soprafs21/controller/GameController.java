@@ -79,7 +79,7 @@ public class GameController {
         List<User> winnerList = gameService.getWinner(gameId);
 
         //store the last winner in the gameroom
-        Gameroom gameroom = gameroomService.getGameroomByGameId(gameId);
+        Gameroom gameroom = gameroomService.getGameroomByStartedGame(gameId);
         gameroomService.storeWinner(gameroom.getId(), winnerList);
 
         //convert winner list

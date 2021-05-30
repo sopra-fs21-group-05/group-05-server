@@ -147,6 +147,16 @@ public class GameroomService {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game was found in this gameroom");
     }
 
+    //get gameroom by itd startedGame
+    public Gameroom getGameroomByStartedGame(Long gameId){
+        Gameroom gameroomByGame = gameroomRespository.findByStartedGame(gameId);
+
+        if(gameroomByGame == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Gameroom was not found.");
+        }
+        return gameroomByGame;
+    }
+
     //throws exception if a gameroom name already exists
     private void checkIfGameroomExists(Gameroom gameroom) {
         Gameroom gameroomByName = gameroomRespository.findByRoomname(gameroom.getRoomname());

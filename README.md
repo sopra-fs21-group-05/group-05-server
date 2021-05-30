@@ -6,6 +6,8 @@ The online version follows all main [Pictures game rules](https://www.riograndeg
 The project uses an external API [Pixabay](https://pixabay.com/api/docs/) to retrieve the images for the picture grid.
 An additional feature implemented in the online version, in order to make it more challenging, is that winners of a game are restricted for the next game in terms of the material sets they get to recreate a picture.
 
+The implementation was done as a part of the 'SoPra' course at the University of Zurich.
+
 ## Technologies used
 - **Java** as the main programming language of the server
 - **Gradle** for building and wrapping
@@ -97,12 +99,14 @@ If you want to avoid running all tests with every change, use the following comm
 
 `./gradlew build --continuous -xtest`
 
+###Deployment and Release
+This project is set up to work hand-in-hand with Heroku using GitHub actions. Once a new commit is done to the repository, a deploy to Heroku will be launched. A release can simply be done by setting a tag on the GitHub repository.
+
 ## API Endpoint Testing
 
 ### Postman
 
 -   We highly recommend to use [Postman](https://www.getpostman.com) in order to test your API Endpoints.
-
 
 
 ## Roadmap

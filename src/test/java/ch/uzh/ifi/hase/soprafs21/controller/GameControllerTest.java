@@ -170,6 +170,7 @@ public class GameControllerTest {
 
         Gameroom gameroom = new Gameroom();
         given(gameRoomService.getGameroomByGameId(Mockito.any())).willReturn(gameroom);
+        given(gameRoomService.getGameroomByStartedGame(Mockito.any())).willReturn(gameroom);
 
 
         GameGetDTO gameGetDTO = new GameGetDTO();
